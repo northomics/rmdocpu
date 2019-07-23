@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1563910985096.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "D5FCB6D7",
+    "lastKnownWriteTime" : 1563906990,
+    "last_content_update" : 1563906990,
+    "path" : "C:/Users/Figeys Lab/Dropbox/Project_R_packages/rmdocpu/inst/rmd/input.Rmd",
+    "project_path" : "inst/rmd/input.Rmd",
+    "properties" : {
+        "cursorPosition" : "2,15",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

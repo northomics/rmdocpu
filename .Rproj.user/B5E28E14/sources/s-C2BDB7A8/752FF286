@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1563907574106.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "752FF286",
+    "lastKnownWriteTime" : 1563915022,
+    "last_content_update" : 1563915022573,
+    "path" : "C:/Users/Figeys Lab/Dropbox/Project_R_packages/rmdocpu/R/rmdtext.R",
+    "project_path" : "R/rmdtext.R",
+    "properties" : {
+        "cursorPosition" : "18,1",
+        "docOutlineVisible" : "0",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
