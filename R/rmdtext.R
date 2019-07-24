@@ -4,8 +4,7 @@
 #' @export
 #'
 render_rmd_url <- function(){
-  library(RCurl)
-  myfile <- getURL('https://raw.githubusercontent.com/ningzhibin/metalab/master/inst/rmd/input.Rmd')
+  myfile <- RCurl::getURL('https://raw.githubusercontent.com/ningzhibin/metalab/master/inst/rmd/input.Rmd')
   writeLines(myfile, con="input.Rmd");
   rmarkdown::render("input.Rmd",output_format = "html_document", output_file="output.html")
 
@@ -17,3 +16,11 @@ render_rmd_server <- function(){
   rmarkdown::render(path_to_input,output_format = "html_document", output_file="output.html")
   invisible()
 }
+
+
+rmdtext <- function(text){
+  writeLines(text, con="input.Rmd");
+  rmarkdown::render("input.Rmd", output_file="output.html");
+  invisible();
+}
+
