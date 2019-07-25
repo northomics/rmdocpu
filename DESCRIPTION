@@ -7,7 +7,6 @@ Authors@R:
            family = "Ning",
            role = c("aut", "cre"),
            email = "ningzhibin@gmail.com")
-Maintainer: ningzhibin@gmail.com
 Description: rmd template and opencpu render test
 License: GNU
 Encoding: UTF-8
