@@ -13,7 +13,14 @@ render_rmd_url <- function(){
 
 render_rmd_server <- function(){
   path_to_input <- system.file("rmd", "input.Rmd", package = "rmdocpu")
-  rmarkdown::render(path_to_input,output_format = "html_document", output_file="output.html")
+
+  tempfolder <-  tempdir()
+  rmarkdown::render(path_to_input, output_format = "html_document",
+                    output_dir = tempfolder,
+                    intermediates_dir = tempfolder,
+                    output_file = "output.html")
+
+
   invisible()
 }
 
