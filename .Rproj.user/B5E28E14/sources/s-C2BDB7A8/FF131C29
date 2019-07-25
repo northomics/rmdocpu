@@ -5,14 +5,14 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "793169341",
+    "hash" : "0",
     "id" : "FF131C29",
-    "lastKnownWriteTime" : 1564062546,
-    "last_content_update" : 1564062546816,
+    "lastKnownWriteTime" : 1564062710,
+    "last_content_update" : 1564062710076,
     "path" : "C:/Users/Figeys Lab/Dropbox/Project_R_packages/rmdocpu/DESCRIPTION",
     "project_path" : "DESCRIPTION",
     "properties" : {
-        "cursorPosition" : "8,42",
+        "cursorPosition" : "10,4",
         "scrollLine" : "0"
     },
     "read_only" : false,
