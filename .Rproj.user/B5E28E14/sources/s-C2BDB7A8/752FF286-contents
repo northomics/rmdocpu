@@ -3,8 +3,9 @@
 
 #' @export
 #'
-render_rmd_url <- function(){
-  myfile <- RCurl::getURL('https://raw.githubusercontent.com/ningzhibin/metalab/master/inst/rmd/input.Rmd')
+render_rmd_url <- function(rmd_url){
+  ## for test rmd_url https://raw.githubusercontent.com/ningzhibin/metalab/master/inst/rmd/input.Rmd
+  myfile <- RCurl::getURL(rmd_url)
   writeLines(myfile, con="input.Rmd");
   rmarkdown::render("input.Rmd",output_format = "html_document", output_file="output.html")
 
