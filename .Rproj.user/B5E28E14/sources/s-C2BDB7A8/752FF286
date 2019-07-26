@@ -5,16 +5,16 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "0",
+    "hash" : "614616892",
     "id" : "752FF286",
-    "lastKnownWriteTime" : 1564171042,
-    "last_content_update" : 1564171042817,
+    "lastKnownWriteTime" : 1564171497,
+    "last_content_update" : 1564171497770,
     "path" : "C:/Users/Figeys Lab/Dropbox/Project_R_packages/rmdocpu/R/rmdtext.R",
     "project_path" : "R/rmdtext.R",
     "properties" : {
-        "cursorPosition" : "16,113",
+        "cursorPosition" : "29,0",
         "docOutlineVisible" : "0",
-        "scrollLine" : "0"
+        "scrollLine" : "1"
     },
     "read_only" : false,
     "read_only_alternatives" : [
