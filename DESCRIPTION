@@ -1,7 +1,7 @@
 Package: rmdocpu
 Type: Package
 Title: Rmarkdown test for opencpu
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: 
     person(given = "Zhibin",
            family = "Ning",

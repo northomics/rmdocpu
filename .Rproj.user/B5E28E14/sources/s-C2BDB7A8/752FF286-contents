@@ -22,17 +22,17 @@ render_rmd_url <- function(rmd_url){
 
 
 render_rmd_server <- function(rmd_file){
-  ## for test input.Rmd
+  ## for test use input.Rmd
   path_to_input <- system.file("rmd", rmd_file, package = "rmdocpu")
 
-  ##myfile <- readLines(path_to_input)
-  #writeLines(myfile, con="input.Rmd");
-  #rmarkdown::render("input.Rmd",output_format = "html_document", output_file="output.html")
+  myfile <- readLines(path_to_input)
+  writeLines(myfile, con="input.Rmd");
+  rmarkdown::render("input.Rmd",output_format = "html_document", output_file="output.html")
 
-  tempfolder <-  tempdir()
-  rmarkdown::render(path_to_input, output_format = "html_document",
-                    intermediates_dir = tempfolder, # the ocpu server does nothave
-                    output_file = "output.html")
+  #tempfolder <-  tempdir()
+  #rmarkdown::render(path_to_input, output_format = "html_document",
+  #                  intermediates_dir = tempfolder, # the ocpu server does nothave
+  #                  output_file = "output.html")
 
 
   invisible()
