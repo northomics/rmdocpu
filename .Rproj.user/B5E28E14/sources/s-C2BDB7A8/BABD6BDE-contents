@@ -1,0 +1,365 @@
+## app.R ##
+# playtable
+
+# >run preparation -------------------------------------------------------------
+
+# this is the option for my project, universal
+options(stringsAsFactors = FALSE)
+options(scipen=10)
+options(shiny.maxRequestSize=30*1024^2) # change default maximun size from default 5M to 30M
+
+
+source("subfunctions_general.r",local = TRUE)
+source("subfunctions_general_update.r",local = TRUE)
+source("shiny_modules.R",local = TRUE)
+
+#install.packages(shinysky)  # install but do not library
+# do not load the whole shinysky library, which will make the buttons ugly
+install.packages.auto(shinydashboard)
+install.packages.auto(shiny)
+install.packages.auto(htmlwidgets)
+install.packages.auto(DT) # for table
+install.packages.auto(ggplot2)
+install.packages.auto(plotly)
+install.packages.auto(colourpicker)
+install.packages.auto(d3heatmap) # for heatmap
+install.packages.auto(reshape2)
+install.packages.auto(GGally) # for paried
+install.packages.auto(ggcorrplot) # for correlation plot
+install.packages.auto(gplots) # heatmap.2
+install.packages.auto(shinyBS)
+install.packages.auto(shinyWidgets)
+
+
+
+
+#  _header ------------------------------------------------------
+
+
+header <- dashboardHeader(title = span(img(src="logo_imetalab.png", width = 150), "Play Figure"),
+                          titleWidth = 300,
+                          tags$li(class = "dropdown",
+                                  tags$a(href="www.imetalab.ca", target="_blank", 
+                                         tags$img(height = "18px", alt="SNAP Logo", src="logo_M.png")
+                                  )
+                          )
+)
+
+#  _side bar ------------------------------------------------------
+
+sidebar <- dashboardSidebar(
+  width = 250,
+  sidebarMenu(
+    id = "tabs",
+    menuItem("Upload Data", tabName = "dashboard", icon = icon("dashboard")),
+    sidebarMenuOutput("menu"),
+    menuItem("Gallery", tabName = "gallery", icon = icon("picture-o")),
+    menuItem("About", tabName = "about", icon = icon("info-circle")),
+    menuItem("iMetaLab", icon = icon("home"), 
+             href = "http://www.imetalab.ca")
+    
+  )
+)
+
+
+# _body --------------------------------------------------------------
+
+
+body <- dashboardBody(
+  tags$head(tags$link(rel = "shortcut icon", href = "logo_M.png")), # for favorcon
+  title = "Platable",
+  tabItems(
+    #  __ Panel: start------------------------------------------------------
+    tabItem(tabName = "dashboard",
+            fluidRow(
+                    box(solidHeader = TRUE,
+                        title = "Choose diagram to plot", 
+                        status = "primary", 
+                        width = 12,
+                        # _____ select type --------------------------------------
+                        column(6, 
+                               radioGroupButtons("select_diagram_type", 
+                                                 label = NULL, choices = c(
+                                                   "Circos plot from interaction matrix", 
+                                                   "Circos plot from interaction list", 
+                                                   "Sankey plot from interaction matrix", 
+                                                   "Sankey plot from interaction list",
+                                                   "3D scatter plot from xyz data"
+                                                   ), justified = FALSE
+                                                 # , 
+                                                 # checkIcon = list(yes = icon("ok", 
+                                                 #                             lib = "glyphicon"))
+                                                 ),
+                               br(),
+                               # awesomeCheckbox(inputId = "load_sample_Data", 
+                               #                 label = "Proceed with sample data", 
+                               #                 value = FALSE),
+                               radioButtons(inputId = "data_source", 
+                                            label = "Choose data to start", 
+                                            c("Upload data", "Sample dataset"),
+                                            selected = "Upload data")),
+                        column(6,
+                               # _____ condition image --------------------------------------
+                               conditionalPanel(
+                                 condition = "input.select_diagram_type == 'Circos plot from interaction matrix' 
+                                 || input.select_diagram_type == 'Circos plot from interaction list'",
+                                   img(src='gallery/circos.PNG', align = "left")
+                               ),
+                               conditionalPanel(
+                                 condition = "input.select_diagram_type == 'Sankey plot from interaction matrix'",
+                                 img(src='gallery/sankey.PNG', align = "left")
+                               ),
+                               conditionalPanel(
+                                 condition = "input.select_diagram_type == 'Sankey plot from interaction list'",
+                                 img(src='gallery/sankey2.PNG', align = "left")
+                               ),
+                               conditionalPanel(
+                                 condition = "input.select_diagram_type == '3D scatter plot from xyz data'",
+                                 img(src='gallery/3D_scatter.PNG', align = "left")
+                               )
+                            )
+                    )
+            ), 
+            fluidRow(
+              box(
+                width = 12,
+                status = "primary",
+                solidHeader = TRUE,
+                column(4,
+                       # _____ upload data ui --------------------------------------
+                       conditionalPanel(
+                         condition = "input.data_source == 'Upload data'",
+                         UPLOAD_TABLE_UI("data_table_upload", boxwidth = 12, rownames = FALSE) # this is for data file
+                       ),
+                       #UPLOAD_TABLE_UI("data_table_upload", boxwidth = 12), # this is for data file
+                       conditionalPanel(
+                         condition = "output.data_table_upload_status",
+                         box(
+                           width = 12,
+                           status = "primary",
+                           solidHeader = TRUE,
+                           checkboxInput("if_preprocess_data", 'Process data matrix before plotting?', FALSE),
+                           actionButton("goto_data_plotting", 
+                                        icon = icon("arrow-right"),
+                                        label = "Go to plotting",
+                                        style="float:right; color: #fff; background-color: #337ab7; border-color: #2e6da4"
+                           ),
+                           bsTooltip("goto_data_plotting", "Do not click before you see the table loaded and displayed below",
+                                     "left", options = list(container = "body"))
+                         )
+                         
+                       )
+                       ),
+                column(8,
+                       # _____ data table dispaly ui --------------------------------------
+                       conditionalPanel(
+                         condition = "output.data_table_upload_status",
+                         DATATABLE_Display_UI("data_table_display",boxwidth = 12)
+                       )
+                       )
+              
+              
+            ) 
+            ),
+            # _____ meta data upload and display --------------------------------------
+            # this is for meta data if needs
+            conditionalPanel(
+              condition = "input.select_diagram_type == 'something needs'",
+              fluidRow(
+                UPLOAD_TABLE_UI("meta_data",boxwidth = 4, boxtitle = "upload meta data"),
+                DATATABLE_Display_UI("meta_data_display", boxwidth = 8)
+              )
+              
+            ),
+            # fluidrow for data upload ends
+            # _____ for data pre-process --------------------------------------
+            fluidRow(
+            conditionalPanel(
+              condition = "input.if_preprocess_data",
+              datatableProcess_UI("data_table_preprocess",boxtitle = "Data table pre-process", boxwidth = 12)
+            )),
+            
+            shinysky::busyIndicator(text = "Loading, please wait ...",
+                                    img = "ajaxloaderq.gif",
+                                    wait = 500) 
+    ),
+    
+
+    
+    #  __ Panel:  plotting------------------------------------------------------
+    
+    
+    tabItem(tabName = "plottings",
+           fluidRow(
+             column(12,
+                    # _____ for circos plot --------------------------------------
+                    conditionalPanel(
+                      condition = "input.select_diagram_type == 'Circos plot from interaction matrix'",
+                      ADJACENCY_MATRIX_LIST_CIRCOS_UI("circos_plot_matrix")
+                    ),
+                    conditionalPanel(
+                      condition = "input.select_diagram_type == 'Circos plot from interaction list'",
+                      ADJACENCY_MATRIX_LIST_CIRCOS_UI("circos_plot_list")
+                    ),
+                    
+                    # _____ for sankey --------------------------------------
+                    conditionalPanel(
+                      condition = "input.select_diagram_type == 'Sankey plot from interaction matrix'",
+                      SANKEY_UI("sankey_plot_matrix")
+                    ),
+                    conditionalPanel(
+                      condition = "input.select_diagram_type == 'Sankey plot from interaction list'",
+                      SANKEY_UI("sankey_plot_list")
+                    ),
+                    
+                    
+                    # _____ for 3D plot --------------------------------------
+                    conditionalPanel(
+                      condition = "input.select_diagram_type == '3D scatter plot from xyz data'",
+                      SCATTER_3D_UI("3d_scatter")
+                    )
+                    )
+           )
+    ),
+
+    source("sources/ui_pannel_gallery.R", local = FALSE)$value,
+    source("sources/ui_pannel_about.R", local = FALSE)$value
+  ),
+  
+  
+  #   CSS section ignore for analysis
+  tags$head(
+    tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
+  ),
+  #Semi-collapsible sidebar
+  tags$script(HTML("$('body').addClass('sidebar-mini');"))
+ 
+)
+
+
+server <- function(input, output, session) {
+  #  __ get data_table ------------------------------------------------------
+  data_table <- reactive({
+    if(input$data_source == "Sample dataset"){
+      switch(input$select_diagram_type,
+             "Circos plot from interaction matrix" = {
+               as.matrix(read.delim("www/taxon_function_table.txt", row.names = 1))
+             },
+             "Circos plot from interaction list" = {
+               read.delim("www/data_for_sankey_list.txt", header =  TRUE, row.names = 1)
+             },
+             "Sankey plot from interaction matrix" = {
+               mat = matrix(sample(100,9), 3)
+               rownames(mat) = letters[1:3]
+               colnames(mat) = LETTERS[1:3]
+               mat
+             },
+             "Sankey plot from interaction list" = {
+               #data.frame(from =  sample(LETTERS, 20),to =  sample(letters, 20), intenisty = sample(100,20))
+               read.delim("www/data_for_sankey_list.txt", header =  TRUE, row.names = 1)
+             },
+             
+             "3D scatter plot from xyz data" = iris
+
+             )
+      
+    }else{
+      withConsoleRedirect("console_error",{
+        callModule(UPLOAD_TABLE, "data_table_upload", display_after = FALSE) # call this within the withConsoleRedirect will catch the error message and display
+      })
+    }
+     
+
+  })
+
+
+  
+  # mark the data table status
+  output$data_table_upload_status <- reactive({
+    return(!is.null(data_table()))
+  })
+  outputOptions(output, 'data_table_upload_status', suspendWhenHidden=FALSE)
+  
+  
+  
+  #_____ for data prepocess--------------------------------------
+  rvalues <- reactiveValues()
+  
+  observe({
+    if(input$if_preprocess_data){
+      # the logic is that if user choose to process data, call the modue, take the returned value
+      # otherwise setup a conduct/pipe
+      
+      Data_processed <- callModule(datatableProcess, "data_table_preprocess", data_table())
+    }else{
+      Data_processed <- reactive({data_table()})
+    }
+    
+    # put the returned reacitve expression into new reative values list, for easy downstream useages
+    rvalues$Data_processed <- Data_processed()
+    
+    # display the table
+    callModule(DATATABLE_Display, "data_table_display",
+               data_table = rvalues$Data_processed,
+               filename_tag = "data_table",
+               height = 300)
+    
+    
+    
+  })
+  
+
+  output$menu <- renderMenu({
+    if (!is.null(data_table())) {
+      sidebarMenu(
+        menuItem("Plot Diagram", tabName = "plottings", icon = icon("bar-chart"))
+      )
+    }
+  })
+
+
+  #_____ plottings--------------------------------------
+
+  observe({
+    if(!is.null(rvalues$Data_processed)){
+      switch(input$select_diagram_type,
+             
+             "Circos plot from interaction matrix" = {callModule(ADJACENCY_MATRIX_LIST_CIRCOS, "circos_plot_matrix", data = rvalues$Data_processed, type = "matrix")},
+             "Circos plot from interaction list" = {callModule(ADJACENCY_MATRIX_LIST_CIRCOS, "circos_plot_list", data = rvalues$Data_processed, type = "list")},
+             
+             "Sankey plot from interaction matrix" = {callModule(SANKEY, "sankey_plot_matrix", data = rvalues$Data_processed, type = "matrix")},
+             "Sankey plot from interaction list" = {callModule(SANKEY, "sankey_plot_list", data = rvalues$Data_processed, type = "list")},
+             "3D scatter plot from xyz data" = {callModule(SCATTER_3D, "3d_scatter", data_frame = rvalues$Data_processed)}
+             
+             
+      )
+    }
+    
+    
+  })
+  
+  #__ switch tab--------------------------------------
+  
+  observeEvent(
+    input$goto_data_plotting, {
+      updateTabItems(session, "tabs", "plottings")
+    }
+  )
+  
+} 
+
+
+
+
+#  App entrance: main  ------------------------------------------------------
+
+ui <- dashboardPage(
+  title = "Play Figure", # this is going to be the title in the browser
+  header, 
+  sidebar, 
+  body 
+ )
+shinyApp(ui, server)
+
+
+

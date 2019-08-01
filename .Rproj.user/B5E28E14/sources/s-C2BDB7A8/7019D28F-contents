@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Send data table to server</title>
+    <meta charset="utf-8"/>
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <!--   <script src="js/jquery-1.10.2.min.js"></script> -->
+   
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    <script src="js/opencpu-0.4.js"></script>
+    <script src="js/metalab.js"></script>
+    <script src="mydata.json"></script>
+    <script>
+    
+      //set CORS to call "appdemo" package on public server
+      //ocpu.seturl("http://public.opencpu.org/ocpu/apps/rwebapps/appdemo/R")
+			//ocpu.seturl("http://206.12.91.148/ocpu/library/graphics/R");
+			
+			ocpu.seturl("http://206.12.91.148/ocpu/library/base/R");
+        
+      
+      
+    	var source_array_without_rowname = [["col1","col2", "col3", "col4"],
+    	        [1, 2, 3, 4],
+            	[0, 3, 13, 4],
+            	[1, 5, 13, 0],
+            	[2, 2, 13, 2],
+            	[2, 2, 16, 2]
+            	];
+  	  var source_array_with_rowname = [["rowname","col1","col2", "col3", "col4"],
+    	        ["row1",1, 2, 3, 4],
+            	["row2",0, 3, 13, 4],
+            	["row3",1, 5, 13, 0],
+            	["row4",2, 2, 13, 2],
+            	["row5",2, 2, 16, 2]
+            	];
+            	
+            	
+      var source_json_object = {
+                                "row1":{"col1": 1, "col2": 2, "col3": 3, "col4": 4},
+                                "row2":{"col1": 0, "col2": 3, "col3": 13, "col4": 4},
+                                "row3":{"col1": 1, "col2": 5, "col3": 13, "col4": 0},
+                                "row4":{"col1": 2, "col2": 2, "col3": 13, "col4": 2},
+                                "row4":{"col1": 2, "col2": 2, "col3": 16, "col4": 2}
+                                }
+   	
+      
+
+      
+          
+       //init this script when the page has loaded
+       $(document).ready(function(){
+                
+          // console.log("Array length is: "+source_array_without_rowname.length);
+          // console.log("Array width is: "+source_array_without_rowname[1].length);
+          // console.log(source_array_without_rowname[1].length);
+                  
+                //simply output the two dimenstion array, using \n to joint the first layer of elements
+                 //console.log(source_array.join('\n'));
+                
+                // a better way is uing console.table
+                console.log("Orignal array of array table without row names:");
+                console.table(source_array_without_rowname)
+
+                console.log("Orignal array of array table with row names:");
+                console.table(source_array_with_rowname)
+
+
+
+                // change the input 
+                	//$("#input").text(source_array); 
+                	$("#input1").DataTable(
+                	  {data:source_array_without_rowname,
+                	   columns:[null, null, null, null]
+                	  }
+                	  );
+                	  
+               	$("#input2").DataTable(
+                	  {data:source_array_with_rowname,
+                	   columns:[null, null, null, null, null]
+                	  }
+                	  );               	  
+                	  
+
+                // to json, using the self defined function or someother ways
+                 var target_json = array2object(source_array_with_rowname); 
+                 
+                 
+
+     
+                 console.log("json formated table is:");
+                 console.table(target_json)
+                 
+                 
+                 //console.log(target_json.toString())
+                 
+                //	$("#input2").DataTable(
+                //    	  {data:target_json,
+                //    	   columns:[null, null, null, null]
+                //    	  }
+                //  )
+  
+                
+                $("#submitbutton").on("click", function(){
+                  
+                  //disable the button to prevent multiple clicks
+                  $("#submitbutton").attr("disabled", "disabled");
+                  
+                  //read the value for 'myname'
+                  //var nfield = parseInt($("#nfield").val());
+                  //var distfield = $("#distfield").val();
+
+                  var req = ocpu.call(
+                    "t",
+                    {x:target_json},
+
+                    function(session){ // call back function
+                			session.getConsole(function(outtxt){
+                				//$("#output").text(outtxt); 
+              				  console.log(outtxt);
+              				  $("#output").text(outtxt); 
+                			});
+                	  console.log("returned session is ",session)
+                			
+                		}
+                    
+                  )
+                 
+          
+                  //if R returns an error, alert the error message
+                  req.fail(function(){
+                    alert("Server error: " + req.responseText);
+                  });
+                  
+                  //after request complete, re-enable the button 
+                  req.always(function(){
+                    $("#submitbutton").removeAttr("disabled")
+                  });
+                });
+              });
+                    
+  
+    </script>
+  
+    <style>
+      
+      #plotdiv {
+        height: 400px;
+        border: solid gray 1px;
+      }
+      
+    </style>
+    
+    
+    
+  </head>
+
+  <body>
+      
+      <h1>Send data table to server for processing</h1>
+      
+      <!--
+      
+      <b>n (count) </b> <input type="number" id="nfield" value="1000">
+      
+      <b>distribution type</b> <select id="distfield">
+      <option>normal</option>
+      <option>uniform</option>
+      </select> <br>
+      -->
+      
+
+      <h3>This page demonstrate how to deliver a data table by javascript to opencpu. </h3>
+      
+      <h3> Press F12 to open the browser console to see more details</h3>
+
+
+      <p><b>In the backend of opencpu server, R uses jsonlite::fromJSON and jasonlite::toJSON 
+      to change the format of all data (parameters) back and forth connecting each http ocpu request. 
+      All data, including data table has to be passed to ocpu server using json. Most of the time, 
+      we only need to pass very simple parameter list. but some time we start from a tsv/csv table, 
+      and would like to pass it to R for further processment. </b></p>
+      
+      <p><b>There are two ways to load data table, one is using file input, which is easiest to implement, and pass to the ocpu. It is a relative path which is delivered to the server. In order to use this way, you need to either wrap your target function along with a file reading function (read.csv et) or call open ocpu multiple times.(of course you need to seturl multiple times, because read.csv is not in the same path with your own library). The other way is to read in a table (either by file input or by loading a array of array in json format by sourcing), then the json formated array is converted to a json object with column and row names options, then the object is directly passed to opencpu call</b></p>
+      
+      <p>For data table, the format is like this:  tsv--> </p>
+        
+      <pre>
+         (The following code is from https://www.opencpu.org/api.html)
+          library(jsonlite)
+          args <- fromJSON('{"n":3, "mean": 10, "sd":10}')
+          output <- do.call(stats::rnorm, args)
+          toJSON(output)
+      
+      </pre>
+
+      <h3>Input: array of array without row names</h3>
+      <table id="input1">  </table>  
+      
+      <h3>Input array of array with row names</h3>
+      <table id="input2">  </table>  
+      
+      
+      <h3>Output object</h3>
+      <table id="output2">  </table>  
+      
+      
+      
+      <button id="submitbutton" type="button">Submit table to opencpu server to see the return of transpose</button> <br>
+      
+      
+      <h3>Output from R</h3>
+      <pre id="output"></pre>  
+ 
+
+  
+  
+  </body>
+
+</html>

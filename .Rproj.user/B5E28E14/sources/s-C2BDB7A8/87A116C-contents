@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>OpenCPU Markdown App</title>
+    
+<script src="underscore-min.js"></script>    
+<script src="jquery-1.10.2.min.js"></script>
+<script src="opencpu-0.5.js"></script>
+<script src="src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+
+<script>
+$(function(){
+  var editor = ace.edit("editor");
+  editor.setTheme("ace/theme/monokai");
+  editor.getSession().setMode("ace/mode/r");
+  editor.setFontSize("14px");
+
+  //This app requires OpenCPU 1.0.1 or higher!
+  
+   //ocpu.seturl("http://localhost:5656/ocpu/library/markdownapp/R");
+   //ocpu.seturl("http://206.12.91.148/ocpu/library/markdownapp/R");
+   ocpu.seturl("http://206.12.91.148/ocpu/library/rmdocpu/R");
+   
+  function domarkdown(e){
+    var req = ocpu.call(
+      //"rmdtext", {text : editor.getSession().getValue()}, 
+      "render_rmd_url",{rmd_url : 'https://raw.githubusercontent.com/ningzhibin/metalab/master/inst/rmd/input.Rmd'},
+      //"render_rmd_server",{rmd_file: 'input.Rmd'},
+    function(session){
+      
+    console.log(session);
+    //console.log(session.loc); 
+    //console.log(session.txt); 
+    //console.log(session.output); 
+    
+		//console.log(session.getFileURL("output.html"));
+		
+		//console.log(session.getFile("output.html"));
+		
+		//session.getObject(function(data){
+		//			console.log(data);
+		//});
+
+		
+		
+		 	session.getConsole(function(outtxt){
+				console.log(outtxt);
+  			});
+		
+		
+		
+      $("iframe").attr('src', session.getFileURL("output.html"));     
+    }).fail(function(text){
+      alert("Error: " + req.responseText);
+    });
+  }
+
+  //auto run after 2 seconds of no activity
+  var update = _.debounce(domarkdown, 2000);
+  
+  //register event
+  editor.on("change", update);
+  
+  //init on start
+  domarkdown();  
+});
+</script>
+
+<style type="text/css" media="screen">
+ 
+#editor { 
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 50%;
+  height: 100%;
+}
+
+iframe { 
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 50%;
+  height: 100%;
+  border: 0;
+  margin: 0;
+  z-index: 999999;
+}
+
+</style>
+</head>
+<body>
+  
+  <div>
+    
+      <h1>Uploading a CSV File</h1>
+      
+      <b>Upload File:</b> 
+      
+      <input type="file" id="csvfile"> 
+      
+      <br/>
+      <b>First line as header?</b> 
+        
+        <input type="radio" name = "header" value="true" checked="checked">yes
+        <input type="radio" name = "header" value="false">no
+        
+        <br>
+        
+      <b>Separator:</b> 
+        <input type="radio" name = "separator" value= "&#09;" checked="checked" >tab( .tsv)
+        <input type="radio" name = "separator" value= "," >comma( .csv)
+        
+      
+      <br />
+      <button id="submitbutton_upload" type="button">read.csv</button>
+      <pre><code id="output"></code></pre>
+    
+    
+  </div>  
+  
+  
+  <div>
+    <div id="editor">
+    
+      The Normal Distribution
+      
+      =======================
+      > Output automatically refreshes 5 seconds after editing markdown!
+      
+      The normal (or Gaussian) distribution is defined as follows:
+      
+      $$latex
+      f(x;\mu,\sigma^2) = \frac{1}{\sigma\sqrt{2\pi}} 
+      e^{ -\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2 }
+      $$
+      
+      To generate random draws from a normal distribution we use the **rnorm** function:
+      
+      ```{r block1}
+      output <- rnorm(1000, 100, 15);
+      ```
+      
+      The normal distribution has the typical bell shape:
+      
+      ```{r block2, fig.width=8, fig.height=5}
+      library(ggplot2)
+      qplot(output)
+      ```
+      
+      ## Kernel density estimation
+      
+      We can perform density estimation on the sample:
+      
+      ```{r block3, fig.width=8, fig.height=5}
+      plot(density(output))
+      ``` 
+      
+      ## Carl Friedrich Gauß
+      
+      This little guy had something to do with it
+      
+      !['Gauss'](https://goo.gl/eXN77h)
+    </div>
+  <div>
+
+
+
+<iframe src="about:blank"></iframe>
+
+</body>
+</html>

@@ -1,0 +1,55 @@
+---
+title: Paramterized Rmarkdown
+output: html_document
+params:  # note that the value is the real value
+  data: !r mtcars # only define the value if you do not want to use interactive interface to knit
+---
+
+
+# how to render a parameterized rmarkdown 
+
+
+
+## This is the orignal link for this tutorial
+
+refer to for more detailed infromation
+
+https://bookdown.org/yihui/rmarkdown/params-knit.html#knit-with-custom-parameters
+
+
+
+
+## this is how you knit the markdown with defined YAML 
+
+```{r eval= FALSE}
+rmarkdown::render("MyDocument_table.Rmd", params = list(data =  iris))
+
+```
+
+
+
+```{r}
+dim(params$data)
+colnames(params$data)
+
+
+```
+
+
+
+
+## can it be used in shiny or openCPU?
+
+it looks like so, onece a button is pressed,  do the render, and then include the html in the shiny
+
+
+for sure in opencpu, 
+
+will figure out the way to do this
+
+
+
+
+
+
+

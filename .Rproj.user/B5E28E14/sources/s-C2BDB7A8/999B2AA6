@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1564586050138.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "999B2AA6",
+    "lastKnownWriteTime" : 1564521034,
+    "last_content_update" : 1564521034,
+    "path" : "C:/Users/Figeys Lab/Dropbox/Project_Rlearning/MQ_summary/app.R",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "385,41",
+        "scrollLine" : "357"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
