@@ -37,8 +37,6 @@ source("https://raw.githubusercontent.com/ningzhibin/rmdocpu/master/inst/subfunc
 library(tidyverse)
 library(ggplot2)
 #library(plotly)
-#library(jsonlite)
-
 
 
 # rmarkdown::render("MQ_report_summary_ocpu.Rmd", params = list(summary_file_tbl =  your_readin_tbl))
@@ -110,7 +108,7 @@ exp <- summary_file_summary$summary_experiment
 p <-ggplot(data=exp, aes(x=`Raw file`, y=`Peptide Sequences Identified`)) +
   geom_bar(stat="identity") + coord_flip()
 
-ggplotly(p)
+plotly::ggplotly(p)
 
 ```
 
@@ -123,7 +121,7 @@ check the averaged performance from all raw files:
 
 ```{r echo=FALSE}
 nrows <- nrow(summary_file_summary$summary_all)
-datatable(summary_file_summary$summary_all,options = list(pageLength = nrows))
+DT::datatable(summary_file_summary$summary_all,options = list(pageLength = nrows))
 
 ```
 
