@@ -18,7 +18,7 @@ params:
 
 <style type="text/css">
 .main-container {
-  max-width: 1800px;
+  max-width: 1400px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -28,27 +28,22 @@ params:
 ```{r setup, include=FALSE}
 # enviroment setup
 knitr::opts_chunk$set(echo = FALSE,warning = FALSE, message = FALSE, cache = TRUE)
-# if you have a large file (large dataset to process) to knit, set cache = TRUE to speed up the test process
 
-source("https://raw.githubusercontent.com/ningzhibin/rmdocpu/master/inst/subfunctions_general.r")
-source("https://raw.githubusercontent.com/ningzhibin/rmdocpu/master/inst/subfunctions_general_update.r")
-
-#library(DT) # for interactive data table display 
 library(tidyverse)
 library(ggplot2)
 #library(plotly)
+#library(DT) # for interactive data table display 
 
-
+# local usage
 # rmarkdown::render("MQ_report_summary_ocpu.Rmd", params = list(summary_file_tbl =  your_readin_tbl))
+# on local machine, your_readin_tbl is a data table, while on ocpu, your_readin_tbl is a json formatted table
 
 
 ```
 
 
 
-
-
-```{r recho=FALSE}
+```{r function_needed recho=FALSE}
 
 tidy_MQ_summary <- function(df_summary.txt){
   
@@ -62,9 +57,9 @@ tidy_MQ_summary <- function(df_summary.txt){
   last_line <- last_line[which(!is.na(last_line[,1])),, drop =  FALSE]
   colnames(last_line) <- ("values")
   
-  # take out rows about raw files summary
   summary <- df_summary.txt[-nrow(df_summary.txt),] # remove the last line
-   
+  
+  # take out rows about raw files summary 
   df_rawfiles <-summary[!is.na(summary$Experiment),]
   
   # take out rows about experiment summary
@@ -79,22 +74,16 @@ tidy_MQ_summary <- function(df_summary.txt){
   
 }
 
-
 ```
 
 
 
-```{r title, echo=FALSE,fig.width= 15,fig.height=10}
-# only for debugging
+```{r file_summary, echo=FALSE,fig.width= 15,fig.height=10}
+# This line is only for debugging
 # summary_file  <- read_tsv("www/22122017_Colon_Aging_summary.txt", col_names = TRUE)
 
 # start from the data table for parametrized version
 summary_file_summary <- tidy_MQ_summary(params$summary_file_tbl)
-
-
-#t <- toJSON(summary_file)
-
-#tt <- paste0("data = ", t)
 
 
 ```
@@ -102,7 +91,7 @@ summary_file_summary <- tidy_MQ_summary(params$summary_file_tbl)
 
 # Identification by Experiment
 
-```{r id_by_experiment, echo=FALSE,fig.width= 10,fig.height=8}
+```{r id_by_experiment, echo=FALSE,fig.width= 8,fig.height=8}
 
 exp <- summary_file_summary$summary_experiment
 p <-ggplot(data=exp, aes(x=`Raw file`, y=`Peptide Sequences Identified`)) +
