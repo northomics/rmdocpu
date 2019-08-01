@@ -43,7 +43,7 @@ library(ggplot2)
 
 
 
-```{r function_needed recho=FALSE}
+```{r function_needed, recho=FALSE}
 
 tidy_MQ_summary <- function(df_summary.txt){
   
@@ -79,11 +79,17 @@ tidy_MQ_summary <- function(df_summary.txt){
 
 
 ```{r file_summary, echo=FALSE,fig.width= 15,fig.height=10}
-# This line is only for debugging
-# summary_file  <- read_tsv("www/22122017_Colon_Aging_summary.txt", col_names = TRUE)
+
+
 
 # start from the data table for parametrized version
 summary_file_summary <- tidy_MQ_summary(params$summary_file_tbl)
+
+# This line is only for debugging
+#summary_file  <- read_tsv("22122017_Colon_Aging_summary.txt", col_names = TRUE)
+#summary_file_summary <- tidy_MQ_summary(summary_file)
+
+
 
 
 ```
