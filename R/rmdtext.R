@@ -32,7 +32,7 @@ rmdtext <- function(text){
 #' @return no direct return, but write an output.html to the temp session on the opencpu server
 #' @seealso \code{\link{render}}  \code{\link{knit}}
 #' @examples
-#'   render_rmd_url("https://raw.githubusercontent.com/ningzhibin/metalab/master/inst/rmd/input.Rmd")
+#'   render_rmd_url("https://raw.githubusercontent.com/ningzhibin/rmdocpu/master/inst/rmd/input.Rmd")
 #' @export
 #'
 #'
@@ -40,7 +40,7 @@ rmdtext <- function(text){
 
 
 render_rmd_url <- function(rmd_url){
-  ## for test rmd_url https://raw.githubusercontent.com/ningzhibin/metalab/master/inst/rmd/input.Rmd
+  ## for test rmd_url https://raw.githubusercontent.com/ningzhibin/rmdocpu/master/inst/rmd/input.Rmd
   myfile <- RCurl::getURL(rmd_url)
   writeLines(myfile, con="input.Rmd");
   rmarkdown::render("input.Rmd",output_format = "html_document", output_file="output.html")
@@ -53,7 +53,8 @@ render_rmd_url <- function(rmd_url){
 #' wrapper function of rmarkdown::render for opencpu to render a report for maxquant summary
 #'
 #' This function works on the opencpu server end, to produce an html file to send to the front end to display.
-#' It also works on the stand alone mode, to generate a report file, output.html in the currrent folder, using a public accessible rmd file on github
+#' It also works on the stand alone mode, to generate a report file, output.html in the currrent folder, using a public accessible rmd file on github. Of course, this need internect connection to run
+#'
 #'
 #' @param data_table the table is a matrix/data.frame/tble on the server ond, json formted on the front ond opencpu will do the conversion automatically
 #'

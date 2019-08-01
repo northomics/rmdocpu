@@ -20,5 +20,5 @@ Three general wrapper function to work with opencpu, which can render source r m
   render_rmd_server(path_to_input)
 }
 \seealso{
-\code{\link{render}}
+\code{\link{render}}  \code{\link{knit}}
 }

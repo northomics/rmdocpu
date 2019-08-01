@@ -16,8 +16,8 @@ no direct return, but write an output.html to the temp session on the opencpu se
 Three general wrapper function to work with opencpu, which can render source r markdown code into html files, to be displacyed on the client end
 }
 \examples{
-  render_rmd_url("https://raw.githubusercontent.com/ningzhibin/metalab/master/inst/rmd/input.Rmd")
+  render_rmd_url("https://raw.githubusercontent.com/ningzhibin/rmdocpu/master/inst/rmd/input.Rmd")
 }
 \seealso{
-\code{\link{render}}
+\code{\link{render}}  \code{\link{knit}}
 }
