@@ -12,8 +12,8 @@ output:
       collapsed: TRUE
       smooth_scroll: TRUE
     number_sections: true
-params:  # note that the value is the real value, here supposed to be a read in data.table for one click function
-  data: !r mtcars # only define the value if you do not want to use interactive interface to knit    
+params:  
+  summary_file_tbl: !r mtcars ### note that the value is the real value, here supposed to be a read in data.table for one click function.  
 ---
 
 <style type="text/css">
@@ -38,7 +38,14 @@ library(tidyverse)
 library(ggplot2)
 #library(plotly)
 #library(jsonlite)
+
+
+
+# rmarkdown::render("MQ_report_summary_ocpu.Rmd", params = list(summary_file_tbl =  your_readin_tbl))
+
+
 ```
+
 
 
 
@@ -80,9 +87,11 @@ tidy_MQ_summary <- function(df_summary.txt){
 
 
 ```{r title, echo=FALSE,fig.width= 15,fig.height=10}
+# only for debugging
+# summary_file  <- read_tsv("www/22122017_Colon_Aging_summary.txt", col_names = TRUE)
 
-summary_file  <- read_tsv("www/22122017_Colon_Aging_summary.txt", col_names = TRUE)
-summary_file_summary <- tidy_MQ_summary(summary_file)
+# start from the data table for parametrized version
+summary_file_summary <- tidy_MQ_summary(params$summary_file_tbl)
 
 
 #t <- toJSON(summary_file)
@@ -101,7 +110,7 @@ exp <- summary_file_summary$summary_experiment
 p <-ggplot(data=exp, aes(x=`Raw file`, y=`Peptide Sequences Identified`)) +
   geom_bar(stat="identity") + coord_flip()
 
-plotly::ggplotly(p)
+ggplotly(p)
 
 ```
 
@@ -114,7 +123,7 @@ check the averaged performance from all raw files:
 
 ```{r echo=FALSE}
 nrows <- nrow(summary_file_summary$summary_all)
-DT::datatable(summary_file_summary$summary_all,options = list(pageLength = nrows))
+datatable(summary_file_summary$summary_all,options = list(pageLength = nrows))
 
 ```
 
