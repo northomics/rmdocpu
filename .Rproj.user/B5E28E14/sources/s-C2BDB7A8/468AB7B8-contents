@@ -68,7 +68,7 @@ render_rmd_url <- function(rmd_url){
 #'
 
 
-render_rmd_MQ_summary <- function(data_table){
+render_MQsummary <- function(data_table){
   ## for test rmd_url https://raw.githubusercontent.com/ningzhibin/rmdocpu/master/inst/rmd/MQ_report_summary.Rmd
   myfile <- RCurl::getURL("https://raw.githubusercontent.com/ningzhibin/rmdocpu/master/inst/rmd/MQ_report_summary.Rmd")
   writeLines(myfile, con="input.Rmd");
