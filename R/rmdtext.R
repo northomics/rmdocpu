@@ -59,9 +59,10 @@ render_rmd_url <- function(rmd_url){
 #' @param data_table the table is a matrix/data.frame/tble on the server ond, json formted on the front ond opencpu will do the conversion automatically
 #'
 #' @return no direct return, but write an output.html to the temp session on the opencpu server
-#' @seealso \code{\link{render}}  \code{\link{knit}}
+#' @seealso \code{\link{render}}  \code{\link{knit}} \code{\link{render_MQsummary_file}}
 #' @examples
-#'   render_rmd_MQ_summary()
+#'   summary_table  <- read_tsv("22122017_Colon_Aging_summary.txt", col_names = TRUE)
+#'   render_MQsummary(summary_table)
 #' @export
 #'
 #'
@@ -69,13 +70,45 @@ render_rmd_url <- function(rmd_url){
 
 
 render_MQsummary <- function(data_table){
-  ## for test rmd_url https://raw.githubusercontent.com/ningzhibin/rmdocpu/master/inst/rmd/MQ_report_summary.Rmd
   myfile <- RCurl::getURL("https://raw.githubusercontent.com/ningzhibin/rmdocpu/master/inst/rmd/MQ_report_summary.Rmd")
   writeLines(myfile, con="input.Rmd");
+
   rmarkdown::render("input.Rmd",output_format = "html_document", params = list(summary_file_tbl =  data_table), output_file="output.html")
+
   invisible()
 }
 
+
+#' wrapper function of rmarkdown::render for opencpu to render a report for maxquant summary
+#'
+#' This function works on the opencpu server end, to produce an html file to send to the front end to display.
+#' It also works on the stand alone mode, to generate a report file, output.html in the currrent folder, using a public accessible rmd file on github. Of course, this need internect connection to run
+#'
+#'
+#' @param file the file path, string is the tsv file, summary.txt
+#'
+#' @return no direct return, but write an output.html to the temp session on the opencpu server
+#' @seealso \code{\link{render}}  \code{\link{knit}} \code{\link{render_MQsummary}}
+#' @examples
+#'   # run locally
+#'   summary_file <-  "summary.txt"
+#'   render_MQsummary_file(summary_file)
+#' @export
+#'
+#'
+#'
+
+render_MQsummary_file <- function(file){
+
+  data_table  <- readr::read_tsv(file, col_names = TRUE)
+
+  myfile <- RCurl::getURL("https://raw.githubusercontent.com/ningzhibin/rmdocpu/master/inst/rmd/MQ_report_summary.Rmd")
+  writeLines(myfile, con="input.Rmd");
+
+  rmarkdown::render("input.Rmd",output_format = "html_document", params = list(summary_file_tbl =  data_table), output_file="output.html")
+
+  invisible()
+}
 
 
 
