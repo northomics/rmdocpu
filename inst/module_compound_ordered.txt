@@ -1,0 +1,833 @@
+M00001	 Glycolysis (Embden-Meyerhof pathway), glucose => pyruvate (16)  (complete)
+            C00267  alpha-D-Glucose
+            C00668  alpha-D-Glucose 6-phosphate
+            C05345  beta-D-Fructose 6-phosphate
+            C05378  beta-D-Fructose 1,6-bisphosphate
+            C00111  Glycerone phosphate
+            C00118  D-Glyceraldehyde 3-phosphate
+            C00236  3-Phospho-D-glyceroyl phosphate
+            C00197  3-Phospho-D-glycerate
+            C00631  2-Phospho-D-glycerate
+            C00074  Phosphoenolpyruvate
+            C00022  Pyruvate
+M00002	 Glycolysis, core module involving three-carbon compounds (8)  (complete)
+            C00111  Glycerone phosphate
+            C00118  D-Glyceraldehyde 3-phosphate
+            C00236  3-Phospho-D-glyceroyl phosphate
+            C00197  3-Phospho-D-glycerate
+            C00631  2-Phospho-D-glycerate
+            C00074  Phosphoenolpyruvate
+            C00022  Pyruvate
+M00003	 Gluconeogenesis, oxaloacetate => fructose-6P (13)  (complete)
+            C00036  Oxaloacetate
+            C00074  Phosphoenolpyruvate
+            C00631  2-Phospho-D-glycerate
+            C00197  3-Phospho-D-glycerate
+            C00236  3-Phospho-D-glyceroyl phosphate
+            C00118  (2R)-2-Hydroxy-3-(phosphonooxy)-propanal
+            C00111  Glycerone phosphate
+            C05378  beta-D-Fructose 1,6-bisphosphate
+            C05345  beta-D-Fructose 6-phosphate
+M00307	 Pyruvate oxidation, pyruvate => acetyl-CoA (10)  (complete)
+            C00022  Pyruvate
+            C00024  AcetylM00009	 Citrate cycle (TCA cycle, Krebs cycle) (25)  (complete)
+            C00024  Acetyl-CoA
+            C00036  Oxaloacetate
+            C00158  Citrate
+            C00311  Isocitrate
+            C00026  2-Oxoglutarate
+            C15972  Enzyme N6-(lipoyl)lysine
+            C16254  [Dihydrolipoyllysine-residue succinyltransferase] S-succinyldihydrolipoyllysine
+            C00091  Succinyl-CoA
+            C15973  Enzyme N6-(dihydrolipoyl)lysine
+            C00042  Succinate
+            C00122  Fumarate
+            C00149  (S)-Malate
+M00010	 Citrate cycle, first carbon oxidation, oxaloacetate => 2-oxoglutarate (4)  (complete)
+            C00036  Oxaloacetate
+            C00024  Acetyl-CoA
+            C00158  Citrate
+            C00311  Isocitrate
+            C00026  2-OxoglutaM00011	 Citrate cycle, second carbon oxidation, 2-oxoglutarate => oxaloacetate (21)  (complete)
+            C00026  2-Oxoglutarate
+            C15972  Enzyme N6-(lipoyl)lysine
+            C16254  [Dihydrolipoyllysine-residue succinyltransferase] S-succinyldihydrolipoyllysine
+            C00091  Succinyl-CoA
+            C15973  Enzyme N6-(dihydrolipoyl)lysine
+            C00042  Succinate
+            C00122  Fumarate
+            C00149  (S)-Malate
+            C00036  Oxaloacetate
+M00004	 Pentose phosphate pathway (Pentose phosphate cycle) (9)  (complete)
+            C01172  beta-D-Glucose 6-phosphate
+            C01236  D-Glucono-1,5-lactone 6-phosphate
+            C00345  6-Phospho-D-gluconate
+            C00199  D-Ribulose 5-phosphate
+            C00231  D-Xylulose 5-phosphate
+            C00117  D-Ribose 5-phosphate
+            C05382  Sedoheptulose 7-phosphate
+            C00118  D-Glyceraldehyde 3-phosphate
+            C00279  D-Erythrose 4-phosphate
+            C05345  beta-D-Fructose 6-phosphate
+            C00668  alpha-D-Glucose 6-phosphate
+M00006	 Pentose phosphate pathway, oxidative phase, glucose 6P => ribulose 5P (3)  (complete)
+            C01172  beta-D-Glucose 6-phosphate
+            C01236  D-Glucono-1,5-lactone 6-phosphate
+            C00345  6-Phospho-D-gluconate
+            C00199  D-Ribulose 5-phosphate
+M00007	 Pentose phosphate pathway, non-oxidative phase, fructose 6P => ribose 5P (5)  (complete)
+            C05345  beta-D-Fructose 6-phosphate
+            C00118  D-Glyceraldehyde 3-phosphate
+            C00279  D-Erythrose 4-phosphate
+            C00231  D-Xylulose 5-phosphate
+            C05382  Sedoheptulose 7-phosphate
+            C00117  D-Ribose 5-phosphate
+            C00199  D-Ribulose 5-phosphate
+M00580	 Pentose phosphate pathway, archaea, fructose 6P => ribose 5P (1)  (1 block missing)
+            C05345  beta-D-Fructose 6-phosphate
+            C06019  D-arabino-Hex-3-ulose 6-phosphate
+            C00199  D-Ribulose 5-phosphate
+            C00117  D-Ribose 5-phosphate
+M00005	 PRPP biosynthesis, ribose 5P => PRPP (1)  (complete)
+            C00117  D-Ribose 5-phosphate
+            C00119  5-Phospho-alpha-D-ribose 1-diphosphate
+M00008	 Entner-Doudoroff pathway, glucose-6P => glyceraldehyde-3P + pyruvate (3)  (1 block missing)
+            C01172  beta-D-Glucose 6-phosphate
+            C01236  D-Glucono-1,5-lactone 6-phosphate
+            C00345  6-Phospho-D-gluconate
+            C04442  2-Dehydro-3-deoxy-6-phospho-D-gluconate
+            C00118  D-Glyceraldehyde 3-phosphate
+            C00022  PyruM00308	 Semi-phosphorylative Entner-Doudoroff pathway, gluconate => glycerate-3P (4)  (1 block missing)
+            C00257  D-Gluconic acid
+            C00204  2-Dehydro-3-deoxy-D-gluconate
+            C04442  2-Dehydro-3-deoxy-6-phospho-D-gluconate
+            C00118  D-Glyceraldehyde 3-phosphate
+            C00022  Pyruvate
+            C00236  3-Phospho-D-glyceroyl phosphate
+            C00197  3-Phospho-D-glyceM00633	 Semi-phosphorylative Entner-Doudoroff pathway, gluconate/galactonate => glycerate-3P (0)  (incomplete)
+            C00257  D-Gluconic acid
+            C00204  2-Dehydro-3-deoxy-D-gluconate
+            C04442  2-Dehydro-3-deoxy-6-phospho-D-gluconate
+            C00118  D-Glyceraldehyde 3-phosphate
+            C00022  Pyruvate
+            C00197  3-Phospho-D-glycerate
+            C00880  D-Galactonate
+            C01216  2-Dehydro-3-deoxy-D-galactonate
+            C01286  2-Dehydro-3-deoxy-6-phospho-D-galactoM00309	 Non-phosphorylative Entner-Doudoroff pathway, gluconate/galactonate => glycerate (0)  (incomplete)
+            C00257  D-Gluconic acid
+            C00204  2-Dehydro-3-deoxy-D-gluconate
+            C00577  D-Glyceraldehyde
+            C00022  Pyruvate
+            C00880  D-Galactonate
+            C01216  2-Dehydro-3-deoxy-D-galactonate
+            C00258  D-GlyceM00014	 Glucuronate pathway (uronate pathway) (3)  (incomplete)
+            C00029  UDP-glucose
+            C00167  UDP-glucuronate
+            C05385  D-Glucuronate 1-phosphate
+            C00191  D-Glucuronate
+            C03033  beta-D-Glucuronoside
+            C00800  L-Gulonate
+            C00618  3-Dehydro-L-gulonate
+            C00312  L-Xylulose
+            C00379  Xylitol
+            C00310  D-Xylulose
+            C00231  D-Xylulose 5-phosphate
+M00630	 D-Galacturonate degradation (fungi), D-galacturonate => glycerol (0)  (incomplete)
+            C00333  D-Galacturonate
+            C15930  L-Galactonate
+            C20680  2-Dehydro-3-deoxy-L-galactonate
+            C02426  L-Glyceraldehyde
+            C00116  GlycM00631	 D-Galacturonate degradation (bacteria), D-galacturonate => pyruvate + D-glyceraldehyde 3P (5)  (complete)
+            C00333  D-Galacturonate
+            C00558  D-Tagaturonate
+            C00817  D-Altronate
+            C00204  2-Dehydro-3-deoxy-D-gluconate
+            C04442  2-Dehydro-3-deoxy-6-phospho-D-gluconate
+            C00022  Pyruvate
+            C00118  D-Glyceraldehyde 3-phospM00061	 D-Glucuronate degradation, D-glucuronate => pyruvate + D-glyceraldehyde 3P (5)  (complete)
+            C00191  D-Glucuronate
+            C00905  D-Fructuronate
+            C00514  D-Mannonate
+            C00204  2-Dehydro-3-deoxy-D-gluconate
+            C04442  2-Dehydro-3-deoxy-6-phospho-D-gluconate
+            C00022  Pyruvate
+            C00118  D-Glyceraldehyde 3-phospM00081	 Pectin degradation (1)  (2 blocks missing)
+            C00714  Pectin
+            C00470  Pectate
+            C02273  Digalacturonate
+            C00333  D-Galacturonate
+M00632	 Galactose degradation, Leloir pathway, galactose => alpha-D-glucose-1P (4)  (complete)
+            C00124  D-Galactose
+            C00984  alpha-D-Galactose
+            C00446  alpha-D-Galactose 1-phosphate
+            C00029  UDP-glucose
+            C00052  UDP-alpha-D-galactose
+            C00103  D-Glucose 1-phospM00552	 D-galactonate degradation, De Ley-Doudoroff pathway, D-galactonate => glycerate-3P (3)  (2 blocks missing)
+            C00880  D-Galactonate
+            C01216  2-Dehydro-3-deoxy-D-galactonate
+            C01286  2-Dehydro-3-deoxy-6-phospho-D-galactonate
+            C00118  D-Glyceraldehyde 3-phosphate
+            C00236  3-Phospho-D-glyceroyl phosphate
+            C00197  3-Phospho-D-glyceM00129	 Ascorbate biosynthesis, animals, glucose-1P => ascorbate (2)  (incomplete)
+            C00103  D-Glucose 1-phosphate
+            C00029  UDP-glucose
+            C00167  UDP-glucuronate
+            C03033  beta-D-Glucuronoside
+            C00191  D-Glucuronate
+            C00800  L-Gulonate
+            C01040  L-Gulono-1,4-lactone
+            C03289  L-xylo-Hexulonolactone
+            C00072  Ascorbate
+M00114	 Ascorbate biosynthesis, plants, glucose-6P => ascorbate (6)  (incomplete)
+            C00668  alpha-D-Glucose 6-phosphate 
+            C05345  beta-D-Fructose 6-phosphate
+            C00275  D-Mannose 6-phosphate
+            C00636  D-Mannose 1-phosphate
+            C00096  GDP-mannose
+            C02280  GDP-L-galactose
+            C15926  L-Galactose 1-phosphate
+            C01825  L-Galactose
+            C01115  L-Galactono-1,4-lactone
+            C00072  Ascorbate
+M00550	 Ascorbate degradation, ascorbate => D-xylulose-5P (4)  (incomplete)
+            C00072  Ascorbate
+            C16186  L-Ascorbate 6-phosphate
+            C14899  3-Dehydro-L-gulonate 6-phosphate
+            C03291  L-Xylulose 5-phosphate
+            C01101  L-Ribulose 5-phosphate
+            C00231  D-Xylulose 5-phospM00854	 Glycogen biosynthesis, glucose-1P => glycogen/starch (4)  (complete)
+            C00103  D-Glucose 1-phosphate
+            C00029  UDP-glucose
+            C00718  Amylose
+            C00498  ADP-glucose
+            C00369  Starch
+M00855	 Glycogen degradation, glycogen => glucose-6P (5)  (complete)
+            C00369  Starch
+            C00103  D-Glucose 1-phosphate
+            C00092  D-Glucose 6-phosphate
+M00565	 Trehalose biosynthesis, D-glucose 1P => trehalose (3)  (incomplete)
+            C00103  D-Glucose 1-phosphate
+            C00498  ADP-glucose
+            C00718  Amylose
+            C00369  Starch
+            C01935  Maltodextrin
+            C06400  Maltooligosyltrehalose
+            C01083  TrehaM00549	 Nucleotide sugar biosynthesis, glucose => UDP-glucose (4)  (complete)
+            C00267  alpha-D-Glucose
+            C00668  alpha-D-Glucose 6-phosphate
+            C00103  D-Glucose 1-phosphate
+            C00029  UDP-glucose
+M00554	 Nucleotide sugar biosynthesis, galactose => UDP-galactose (2)  (complete)
+            C00124  D-Galactose
+            C00446  alpha-D-Galactose 1-phosphate
+            C00052  UDP-D-galacM00761	 Undecaprenylphosphate alpha-L-Ara4N biosynthesis, UDP-GlcA => undecaprenyl phosphate alpha-L-Ara4N (1)  (incomplete)
+            C00167  UDP-glucuronate
+            C16155  UDP-L-Ara4O
+            C16153  UDP-L-Ara4N
+            C16154  UDP-L-Ara4FN
+            C16156  Undecaprenyl phosphate alpha-L-Ara4FN
+            C16157  Undecaprenyl phosphate alpha-L-AM00012	 Glyoxylate cycle (6)  (complete)
+            C00024  Acetyl-CoA
+            C00036  Oxaloacetate
+            C00158  Citrate
+            C00417  cis-Aconitate
+            C00311  Isocitrate
+            C00048  Glyoxylate
+            C00149  (S)-Malate
+M00373	 Ethylmalonyl pathway (4)  (incomplete)
+            C00024  Acetyl-CoA
+            C00332  Acetoacetyl-CoA
+            C03561  (R)-3-Hydroxybutanoyl-CoA
+            C00877  Crotonoyl-CoA
+            C18026  (2S)-Ethylmalonyl-CoA
+            C20238  (2R)-Ethylmalonyl-CoA
+            C18324  (2S)-Methylsuccinyl-CoA
+            C06028  2-Methylfumaryl-CoA
+            C06027  L-erythro-3-Methylmalyl-CoA
+            C00100  Propanoyl-CoA
+            C00048  Glyoxylate
+            C04348  L-Malyl-CoA
+            C00149  (S)-Malate
+            C00683  (S)-Methylmalonyl-CoA
+            C01213  (R)-Methylmalonyl-CoA
+            C00091  SuccinylM00740	 Methylaspartate cycle (8)  (incomplete)
+            C00036  Oxaloacetate
+            C00024  Acetyl-CoA
+            C00158  Citrate
+            C00417  cis-Aconitate
+            C00311  Isocitrate
+            C05379  Oxalosuccinate
+            C00026  2-Oxoglutarate
+            C00025  L-Glutamate
+            C03618  L-threo-3-Methylaspartate
+            C01732  Mesaconate
+            C06028  2-Methylfumaryl-CoA
+            C06027  L-erythro-3-Methylmalyl-CoA
+            C00048  Glyoxylate
+            C04348  L-Malyl-CoA
+            C00149  (S)-MaM00532	 Photorespiration (6)  (incomplete)
+            C01182  D-Ribulose 1,5-bisphosphate
+            C00988  2-Phosphoglycolate
+            C00197  3-Phospho-D-glycerate
+            C00160  Glycolate
+            C00007  Oxygen
+            C00048  Glyoxylate
+            C00027  Hydrogen peroxide
+            C00025  L-Glutamate
+            C00026  2-Oxoglutarate
+            C00037  Glycine
+            C00065  L-Serine
+            C00168  Hydroxypyruvate
+            C00258  D-Glycerate
+            C00014 M00013	 Malonate semialdehyde pathway, propanoyl-CoA => acetyl-CoA (1)  (incomplete)
+            C00100  Propanoyl-CoA
+            C00894  Propenoyl-CoA
+            C05668  3-Hydroxypropionyl-CoA
+            C01013  3-Hydroxypropanoate
+            C00222  3-Oxopropanoate
+            C00024  AcetylM00741	 Propanoyl-CoA metabolism, propanoyl-CoA => succinyl-CoA (5)  (1 block missing)
+            C00100  Propanoyl-CoA
+            C00683  (S)-Methylmalonyl-CoA
+            C01213  (R)-Methylmalonyl-CoA
+            C00091  Succinyl-CoA
+M00130	 Inositol phosphate metabolism, PI=> PIP2 => Ins(1,4,5)P3 => Ins(1,3,4,5)P4 (0)  (incomplete)
+            C01194  1-Phosphatidyl-D-myo-inositol
+            C01277  1-Phosphatidyl-1D-myo-inositol 4-phosphate
+            C04637  1-Phosphatidyl-D-myo-inositol 4,5-bisphosphate
+            C01245  D-myo-Inositol 1,4,5-trisphosphate
+            C01272  1D-myo-Inositol 1,3,4,5-tetrakisphosphate
+M00131	 Inositol phosphate metabolism, Ins(1,3,4,5)P4 => Ins(1,3,4)P3 => myo-inositol (1)  (incomplete)
+            C01272  1D-myo-Inositol 1,3,4,5-tetrakisphosphate
+            C01243  1D-myo-Inositol 1,3,4-trisphosphate
+            C04063  D-myo-Inositol 3,4-bisphosphate
+            C04006  1D-myo-Inositol 3-phosphate
+            C00137  myo-Inositol
+M00132	 Inositol phosphate metabolism, Ins(1,3,4)P3 => phytate (0)  (incomplete)
+            C01243  1D-myo-Inositol 1,3,4-trisphosphate
+            C04477  1D-myo-Inositol 1,3,4,6-tetrakisphosphate
+            C01284  1D-myo-Inositol 1,3,4,5,6-pentakisphosphate
+            C01204  myo-Inositol hexakisphosphate
+M00165	 Reductive pentose phosphate cycle (Calvin cycle) (8)  (incomplete)
+            C00199  D-Ribulose 5-phosphate
+            C01182  D-Ribulose 1,5-bisphosphate
+            C00011  CO2
+            C00197  3-Phospho-D-glycerate
+            C00236  3-Phospho-D-glyceroyl phosphate
+            C00118  D-Glyceraldehyde 3-phosphate
+            C00354  D-Fructose 1,6-bisphosphate
+            C00085  D-Fructose 6-phosphate
+            C00279  D-Erythrose 4-phosphate
+            C00447  Sedoheptulose 1,7-bisphosphate
+            C05382  Sedoheptulose 7-phosphate
+            C00117  D-Ribose 5-phosphate
+M00166	 Reductive pentose phosphate cycle, ribulose-5P => glyceraldehyde-3P (2)  (2 blocks missing)
+            C00199  D-Ribulose 5-phosphate
+            C01182  D-Ribulose 1,5-bisphosphate
+            C00011  CO2
+            C00197  3-Phospho-D-glycerate
+            C00236  3-Phospho-D-glyceroyl phosphate
+            C00118  D-Glyceraldehyde 3-phosphate
+M00167	 Reductive pentose phosphate cycle, glyceraldehyde-3P => ribulose-5P (6)  (1 block missing)
+            C00118  D-Glyceraldehyde 3-phosphate
+            C00354  D-Fructose 1,6-bisphosphate
+            C00085  D-Fructose 6-phosphate
+            C00279  D-Erythrose 4-phosphate
+            C00447  Sedoheptulose 1,7-bisphosphate
+            C05382  Sedoheptulose 7-phosphate
+            C00117  D-Ribose 5-phosphate
+            C00199  D-Ribulose 5-phosphate
+M00168	 CAM (Crassulacean acid metabolism), dark (2)  (complete)
+            C00074  Phosphoenolpyruvate
+            C00011  CO2
+            C00036  Oxaloacetate
+            C00149  (S)-Malate
+M00169	 CAM (Crassulacean acid metabolism), light (2)  (complete)
+            C00149  (S)-Malate
+            C00022  Pyruvate
+            C00011  CO2
+            C00074  Phosphoenolpyruvate
+M00172	 C4-dicarboxylic acid cycle, NADP - malic enzyme type (3)  (1 block missing)
+            C00074  Phosphoenolpyruvate
+            C00011  CO2
+            C00036  Oxaloacetate
+            C00149  (S)-Malate
+            C00022  Pyruvate
+M00171	 C4-dicarboxylic acid cycle, NAD - malic enzyme type (2)  (incomplete)
+            C00074  Phosphoenolpyruvate
+            C00036  Oxaloacetate
+            C00049  L-Aspartate
+            C00149  (S)-Malate
+            C00022  Pyruvate
+            C00011  CO2
+            C00041  L-Alanine
+M00170	 C4-dicarboxylic acid cycle, phosphoenolpyruvate carboxykinase type (2)  (2 blocks missing)
+            C00074  Phosphoenolpyruvate
+            C00036  Oxaloacetate
+            C00049  L-Aspartate
+            C00011  CO2
+M00173	 Reductive citrate cycle (Arnon-Buchanan cycle) (30)  (1 block missing)
+            C00024  Acetyl-CoA
+            C00022  Pyruvate
+            C00074  Phosphoenolpyruvate
+            C00036  Oxaloacetate
+            C00149  (S)-Malate
+            C00122  Fumarate
+            C00042  Succinate
+            C00091  Succinyl-CoA
+            C00026  2-Oxoglutarate
+            C00311  Isocitrate
+            C00417  cis-Aconitate
+            C00158  Citrate
+            C00566  (3S)-CitrylM00376	 3-Hydroxypropionate bi-cycle (11)  (incomplete)
+            C00024  Acetyl-CoA
+            C00083  Malonyl-CoA
+            C00222  3-Oxopropanoate
+            C01013  3-Hydroxypropanoate
+            C05668  3-Hydroxypropionyl-CoA
+            C00894  Propenoyl-CoA
+            C00100  Propanoyl-CoA
+            C00683  (S)-Methylmalonyl-CoA
+            C01213  (R)-Methylmalonyl-CoA
+            C00091  Succinyl-CoA
+            C00042  Succinate
+            C00122  Fumarate
+            C00149  (S)-Malate
+            C04348  (3S)-3-Carboxy-3-hydroxypropanoyl-CoA
+            C00048  Glyoxylate
+            C06027  L-erythro-3-Methylmalyl-CoA
+            C06028  Mesaconyl-CoA
+            C18323  Mesaconyl-C4-CoA
+            C01011  (3S)-Citramalyl-CoA
+            C00022  PyruM00375	 Hydroxypropionate-hydroxybutylate cycle (5)  (incomplete)
+            C00024  Acetyl-CoA
+            C00083  Malonyl-CoA
+            C00222  3-Oxopropanoate
+            C01013  3-Hydroxypropanoate
+            C05668  3-Hydroxypropionyl-CoA
+            C00894  Propenoyl-CoA
+            C00100  Propanoyl-CoA
+            C00683  (S)-Methylmalonyl-CoA
+            C01213  (R)-Methylmalonyl-CoA
+            C00091  Succinyl-CoA
+            C00232  Succinate semialdehyde
+            C00989  4-Hydroxybutanoic acid
+            C11062  4-Hydroxybutyryl-CoA
+            C00877  Crotonoyl-CoA
+            C01144  (S)-3-Hydroxybutanoyl-CoA
+            C00332  AcetoacetylM00374	 Dicarboxylate-hydroxybutyrate cycle (17)  (incomplete)
+            C00024  Acetyl-CoA
+            C00022  Pyruvate
+            C00074  Phosphoenolpyruvate
+            C00036  Oxaloacetate
+            C00149  (S)-Malate
+            C00122  Fumarate
+            C00042  Succinate
+            C00091  Succinyl-CoA
+            C00232  Succinate semialdehyde
+            C00989  4-Hydroxybutanoic acid
+            C11062  4-Hydroxybutyryl-CoA
+            C00877  Crotonoyl-CoA
+            C01144  (S)-3-Hydroxybutanoyl-CoA
+            C00332  AcetoacetylM00377	 Reductive acetyl-CoA pathway (Wood-Ljungdahl pathway) (8)  (1 block missing)
+            C00011  CO2
+            C00237  CO
+            C00058  Formate
+            C00101  Tetrahydrofolate
+            C00234  10-Formyltetrahydrofolate
+            C00445  5,10-Methenyltetrahydrofolate
+            C00143  5,10-Methylenetetrahydrofolate
+            C00440  5-Methyltetrahydrofolate
+            C00024  AcetylM00579	 Phosphate acetyltransferase-acetate kinase pathway, acetyl-CoA => acetate (4)  (complete)
+            C00024  Acetyl-CoA
+            C00227  Acetyl phosphate
+            C00033  AceM00620	 Incomplete reductive citrate cycle, acetyl-CoA => oxoglutarate (14)  (2 blocks missing)
+            C00024  Acetyl-CoA
+            C00022  Pyruvate
+            C00036  Oxaloacetate
+            C00149  (S)-Malate
+            C00122  Fumarate
+            C00042  Succinate
+            C00091  Succinyl-CoA
+            C00026  2-OxoglutaM00567	 Methanogenesis, CO2 => methane (9)  (incomplete)
+            C00011  CO2
+            C01001  Formylmethanofuran
+            C01274  5-Formyl-5,6,7,8-tetrahydromethanopterin
+            C04330  5,10-Methenyltetrahydromethanopterin
+            C04377  5,10-Methylenetetrahydromethanopterin
+            C04488  5-Methyl-5,6,7,8-tetrahydromethanopterin
+            C03576  Coenzyme M
+            C03920  2-(Methylthio)ethanesulfonate
+            C04628  Coenzyme B
+            C01438  Methane
+            C04832  Coenzyme M 7-mercaptoheptanoylthreonine-phosphate heterodisulM00357	 Methanogenesis, acetate => methane (13)  (incomplete)
+            C00033  Acetate
+            C00227  Acetyl phosphate
+            C00024  Acetyl-CoA
+            C04488  5-Methyl-5,6,7,8-tetrahydromethanopterin
+            C03576  Coenzyme M
+            C03920  2-(Methylthio)ethanesulfonate
+            C04628  Coenzyme B
+            C01438  Methane
+            C04832  Coenzyme M 7-mercaptoheptanoylthreonine-phosphate heterodisulM00356	 Methanogenesis, methanol => methane (7)  (2 blocks missing)
+            C00132  Methanol
+            C03920  2-(Methylthio)ethanesulfonate
+            C04628  Coenzyme B
+            C01438  Methane
+            C04832  Coenzyme M 7-mercaptoheptanoylthreonine-phosphate heterodisulM00563	 Methanogenesis, methylamine/dimethylamine/trimethylamine => methane (7)  (incomplete)
+            C00218  Methylamine
+            C03920  2-(Methylthio)ethanesulfonate
+            C00543  Dimethylamine
+            C00565  Trimethylamine
+            C04628  Coenzyme B
+            C01438  Methane
+            C04832  Coenzyme M 7-mercaptoheptanoylthreonine-phosphate heterodisulM00358	 Coenzyme M biosynthesis (0)  (incomplete)
+            C00074  Phosphoenolpyruvate
+            C11536  (2R)-O-Phospho-3-sulfolactate
+            C11537  (2R)-3-Sulfolactate
+            C05528  3-Sulfopyruvate
+            C00593  Sulfoacetaldehyde
+            C03576  2-MercaptoethanesulfoM00608	 2-Oxocarboxylic acid chain extension, 2-oxoglutarate => 2-oxoadipate => 2-oxopimelate => 2-oxosuberate (0)  (incomplete)
+            C00026  2-Oxoglutarate
+            C00024  Acetyl-CoA
+            C01251  (R)-2-Hydroxybutane-1,2,4-tricarboxylate
+            C04002  (Z)-But-1-ene-1,2,4-tricarboxylate
+            C05662  Homoisocitrate
+            C00322  2-Oxoadipate
+            C16583  (R)-(Homo)2-citrate
+            C20581  cis-(Homo)2-aconitate
+            C16597  (-)-threo-Iso(homo)2-citrate
+            C16588  2-Oxopimelate
+            C16598  (R)-(Homo)3-citrate
+            C20582  cis-(Homo)3-aconitate
+            C16600  (-)-threo-Iso(homo)3-citrate
+            C16589  2-OxosubeM00174	 Methane oxidation, methanotroph, methane => formaldehyde (0)  (incomplete)
+            C01438  Methane
+            C00132  Methanol
+            C00067  FormaldeM00346	 Formaldehyde assimilation, serine pathway (6)  (incomplete)
+            C00037  Glycine
+            C00065  L-Serine
+            C00168  Hydroxypyruvate
+            C00258  D-Glycerate
+            C00631  2-Phospho-D-glycerate
+            C00074  Phosphoenolpyruvate
+            C00036  Oxaloacetate
+            C00149  (S)-Malate
+            C04348  (3S)-3-Carboxy-3-hydroxypropanoyl-CoA
+            C00048  GlyoxyM00345	 Formaldehyde assimilation, ribulose monophosphate pathway (3)  (1 block missing)
+            C00199  D-Ribulose 5-phosphate
+            C00067  Formaldehyde
+            C06019  D-arabino-Hex-3-ulose 6-phosphate
+            C00085  D-Fructose 6-phosphate
+            C00354  D-Fructose 1,6-bisphosphate
+            C00118  D-Glyceraldehyde 3-phosphate
+            C05345  beta-D-Fructose 6-phosphate
+            C05378  beta-D-Fructose 1,6-bisphospM00344	 Formaldehyde assimilation, xylulose monophosphate pathway (2)  (2 blocks missing)
+            C00067  Formaldehyde
+            C00184  Glycerone
+            C00111  Glycerone phosphate
+            C00354  D-Fructose 1,6-bisphosphate
+            C00085  D-Fructose 6-phospM00378	 F420 biosynthesis (0)  (incomplete)
+            C04732  5-Amino-6-(1-D-ribitylamino)uracil
+            C21971  5-Amino-5-(4-hydroxybenzyl)-6-(D-ribitylimino)-5,6-dihydrouracil
+            C19154  7,8-Didemethyl-8-hydroxy-5-deazariboflavin
+            C19156  (2S)-2-Phospholactate
+            C19155  (2S)-Lactyl-2-diphospho-5'-guanosine
+            C19153  Coenzyme F420-0
+            C19152  Coenzyme F420-1
+            C00876  Coenzyme M00422	 Acetyl-CoA pathway, CO2 => acetyl-CoA (2)  (incomplete)
+            C00011  CO2
+            C00237  CO
+            C00024  AcetylM00175	 Nitrogen fixation, nitrogen => ammonia (0)  (incomplete)
+            C00697  Nitrogen
+            C00014  AmmM00531	 Assimilatory nitrate reduction, nitrate => ammonia (0)  (incomplete)
+            C00244  Nitrate
+            C00088  Nitrite
+            C00014 M00530	 Dissimilatory nitrate reduction, nitrate => ammonia (4)  (incomplete)
+            C00244  Nitrate
+            C00088  Nitrite
+            C00014 M00529	 Denitrification, nitrate => nitrogen (3)  (incomplete)
+            C00244  Nitrate
+            C00088  Nitrite
+            C00533  Nitric oxide
+            C00887  Nitrous oxide
+            C00697  NitrM00528	 Nitrification, ammonia => nitrite (0)  (incomplete)
+            C00014  Ammonia
+            C00192  Hydroxylamine
+            C00088  NitM00804	 Complete nitrification, comammox, ammonia => nitrite => nitrate (2)  (2 blocks missing)
+            C00014  Ammonia
+            C00192  Hydroxylamine
+            C00088  Nitrite
+            C00244  NitM00176	 Assimilatory sulfate reduction, sulfate => H2S (4)  (2 blocks missing)
+            C00059  Sulfate
+            C00224  Adenylyl sulfate
+            C00053  3'-Phosphoadenylyl sulfate
+            C00094  Sulfite
+            C00283  Hydrogen sulM00596	 Dissimilatory sulfate reduction, sulfate => H2S (6)  (complete)
+            C00059  Sulfate
+            C00224  Adenylyl sulfate
+            C00094  Sulfite
+            C00283  Hydrogen sulM00595	 Thiosulfate oxidation by SOX complex, thiosulfate => sulfate (0)  (incomplete)
+            C00320  Thiosulfate
+            C00059  SulM00082	 Fatty acid biosynthesis, initiation (5)  (1 block missing)
+            C00024  Acetyl-CoA
+            C00083  Malonyl-CoA
+            C01209  Malonyl-[acyl-carrier protein]
+            C03939  Acetyl-[acyl-carrier protein]
+            C05744  Acetoacetyl-[acp]
+M00083	 Fatty acid biosynthesis, elongation (7)  (complete)
+            C03939  Acetyl-[acyl-carrier protein]
+            C01209  Malonyl-[acyl-carrier protein]
+            C05744  Acetoacetyl-[acp]
+            C04618  (3R)-3-Hydroxybutanoyl-[acyl-carrier protein]
+            C04246  But-2-enoyl-[acyl-carrier protein]
+            C05745  Butyryl-[acp]
+            C05746  3-Oxohexanoyl-[acp]
+            C05747  (R)-3-Hydroxyhexanoyl-[acp]
+            C05748  trans-Hex-2-enoyl-[acp]
+            C05749  Hexanoyl-[acp]
+            C05750  3-Oxooctanoyl-[acp]
+            C04620  (3R)-3-Hydroxyoctanoyl-[acyl-carrier protein]
+            C05751  trans-Oct-2-enoyl-[acp]
+            C05752  Octanoyl-[acp]
+            C05753  3-Oxodecanoyl-[acp]
+            C04619  (3R)-3-Hydroxydecanoyl-[acyl-carrier protein]
+            C05754  trans-Dec-2-enoyl-[acp]
+            C05755  Decanoyl-[acp]
+            C05756  3-Oxododecanoyl-[acp]
+            C05757  (R)-3-Hydroxydodecanoyl-[acp]
+            C05758  trans-Dodec-2-enoyl-[acp]
+            C05223  Dodecanoyl-[acyl-carrier protein]
+            C05759  3-Oxotetradecanoyl-[acp]
+            C04688  (3R)-3-Hydroxytetradecanoyl-[acyl-carrier protein]
+            C05760  trans-Tetradec-2-enoyl-[acp]
+            C05761  Tetradecanoyl-[acp]
+            C05762  3-Oxohexadecanoyl-[acp]
+            C04633  (3R)-3-Hydroxypalmitoyl-[acyl-carrier protein]
+            C05763  trans-Hexadec-2-enoyl-[acp]
+            C05764  Hexadecanoyl-[acp]
+M00873	 Fatty acid biosynthesis in mitochondria, animals (2)  (incomplete)
+            NAM00874	 Fatty acid biosynthesis in mitochondria, fungi (3)  (incomplete)
+            NAM00085	 Fatty acid elongation in mitochondria (0)  (incomplete)
+            C00040  Acyl-CoA
+            C00024  Acetyl-CoA
+            C00264  3-Oxoacyl-CoA
+            C00640  (3S)-3-Hydroxyacyl-CoA
+            C00658  trans-2,3-Dehydroacyl-CoA
+            C00136  Butanoyl-CoA
+            C05269  3-Oxohexanoyl-CoA
+            C05268  (S)-Hydroxyhexanoyl-CoA
+            C05271  trans-Hex-2-enoyl-CoA
+            C05270  Hexanoyl-CoA
+            C05267  3-Oxooctanoyl-CoA
+            C05266  (S)-3-Hydroxyoctanoyl-CoA
+            C05276  trans-Oct-2-enoyl-CoA
+            C01944  Octanoyl-CoA
+            C05265  3-Oxodecanoyl-CoA
+            C05264  (S)-Hydroxydecanoyl-CoA
+            C05275  trans-Dec-2-enoyl-CoA
+            C05274  Decanoyl-CoA
+            C05263  3-Oxododecanoyl-CoA
+            C05262  (S)-3-Hydroxydodecanoyl-CoA
+            C03221  2-trans-Dodecenoyl-CoA
+            C01832  Lauroyl-CoA
+            C05261  3-Oxotetradecanoyl-CoA
+            C05260  (S)-3-Hydroxytetradecanoyl-CoA
+            C05273  trans-Tetradec-2-enoyl-CoA
+            C02593  Tetradecanoyl-CoA
+            C05259  3-Oxopalmitoyl-CoA
+            C05258  (S)-3-Hydroxyhexadecanoyl-CoA
+            C05272  trans-Hexadec-2-enoyl-CoA
+            C00154  Palmitoyl-CoA
+M00415	 Fatty acid elongation in endoplasmic reticulum (0)  (incomplete)
+            NAM00086	 beta-Oxidation, acyl-CoA synthesis (1)  (complete)
+            C00249  Hexadecanoic acid
+            C00154  Palmitoyl-CoA
+M00087	 beta-Oxidation (0)  (incomplete)
+            C00154  Palmitoyl-CoA
+            C05272  trans-Hexadec-2-enoyl-CoA
+            C05258  (S)-3-Hydroxyhexadecanoyl-CoA
+            C05259  3-Oxopalmitoyl-CoA
+            C02593  Tetradecanoyl-CoA
+            C00024  Acetyl-CoA
+            C05273  trans-Tetradec-2-enoyl-CoA
+            C05260  (S)-3-Hydroxytetradecanoyl-CoA
+            C05261  3-Oxotetradecanoyl-CoA
+            C01832  Lauroyl-CoA
+            C03221  2-trans-Dodecenoyl-CoA
+            C05262  (S)-3-Hydroxydodecanoyl-CoA
+            C05263  3-Oxododecanoyl-CoA
+            C05274  Decanoyl-CoA
+            C05275  trans-Dec-2-enoyl-CoA
+            C05264  (S)-Hydroxydecanoyl-CoA
+            C05265  3-Oxodecanoyl-CoA
+            C01944  Octanoyl-CoA
+            C05276  trans-Oct-2-enoyl-CoA
+            C05266  (S)-3-Hydroxyoctanoyl-CoA
+            C05267  3-Oxooctanoyl-CoA
+            C05270  Hexanoyl-CoA
+            C05271  trans-Hex-2-enoyl-CoA
+            C05268  (S)-Hydroxyhexanoyl-CoA
+            C05269  3-Oxohexanoyl-CoA
+            C00136  Butanoyl-CoA
+            C00877  Crotonoyl-CoA
+            C01144  (S)-3-Hydroxybutanoyl-CoA
+            C00332  AcetoacetylM00861	 beta-Oxidation, peroxisome, VLCFA (0)  (incomplete)
+            C16168  (6Z,9Z,12Z,15Z,18Z,21Z)-Tetracosahexaenoyl-CoA
+            C16374  (2E,6Z,9Z,12Z,15Z,18Z,21Z)-Tetracosaheptaenoyl-CoA
+            C16375  (3R,6Z,9Z,12Z,15Z,18Z,21Z)-3-Hydroxytetracosahexaenoyl-CoA
+            C16376  (6Z,9Z,12Z,15Z,18Z,21Z)-3-Oxotetracosahexaenoyl-CoA
+            C16169  (4Z,7Z,10Z,13Z,16Z,19Z)-Docosahexaenoyl-CoA
+            C16172  (6Z,9Z,12Z,15Z,18Z)-Tetracosapentaenoyl-CoA
+            C16387  (2E,6Z,9Z,12Z,15Z,18Z)-Tetracosahexaenoyl-CoA
+            C16388  (3R,6Z,9Z,12Z,15Z,18Z)-3-Hydroxytetracosapentaenoyl-CoA
+            C16389  (6Z,9Z,12Z,15Z,18Z)-3-Oxotetracosapentaenoyl-CoA
+            C16173  (4Z,7Z,10Z,13Z,16Z)-DocosapentaenoylM00101	 Cholesterol biosynthesis, squalene 2,3-epoxide => cholesterol (0)  (incomplete)
+            C01054  (S)-2,3-Epoxysqualene
+            C01724  Lanosterol
+            C11455  4,4-Dimethyl-5alpha-cholesta-8,14,24-trien-3beta-ol
+            C05108  14-Demethyllanosterol
+            C15808  4alpha-Methylzymosterol-4-carboxylate
+            C15816  3-Keto-4-methylzymosterol
+            C05103  4alpha-Methylzymosterol
+            C22112  4alpha-Carboxy-5alpha-cholesta-8,24-dien-3beta-ol
+            C22136  Zymosterone
+            C05437  Zymosterol
+            C03845  5alpha-Cholest-8-en-3beta-ol
+            C01189  Lathosterol
+            C01164  7-Dehydrocholesterol
+            C00187  Cholesterol
+M00102	 Ergocalciferol biosynthesis (0)  (incomplete)
+            C05437  Zymosterol
+            C04525  Fecosterol
+            C15777  Episterol
+            C15778  5,7,24(28)-Ergostatrienol
+            C05440  Ergosta-5,7,22,24(28)-tetraen-3beta-ol
+            C01694  Ergosterol
+            C05441  Vitamin D2
+M00103	 Cholecalciferol biosynthesis (0)  (incomplete)
+            C01164  Cholesta-5,7-dien-3beta-ol
+            C05443  Vitamin D3
+            C01561  Calcidiol
+            C01673  Calcitriol
+M00104	 Bile acid biosynthesis, cholesterol => cholate/chenodeoxycholate (0)  (incomplete)
+            C00187  Cholesterol
+            C03594  7alpha-Hydroxycholesterol
+            C05455  7alpha-Hydroxycholest-4-en-3-one
+            C17339  4-Cholesten-7alpha,12alpha-diol-3-one
+            C05453  7alpha,12alpha-Dihydroxy-5beta-cholestan-3-one
+            C05454  3alpha,7alpha,12alpha-Trihydroxy-5beta-cholestane
+            C05446  3alpha,7alpha,12alpha,26-Tetrahydroxy-5beta-cholestane
+            C01301  3alpha,7alpha,12alpha-Trihydroxy-5beta-cholestan-26-al
+            C04722  3alpha,7alpha,12alpha-Trihydroxy-5beta-cholestanoate
+            C15613  (25R)-3alpha,7alpha,12alpha-Trihydroxy-5beta-cholestan-26-oyl-CoA
+            C17343  (25S)-3alpha,7alpha,12alpha-Trihydroxy-5beta-cholestan-26-oyl-CoA
+            C05460  (24E)-3alpha,7alpha,12alpha-Trihydroxy-5beta-cholest-24-enoyl-CoA
+            C15614  (24R,25R)-3alpha,7alpha,12alpha,24-Tetrahydroxy-5beta-cholestanoyl-CoA
+            C05467  3alpha,7alpha,12alpha-Trihydroxy-5beta-24-oxocholestanoyl-CoA
+            C01794  Choloyl-CoA
+            C00695  Cholic acid
+            C05451  7alpha-Hydroxy-5beta-cholestan-3-one
+            C05452  3alpha,7alpha-Dihydroxy-5beta-cholestane
+            C05444  3alpha,7alpha,26-Trihydroxy-5beta-cholestane
+            C05445  3alpha,7alpha-Dihydroxy-5beta-cholestan-26-al
+            C04554  3alpha,7alpha-Dihydroxy-5beta-cholestanate
+            C17345  (25R)-3alpha,7alpha-Dihydroxy-5beta-cholestanoyl-CoA
+            C17346  (25S)-3alpha,7alpha-Dihydroxy-5beta-cholestanoyl-CoA
+            C05447  (24E)-3alpha,7alpha-Dihydroxy-5beta-cholest-24-enoyl-CoA
+            C05448  (24R,25R)-3alpha,7alpha,24-Trihydroxy-5beta-cholestanoyl-CoA
+            C05449  3alpha,7alpha-Dihydroxy-5beta-24-oxocholestanoyl-CoA
+            C05337  Chenodeoxycholoyl-CoA
+            C02528  Chenodeoxycholate
+M00106	 Conjugated bile acid biosynthesis, cholate => taurocholate/glycocholate (0)  (incomplete)
+            C00695  Cholic acid
+            C01794  Choloyl-CoA
+            C05122  Taurocholate
+            C01921  Glycocholate
+M00862	 beta-Oxidation, peroxisome, tri/dihydroxycholestanoyl-CoA => choloyl/chenodeoxycholoyl-CoA (0)  (incomplete)
+            C17343  (25S)-3alpha,7alpha,12alpha-Trihydroxy-5beta-cholestan-26-oyl-CoA
+            C05460  (24E)-3alpha,7alpha,12alpha-Trihydroxy-5beta-cholest-24-enoyl-CoA
+            C15614  (24R,25R)-3alpha,7alpha,12alpha,24-Tetrahydroxy-5beta-cholestanoyl-CoA
+            C05467  3alpha,7alpha,12alpha-Trihydroxy-5beta-24-oxocholestanoyl-CoA
+            C01794  Choloyl-CoA
+            C17346  (25S)-3alpha,7alpha-Dihydroxy-5beta-cholestanoyl-CoA
+            C05447  (24E)-3alpha,7alpha-Dihydroxy-5beta-cholest-24-enoyl-CoA
+            C05448  (24R,25R)-3alpha,7alpha,24-Trihydroxy-5beta-cholestanoyl-CoA
+            C05449  3alpha,7alpha-Dihydroxy-5beta-24-oxocholestanoyl-CoA
+            C05337  ChenodeoxycholoylM00107	 Steroid hormone biosynthesis, cholesterol => prognenolone => progesterone (0)  (incomplete)
+            C00187  Cholesterol
+            C05500  20alpha-Hydroxycholesterol
+            C05501  20alpha,22beta-Dihydroxycholesterol
+            C05502  22beta-Hydroxycholesterol
+            C01953  Pregnenolone
+            C00410  Progesterone
+M00108	 C21-Steroid hormone biosynthesis, progesterone => corticosterone/aldosterone (0)  (incomplete)
+            C00410  Progesterone
+            C03205  11-Deoxycorticosterone
+            C02140  Corticosterone
+            C01124  18-Hydroxycorticosterone
+            C01780  Aldosterone
+M00109	 C21-Steroid hormone biosynthesis, progesterone => cortisol/cortisone (0)  (incomplete)
+            C00410  Progesterone
+            C01176  17alpha-Hydroxyprogesterone
+            C05488  11-Deoxycortisol
+            C00735  Cortisol
+            C00762  Cortisone
+M00110	 C19/C18-Steroid hormone biosynthesis, pregnenolone => androstenedione => estrone (0)  (incomplete)
+            C01953  Pregnenolone
+            C05138  17alpha-Hydroxypregnenolone
+            C01227  Dehydroepiandrosterone
+            C00280  Androstenedione
+            C05290  19-Hydroxyandrost-4-ene-3,17-dione
+            C05297  19-Oxoandrost-4-ene-3,17-dione
+            C00468  Estrone
+M00088	 Ketone body biosynthesis, acetyl-CoA => acetoacetate/3-hydroxybutyrate/acetone (1)  (incomplete)
+            C00024  Acetyl-CoA
+            C00332  Acetoacetyl-CoA
+            C00356  (S)-3-Hydroxy-3-methylglutaryl-CoA
+            C00164  Acetoacetate
+            C01089  (R)-3-Hydroxybutanoate
+            C00207  Acetone
+M00089	 Triacylglycerol biosynthesis (0)  (incomplete)
+            C00093  sn-Glycerol 3-phosphate
+            C00681  1-Acyl-sn-glycerol 3-phosphate
+            C00173  Acyl-[acyl-carrier protein]
+            C02133  Acyl phosphate
+            C00416  Phosphatidate
+            C00641  1,2-Diacyl-sn-glycerol
+            C00422  Triacylglycerol
+M00098	 Acylglycerol degradation (0)  (incomplete)
+            C00422  Triacylglycerol
+            C00641  1,2-Diacyl-sn-glycerol
+            C01885  1-Acylglycerol
+            C00116  Glycerol
+M00090	 Phosphatidylcholine (PC) biosynthesis, choline => PC (0)  (incomplete)
+            C00114  Choline
+            C00588  Choline phosphate
+            C00307  CDP-choline
+            C00157  Phosphatidylcholine
+M00091	 Phosphatidylcholine (PC) biosynthesis, PE => PC (0)  (incomplete)
+            C00350  Phosphatidylethanolamine
+            C01241  Phosphatidyl-N-methylethanolamine
+            C04308  Phosphatidyl-N-dimethylethanolamine
+            C00157  Phosphatidylcholine
+M00092	 Phosphatidylethanolamine (PE) biosynthesis, ethanolamine => PE (0)  (incomplete)
+            C00189  Ethanolamine
+            C00346  Ethanolamine phosphate
+            C00570  CDP-ethanolamine
+            C00350  Phosphatidylethanolamine
+M00093	 Phosphatidylethanolamine (PE) biosynthesis, PA => PS => PE (2)  (1 block missing)
+            C00416  Phosphatidate
+            C00269  CDP-diacylglycerol
+            C02737  Phosphatidylserine
+            C00350  Phosphatidylethanolamine
+M00094	 Ceramide biosynthesis (0)  (incomplete)
+            C00154  Palmitoyl-CoA
+            C00065  L-Serine
+            C02934  3-Dehydrosphinganine
+            C00836  Sphinganine
+            C12126  Dihydroceramide
+            C00195  N-Acylsphingosine
+M00066	 Lactosylceramide biosynthesis (1)  (1 block missing)
+            C00195  N-Acylsphingosine
+            C01190  Glucosylceramide
+            C01290  beta-D-Galactosyl-1,4-beta-D-glucosylceramide

@@ -1,12 +1,54 @@
-# only for debugging
+
+#  the following scripts show how to use r to upload summary.txt to the opencpu server as the imput to render an html report
+#  then download the report to local storage
+#  This function could be done by any script languange, sucha as java, perl or bash
+#  by doing this, metalab can have the report easily, without the need to setup the r enviroment, but easily get all the report, especially with
+#  various data visualization in the report
+#  these report are all html based and could be linked/iframed on the website.
 
 
-library(jsonlite)
-library(httr)
-#library(lubridate)
+# curl way to make any opencpu request is detailed here: https://www.opencpu.org/api.html
 
 
-options(stringsAsFactors = FALSE)
+#library(jsonlite)
+#library(httr)
+
+
+# this is the opencpu url of the function for generating report for summary.txt
+
+url_api <- "http://206.12.91.148/ocpu/library/rmdocpu/R/render_MQsummary_file"
+
+
+# get the root url
+url_api_split <- strsplit(url_api, "/")[[1]]
+url_server<- paste0(url_api_split[1],"//", url_api_split[3],"/")
+
+
+
+# upload file and do the rendering
+# in this case, the summary.txt is in the working dir. it can be anywhere with the path
+# I am sure java has it's onwn way to do this post request
+# variable r is the returning information from the curl function
+r <- httr::POST(url_api, body = list(file = upload_file("summary.txt")))
+
+# get all the paths of all files from the opencpu end, and locate the one, which is the report
+# this step needs to be done in the script enviroment
+
+paths <- strsplit(rawToChar(r$content), "\n")[[1]]
+path_target <- paths[grep("output.html",paths)]
+
+# save/download the report file to local storage
+# the file  "maxquant_result_summary.html" now is the report
+curl::curl_download(paste0(url_server, path_target), "maxquant_result_summary.html")
+
+
+
+
+
+
+
+
+
 
 # R has the “feature” of turning character strings automatically into factor variables.
 # This is great, when doing actual statistical work. It is this magic that allows R to turn multinomial variables into
@@ -17,57 +59,41 @@ options(stringsAsFactors = FALSE)
 
 
 
-summary_file  <- read_tsv("summary.txt", col_names = TRUE)
+#summary_file  <- read_tsv("summary.txt", col_names = TRUE)
 
-t <- toJSON(summary_file)
+#summary_file_json <- toJSON(summary_file)
 
-tt <- paste0("data = '", t,"'")
-writeLines(tt, "mydata.json")
+#tt <- paste0("data = '", t,"'")
+#writeLines(tt, "mydata.json")
 
 
 # test of the file converted back remains the same structure
-mq_smmary <- fromJSON(t)
-
-
-url_Server <- "https://cloud.opencpu.org/"
-url <- "https://cloud.opencpu.org/ocpu/library/stats/R/rnorm"
+# mq_smmary <- fromJSON(t)
 
 
 
 
+
+
+# url_Server <- "https://cloud.opencpu.org/"
+# url <- "https://cloud.opencpu.org/ocpu/library/stats/R/rnorm"
 
 
 # this is the way hwo to use r to do the  POST job
-#r <- RCurl::postForm(url, n=10)
+# r <- RCurl::postForm(url, n=10)
 # for parametr
-r <- httr::POST(url, body = list(n=10, mean =5))
+# r <- httr::POST(url, body = list(n=10, mean =5))
 # for file uploading
-r <- httr::POST("https://cloud.opencpu.org/ocpu/library/utils/R/read.csv", body = list(file = upload_file("summary.txt")))
+# r <- httr::POST("https://cloud.opencpu.org/ocpu/library/utils/R/read.csv", body = list(file = upload_file("summary.txt")))
 
 # parse the response to get the path
 # rawToChar(r$content) # or use toString(r)
 
-paths <- strsplit(rawToChar(r$content), "\n")[[1]]
-path_target <- paths[grep("DESCRIPTION",paths)]
+#paths <- strsplit(rawToChar(r$content), "\n")[[1]]
+#path_target <- paths[grep("DESCRIPTION",paths)]
 
 # download file
-curl::curl_download(paste0(url_Server, path_target), "description")
-
-
-
-
-
-
-#for rmd
-url_server <-"http://206.12.91.148/"
-url_api <- "http://206.12.91.148/ocpu/library/rmdocpu/R/render_MQsummary_file"
-# for file uploading
-r <- httr::POST(url_api, body = list(file = upload_file("summary.txt")))
-
-
-
-
-
+#curl::curl_download(paste0(url_Server, path_target), "DESCRIPTION")
 
 
 # POSt usage examples

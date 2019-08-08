@@ -1,0 +1,105 @@
+M00001	" Glycolysis (Embden-Meyerhof pathway), glucose => pyruvate (16)  (complete)"
+M00002	" Glycolysis, core module involving three-carbon compounds (8)  (complete)"
+M00003	" Gluconeogenesis, oxaloacetate => fructose-6P (13)  (complete)"
+M00307	" Pyruvate oxidation, pyruvate => acetyl-CoA (10)  (complete)"
+M00009	" Citrate cycle (TCA cycle, Krebs cycle) (25)  (complete)"
+M00010	" Citrate cycle, first carbon oxidation, oxaloacetate => 2-oxoglutarate (4)  (complete)"
+M00011	" Citrate cycle, second carbon oxidation, 2-oxoglutarate => oxaloacetate (21)  (complete)"
+M00004	 Pentose phosphate pathway (Pentose phosphate cycle) (9)  (complete)
+M00006	" Pentose phosphate pathway, oxidative phase, glucose 6P => ribulose 5P (3)  (complete)"
+M00007	" Pentose phosphate pathway, non-oxidative phase, fructose 6P => ribose 5P (5)  (complete)"
+M00580	" Pentose phosphate pathway, archaea, fructose 6P => ribose 5P (1)  (1 block missing)"
+M00005	" PRPP biosynthesis, ribose 5P => PRPP (1)  (complete)"
+M00008	" Entner-Doudoroff pathway, glucose-6P => glyceraldehyde-3P + pyruvate (3)  (1 block missing)"
+M00308	" Semi-phosphorylative Entner-Doudoroff pathway, gluconate => glycerate-3P (4)  (1 block missing)"
+M00633	" Semi-phosphorylative Entner-Doudoroff pathway, gluconate/galactonate => glycerate-3P (0)  (incomplete)"
+M00309	" Non-phosphorylative Entner-Doudoroff pathway, gluconate/galactonate => glycerate (0)  (incomplete)"
+M00014	 Glucuronate pathway (uronate pathway) (3)  (incomplete)
+M00630	" D-Galacturonate degradation (fungi), D-galacturonate => glycerol (0)  (incomplete)"
+M00631	" D-Galacturonate degradation (bacteria), D-galacturonate => pyruvate + D-glyceraldehyde 3P (5)  (complete)"
+M00061	" D-Glucuronate degradation, D-glucuronate => pyruvate + D-glyceraldehyde 3P (5)  (complete)"
+M00081	 Pectin degradation (1)  (2 blocks missing)
+M00632	" Galactose degradation, Leloir pathway, galactose => alpha-D-glucose-1P (4)  (complete)"
+M00552	" D-galactonate degradation, De Ley-Doudoroff pathway, D-galactonate => glycerate-3P (3)  (2 blocks missing)"
+M00129	" Ascorbate biosynthesis, animals, glucose-1P => ascorbate (2)  (incomplete)"
+M00114	" Ascorbate biosynthesis, plants, glucose-6P => ascorbate (6)  (incomplete)"
+M00550	" Ascorbate degradation, ascorbate => D-xylulose-5P (4)  (incomplete)"
+M00854	" Glycogen biosynthesis, glucose-1P => glycogen/starch (4)  (complete)"
+M00855	" Glycogen degradation, glycogen => glucose-6P (5)  (complete)"
+M00565	" Trehalose biosynthesis, D-glucose 1P => trehalose (3)  (incomplete)"
+M00549	" Nucleotide sugar biosynthesis, glucose => UDP-glucose (4)  (complete)"
+M00554	" Nucleotide sugar biosynthesis, galactose => UDP-galactose (2)  (complete)"
+M00761	" Undecaprenylphosphate alpha-L-Ara4N biosynthesis, UDP-GlcA => undecaprenyl phosphate alpha-L-Ara4N (1)  (incomplete)"
+M00012	 Glyoxylate cycle (6)  (complete)
+M00373	 Ethylmalonyl pathway (4)  (incomplete)
+M00740	 Methylaspartate cycle (8)  (incomplete)
+M00532	 Photorespiration (6)  (incomplete)
+M00013	" Malonate semialdehyde pathway, propanoyl-CoA => acetyl-CoA (1)  (incomplete)"
+M00741	" Propanoyl-CoA metabolism, propanoyl-CoA => succinyl-CoA (5)  (1 block missing)"
+M00130	" Inositol phosphate metabolism, PI=> PIP2 => Ins(1,4,5)P3 => Ins(1,3,4,5)P4 (0)  (incomplete)"
+M00131	" Inositol phosphate metabolism, Ins(1,3,4,5)P4 => Ins(1,3,4)P3 => myo-inositol (1)  (incomplete)"
+M00132	" Inositol phosphate metabolism, Ins(1,3,4)P3 => phytate (0)  (incomplete)"
+M00165	 Reductive pentose phosphate cycle (Calvin cycle) (8)  (incomplete)
+M00166	" Reductive pentose phosphate cycle, ribulose-5P => glyceraldehyde-3P (2)  (2 blocks missing)"
+M00167	" Reductive pentose phosphate cycle, glyceraldehyde-3P => ribulose-5P (6)  (1 block missing)"
+M00168	" CAM (Crassulacean acid metabolism), dark (2)  (complete)"
+M00169	" CAM (Crassulacean acid metabolism), light (2)  (complete)"
+M00172	" C4-dicarboxylic acid cycle, NADP - malic enzyme type (3)  (1 block missing)"
+M00171	" C4-dicarboxylic acid cycle, NAD - malic enzyme type (2)  (incomplete)"
+M00170	" C4-dicarboxylic acid cycle, phosphoenolpyruvate carboxykinase type (2)  (2 blocks missing)"
+M00173	 Reductive citrate cycle (Arnon-Buchanan cycle) (30)  (1 block missing)
+M00376	 3-Hydroxypropionate bi-cycle (11)  (incomplete)
+M00375	 Hydroxypropionate-hydroxybutylate cycle (5)  (incomplete)
+M00374	 Dicarboxylate-hydroxybutyrate cycle (17)  (incomplete)
+M00377	 Reductive acetyl-CoA pathway (Wood-Ljungdahl pathway) (8)  (1 block missing)
+M00579	" Phosphate acetyltransferase-acetate kinase pathway, acetyl-CoA => acetate (4)  (complete)"
+M00620	" Incomplete reductive citrate cycle, acetyl-CoA => oxoglutarate (14)  (2 blocks missing)"
+M00567	" Methanogenesis, CO2 => methane (9)  (incomplete)"
+M00357	" Methanogenesis, acetate => methane (13)  (incomplete)"
+M00356	" Methanogenesis, methanol => methane (7)  (2 blocks missing)"
+M00563	" Methanogenesis, methylamine/dimethylamine/trimethylamine => methane (7)  (incomplete)"
+M00358	 Coenzyme M biosynthesis (0)  (incomplete)
+M00608	" 2-Oxocarboxylic acid chain extension, 2-oxoglutarate => 2-oxoadipate => 2-oxopimelate => 2-oxosuberate (0)  (incomplete)"
+M00174	" Methane oxidation, methanotroph, methane => formaldehyde (0)  (incomplete)"
+M00346	" Formaldehyde assimilation, serine pathway (6)  (incomplete)"
+M00345	" Formaldehyde assimilation, ribulose monophosphate pathway (3)  (1 block missing)"
+M00344	" Formaldehyde assimilation, xylulose monophosphate pathway (2)  (2 blocks missing)"
+M00378	 F420 biosynthesis (0)  (incomplete)
+M00422	" Acetyl-CoA pathway, CO2 => acetyl-CoA (2)  (incomplete)"
+M00175	" Nitrogen fixation, nitrogen => ammonia (0)  (incomplete)"
+M00531	" Assimilatory nitrate reduction, nitrate => ammonia (0)  (incomplete)"
+M00530	" Dissimilatory nitrate reduction, nitrate => ammonia (4)  (incomplete)"
+M00529	" Denitrification, nitrate => nitrogen (3)  (incomplete)"
+M00528	" Nitrification, ammonia => nitrite (0)  (incomplete)"
+M00804	" Complete nitrification, comammox, ammonia => nitrite => nitrate (2)  (2 blocks missing)"
+M00176	" Assimilatory sulfate reduction, sulfate => H2S (4)  (2 blocks missing)"
+M00596	" Dissimilatory sulfate reduction, sulfate => H2S (6)  (complete)"
+M00595	" Thiosulfate oxidation by SOX complex, thiosulfate => sulfate (0)  (incomplete)"
+M00082	" Fatty acid biosynthesis, initiation (5)  (1 block missing)"
+M00083	" Fatty acid biosynthesis, elongation (7)  (complete)"
+M00873	" Fatty acid biosynthesis in mitochondria, animals (2)  (incomplete)"
+M00874	" Fatty acid biosynthesis in mitochondria, fungi (3)  (incomplete)"
+M00085	 Fatty acid elongation in mitochondria (0)  (incomplete)
+M00415	 Fatty acid elongation in endoplasmic reticulum (0)  (incomplete)
+M00086	" beta-Oxidation, acyl-CoA synthesis (1)  (complete)"
+M00087	 beta-Oxidation (0)  (incomplete)
+M00861	" beta-Oxidation, peroxisome, VLCFA (0)  (incomplete)"
+M00101	" Cholesterol biosynthesis, squalene 2,3-epoxide => cholesterol (0)  (incomplete)"
+M00102	 Ergocalciferol biosynthesis (0)  (incomplete)
+M00103	 Cholecalciferol biosynthesis (0)  (incomplete)
+M00104	" Bile acid biosynthesis, cholesterol => cholate/chenodeoxycholate (0)  (incomplete)"
+M00106	" Conjugated bile acid biosynthesis, cholate => taurocholate/glycocholate (0)  (incomplete)"
+M00862	" beta-Oxidation, peroxisome, tri/dihydroxycholestanoyl-CoA => choloyl/chenodeoxycholoyl-CoA (0)  (incomplete)"
+M00107	" Steroid hormone biosynthesis, cholesterol => prognenolone => progesterone (0)  (incomplete)"
+M00108	" C21-Steroid hormone biosynthesis, progesterone => corticosterone/aldosterone (0)  (incomplete)"
+M00109	" C21-Steroid hormone biosynthesis, progesterone => cortisol/cortisone (0)  (incomplete)"
+M00110	" C19/C18-Steroid hormone biosynthesis, pregnenolone => androstenedione => estrone (0)  (incomplete)"
+M00088	" Ketone body biosynthesis, acetyl-CoA => acetoacetate/3-hydroxybutyrate/acetone (1)  (incomplete)"
+M00089	 Triacylglycerol biosynthesis (0)  (incomplete)
+M00098	 Acylglycerol degradation (0)  (incomplete)
+M00090	" Phosphatidylcholine (PC) biosynthesis, choline => PC (0)  (incomplete)"
+M00091	" Phosphatidylcholine (PC) biosynthesis, PE => PC (0)  (incomplete)"
+M00092	" Phosphatidylethanolamine (PE) biosynthesis, ethanolamine => PE (0)  (incomplete)"
+M00093	" Phosphatidylethanolamine (PE) biosynthesis, PA => PS => PE (2)  (1 block missing)"
+M00094	 Ceramide biosynthesis (0)  (incomplete)
+M00066	 Lactosylceramide biosynthesis (1)  (1 block missing)
