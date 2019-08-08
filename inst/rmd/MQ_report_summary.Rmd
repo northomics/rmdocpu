@@ -101,10 +101,10 @@ tidy_MQ_summary <- function(df_summary.txt){
 
 
 # start from the data table for parametrized version
-summary_file_summary <- tidy_MQ_summary(params$summary_file_tbl)
+ summary_file_summary <- tidy_MQ_summary(params$summary_file_tbl)
 
-# This line is only for debugging
-#summary_file  <- read_tsv("summary2.txt", col_names = TRUE)
+# This 2 lines is only for debugging
+#summary_file  <- read_tsv("summary.txt", col_names = TRUE)
 #summary_file_summary <- tidy_MQ_summary(summary_file)
 
 
@@ -188,11 +188,7 @@ ggplotly(violin_plot)
 
 
 
-
-
-
-
-`if(summary_file_summary$set_experiment){ # Peptide sequence id by Experiment}`
+`r if(summary_file_summary$set_experiment){ "# Peptide sequence id by Experiment"}`
 
 
 ```{r id_by_experiment, echo=FALSE,fig.width= 8,fig.height=6}
