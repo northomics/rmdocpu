@@ -1,0 +1,30 @@
+"0","
+tidy_proteingroups <- function(proteinGroups){ 
+
+  # extract the primary protein ID,
+  protein.ids_split <- strsplit(as.vector(proteinGroups$""Protein IDs""), "";"") # this is a list of list of split names
+  protein_primary_ids <- unlist(lapply(protein.ids_split, function(x) x[1])) # only keep the first one
+  #rownames(proteinGroups) <- protein_primary_ids # rename the rownames of the matrix
+  
+  # do the row wise filtering
+  index_contaminant <- grep(""\\+"", proteinGroups$`Potential contaminant`) # note that + is a special character
+  index_reverse <- grep(""\\+"", proteinGroups$Reverse)
+  index_to_remove <- c(index_contaminant,index_reverse)
+  
+  proteinGroups <- proteinGroups[-index_to_remove,] # filtered table
+  protein_primary_ids <- protein_primary_ids[-index_to_remove] # filtered ids
+
+  n_contaminant <- length(index_contaminant)
+  n_reversed <- length(index_reverse)
+
+  
+  # extra the intensity column matrix
+  if(any(grepl(""LFQ intensity "", colnames(proteinGroups)))){ # if there are LFQ intensity columns, take out the LFQ columns
+    intensity_columns <- proteinGroups[,grep(""LFQ intensity "", colnames(proteinGroups))]
+    colnames(intensity_columns)<-gsub(""LFQ intensity "", """", colnames(intensity_columns))
+  }else(any(grepl(""Intensity "", colnames(proteinGroups)))) { # otherwise take out intensity column
+"
+"2","Error: unexpected '{' in:
+""    colnames(intensity_columns)<-gsub(""LFQ intensity "", """", colnames(intensity_columns))
+  }else(any(grepl(""Intensity "", colnames(proteinGroups)))) {""
+"

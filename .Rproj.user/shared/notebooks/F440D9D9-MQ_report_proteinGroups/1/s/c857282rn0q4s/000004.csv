@@ -1,0 +1,6 @@
+"0","# This 2 lines is only for debugging
+proteinGroups.txt  <- read.delim(""proteinGroups1.txt"", col.names = 1,check.names = FALSE)
+"
+"2","Error in read.table(file = file, header = header, sep = sep, quote = quote,  : 
+  more columns than column names
+"
