@@ -1,8 +1,0 @@
-"0","
-p<- ggplot2::ggplot(data = df_sparsity)+
-  geom_col(aes(x = sparsity,y = Freq))+
-  xlab(""Number of Presence in the Protein Intensity Marix"")+
-  theme_bw()
-plotly::ggplotly(p)
-"
-"0",""

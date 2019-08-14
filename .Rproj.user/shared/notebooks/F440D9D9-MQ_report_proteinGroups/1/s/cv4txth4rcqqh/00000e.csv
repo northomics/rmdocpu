@@ -1,7 +1,0 @@
-"0","DT::datatable(df_intensity, extensions = 'Buttons',options = list(dom = ""Blfrtip"",scrollX=TRUE, buttons =       list('copy', 'print', list(
-        extend = 'collection',
-        buttons = c('csv', 'excel', 'pdf'),
-        text = 'Download'
-      ))))
-"
-"0",""

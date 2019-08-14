@@ -1,1 +1,0 @@
-{"frames":[],"message":"Error: unexpected '{' in:\n\"    colnames(intensity_columns)<-gsub(\"LFQ intensity \", \"\", colnames(intensity_columns))\n  }else(any(grepl(\"Intensity \", colnames(proteinGroups)))) {\"\n"}
