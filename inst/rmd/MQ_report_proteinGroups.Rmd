@@ -1,0 +1,370 @@
+---
+title: "Maxquant proteinGroups.txt Quick summary"
+author: suggestions please to "ningzhibinn@gmail.com"
+date: "`r Sys.time()`"
+output:
+  html_document:
+    fig_width: 10
+    fig_caption: TRUE
+    toc: true
+    toc_depth: 4
+    toc_float:
+      collapsed: TRUE
+      smooth_scroll: TRUE
+    number_sections: true
+params:  
+  input_datatable: !r mtcars ### note that the value is the real value, here supposed to be a read in data.table for one click function.  
+---
+
+<style type="text/css">
+.main-container {
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+
+```{r setup, include=FALSE}
+# enviroment setup
+knitr::opts_chunk$set(echo = FALSE,warning = FALSE, message = FALSE, cache = TRUE)
+
+library(tidyverse)
+library(ggplot2)
+library(d3heatmap)
+library(plotly)
+library(gplots)
+#library(corrplot)
+#library(DT) # for interactive data table display 
+
+# local usage test and debug
+# rmarkdown::render("MQ_report_summary_ocpu.Rmd", params = list(summary_file_tbl =  your_readin_tbl))
+# on local machine, your_readin_tbl is a data table, while on ocpu, your_readin_tbl is a json formatted table
+
+# version control
+# 20190807
+
+
+
+```
+
+
+
+```{r function_needed, recho=FALSE}
+
+# proteinGroups <- proteinGroups.txt
+
+tidy_proteingroups <- function(proteinGroups){ 
+
+  # extract the primary protein ID,
+  protein.ids_split <- strsplit(as.vector(proteinGroups$"Protein IDs"), ";") # this is a list of list of split names
+  protein_primary_ids <- unlist(lapply(protein.ids_split, function(x) x[1])) # only keep the first one
+  #rownames(proteinGroups) <- protein_primary_ids # rename the rownames of the matrix
+  
+  # do the row wise filtering
+  index_contaminant <- grep("\\+", proteinGroups$`Potential contaminant`) # note that + is a special character
+  index_reverse <- grep("\\+", proteinGroups$Reverse)
+  index_to_remove <- c(index_contaminant,index_reverse)
+  
+  proteinGroups <- proteinGroups[-index_to_remove,] # filtered table
+  protein_primary_ids <- protein_primary_ids[-index_to_remove] # filtered ids
+
+  n_contaminant <- length(index_contaminant)
+  n_reversed <- length(index_reverse)
+
+  
+  # extra the intensity column matrix
+  if(any(grepl("LFQ intensity ", colnames(proteinGroups)))){ # if there are LFQ intensity columns, take out the LFQ columns
+    intensity_columns <- proteinGroups[,grep("LFQ intensity ", colnames(proteinGroups))]
+    colnames(intensity_columns)<-gsub("LFQ intensity ", "", colnames(intensity_columns))
+  }else if(any(grepl("Intensity ", colnames(proteinGroups)))) { # otherwise take out intensity column
+    intensity_columns <-   proteinGroups[,grep("Intensity ", colnames(proteinGroups))]
+    colnames(intensity_columns)<-gsub("Intensity ", "", colnames(intensity_columns))
+  }else{ # this is for the special case that no experiment desgin setup, only one column of intensity
+    intensity_columns <-   proteinGroups[,grep("Intensity", colnames(proteinGroups)),drop =  FALSE]
+  } 
+  
+  return(list("intensity_matrix" = intensity_columns,
+              "n_contaminant" = n_contaminant,
+              "n_reversed" = n_reversed,
+              "n_unique_peptides" = proteinGroups$"Unique peptides",
+              "score" = proteinGroups$Score,
+              "protein_primary_ids" =protein_primary_ids
+              
+              ))
+  
+}
+
+
+
+```
+
+
+
+```{r file_summary, echo=FALSE,fig.width= 15,fig.height=10}
+
+
+# start from the data table for parametrized version
+proteingroups_tidyed <- tidy_proteingroups(params$input_datatable)
+
+
+# This 2 lines is only for debugging
+#proteinGroups.txt  <- read.delim("proteinGroups4.txt", header = TRUE,check.names = FALSE, stringsAsFactors = FALSE)
+#proteingroups_tidyed<- tidy_proteingroups(proteinGroups.txt)
+
+
+df_intensity <- proteingroups_tidyed$intensity_matrix
+
+
+sparsity <- rowSums(df_intensity > 0) # here sparsity is number of present values
+
+index_all_na_rows <- which(sparsity == 0)
+
+df_intensity <- df_intensity[-index_all_na_rows,,drop = FALSE]
+
+protein_primary_ids <- proteingroups_tidyed$protein_primary_ids[-index_all_na_rows]
+
+
+
+```
+
+# Intro
+
+**This report provides some basic description of the proteingroups identificaiton from maxquant database search. **
+**The report is based on the proteinGroups.txt, without defined experimental design/grouping information**
+**Users can use this to quickly check the overal quality of the experiment**
+
+
+# Take home figures
+
+
+
+*  **Number of contaminant: ** `r proteingroups_tidyed$n_contaminant`
+
+*  **Number of reversed: ** `r proteingroups_tidyed$n_reversed`
+
+*  **Number of qualified proteingroups: ** `r nrow(proteingroups_tidyed$intensity_matrix)`
+
+*  **Number of quailfied proteingroups without intensity information:  ** `r length(index_all_na_rows)`
+
+*  **Number of experiment:  ** `r ncol(df_intensity)`
+
+*  **All experiments:  ** `r colnames(df_intensity)`
+
+
+
+
+# Unique peptide number
+
+
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+peptide_summary <- as.data.frame(table(proteingroups_tidyed$n_unique_peptides))
+colnames(peptide_summary) = c("Unique_Peptides", "Freq")
+
+
+p<- ggplot2::ggplot(data = peptide_summary)+
+  geom_col(aes(x = Unique_Peptides,y = Freq))+
+  theme_bw()
+plotly::ggplotly(p)
+
+
+
+
+```
+
+
+# Protein Score distribution
+
+
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+df_score <- data.frame(Score  = proteingroups_tidyed$score)
+
+
+p<- ggplot2::ggplot(data=df_score, aes(Score)) +
+  geom_histogram(aes(y=..density..),color= "black",fill="white")+
+  geom_density(alpha=.2, fill="#FF6666")+
+  theme_bw()
+
+plotly::ggplotly(p)
+
+```
+
+
+# Intensity distribution
+
+Columns starting with "LFQ_intensity_" will be selected if exist (meaning LFQ option was checked for label free quantification, which is deliberately processed by Maxquant already), otherwise Intensity_ columns will be used instead for protein experession.
+
+
+
+
+
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+df_sparsity <- as.data.frame(table(sparsity))
+
+
+p<- ggplot2::ggplot(data = df_sparsity)+
+  geom_col(aes(x = sparsity,y = Freq))+
+  xlab("Presence in the Protein Intensity Matrix")+
+  theme_bw()
+plotly::ggplotly(p)
+
+
+
+```
+
+
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+#note: in this log10 intenisty matrix, 0 is converted into infinity, therefore will not show in the box plot, and does not affect the distribution
+df_intensity_log10 <-log10(df_intensity)
+
+data_matrix_log10_melt<-reshape2::melt(as.matrix(df_intensity_log10))
+
+colnames(data_matrix_log10_melt) <- c("Proteins", "Samples", "Log10(Inensity)")
+
+p<-ggplot(data_matrix_log10_melt)+
+    geom_boxplot(aes(x = Samples, y = `Log10(Inensity)`)) +
+    theme_bw()+
+    theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  
+
+plotly::ggplotly(p)
+
+
+```
+
+
+`r if(ncol(df_intensity) > 1){ "# Overall Expression Profile   ## Heatmap"} `
+
+
+
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+# only if there is experiment desgin and  number of columns in protein experssion value is more than 1, 
+if(ncol(df_intensity) > 1){ 
+  df_intensity_log10 <-log10(df_intensity+1)
+  rownames(df_intensity_log10) <- protein_primary_ids
+  
+  d3heatmap(df_intensity_log10,show_grid = FALSE, color = "OrRd")
+
+
+  
+}
+
+
+```
+
+
+
+`r if(ncol(df_intensity) > 1){ "## PCA"}`
+
+
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+if(ncol(df_intensity) > 1){ 
+  
+  PCA_result <- prcomp(t(df_intensity_log10))
+  loading <- as.data.frame(PCA_result$x)
+  loading$Sample.Name <- rownames(loading)
+  plot_ly(loading, x = ~PC1, y = ~PC2, z = ~PC3) %>%
+  add_markers() %>%
+  add_text(text = row.names(loading))
+
+}
+
+
+```
+
+`r if(ncol(df_intensity) > 1){ "**Scree plot shows the performance of the PCA analysis, the more the top procomponets accounts, the better separation**"}`
+
+
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+  # screen plot
+if(ncol(df_intensity) > 1){ 
+
+  sd <- PCA_result$sde
+  var <- sd^2
+  var.percent <- var/sum(var) * 100
+  
+  PCs <- paste("PC", 1:length(var.percent))
+  
+  
+  df_scree <- data.frame(PC  = factor(PCs, levels = PCs), ratio =var.percent)
+  
+  
+  plot_ly(data = df_scree,x = ~PC, y = ~ratio, type = "bar") %>% 
+    layout(title = "Scree Plot of Principle components", xaxis = list(title = 'Principle Component'), yaxis = list(title = 'Variance(%)'))
+  
+
+  }
+
+
+```
+
+
+
+# Download the neat table
+
+**The table is clean proteingroups expression table, with reversed and contaminant removed. Only the first protein id was used to represent the proteingroups.**
+**The values are the LFQ(with label free quantification turned on) or raw protein intensity from Maxquant output. **
+**You can download/export and start from this table for downstream analysis using the (i)Metalab faminly apps. **
+
+
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+
+df_intensity <- as.data.frame(df_intensity)
+rownames(df_intensity) <- protein_primary_ids
+
+
+DT::datatable(df_intensity, extensions = 'Buttons',options = list(dom = "Blfrtip",scrollX=TRUE, buttons =       list('copy', 'print', list(
+        extend = 'collection',
+        buttons = c('csv', 'excel', 'pdf'),
+        text = 'Download'
+      ))))
+
+
+
+
+```
+
+
+
+```{r}
+# library(ggforce)
+# 
+# a1 <-100
+# a2 <- 500
+# a3 <- 1000
+# 
+# r1 <- sqrt(a1)
+# r2 <- sqrt(a2)
+# r3 <-sqrt(a3)
+# 
+# 
+# 
+# 
+# circles <- data.frame(
+#   x0 = rep(0,3),
+#   y0 = sort(c(r1,r2,r3),decreasing =TRUE),
+#   r = sort(c(r1,r2,r3),decreasing =TRUE)
+# )
+# 
+# ggplot(data = circles) +
+#   geom_circle( aes(x0 = x0, y0 = y0, r = r, alpha = rev(r)), color = "orange", fill= "orange",show.legend = c("a","b","c") )+
+#   coord_fixed()+
+#   theme_void()
+
+
+
+
+```
+
+
+
+
+
