@@ -234,8 +234,6 @@ render_taxon_file <- function(file){
 
   rmarkdown::render("input.Rmd",output_format = "html_document", params = list(input_datatable =  data_table), output_file="output.html")
 
-  #rmarkdown::render("input.Rmd",render_args =list(params = list(input_datatable =  data_table)) )
-
   invisible()
 }
 
