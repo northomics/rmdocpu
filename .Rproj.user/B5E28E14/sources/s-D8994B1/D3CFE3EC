@@ -1,0 +1,33 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1566420425606.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "D3CFE3EC",
+    "lastKnownWriteTime" : 2694162226568,
+    "last_content_update" : 1566420425606,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "F4B2A5FF",
+        "caption" : "df_intensity",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=df_intensity&cache_key=F4B2A5FF",
+        "displayedObservations" : 19224,
+        "environment" : "",
+        "expression" : "df_intensity",
+        "object" : "df_intensity",
+        "preview" : 0,
+        "totalObservations" : 19224,
+        "variables" : 1
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 11,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

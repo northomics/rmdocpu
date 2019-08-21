@@ -74,7 +74,7 @@ tidy_peptides <- function(peptide.txt){
     intensity_columns <- peptide.txt[,grep("LFQ intensity ", colnames(peptide.txt))]
     colnames(intensity_columns) <- gsub("LFQ intensity ", "", colnames(intensity_columns))
     
-  }else if(any(grepl("Intensity ", colnames(proteinGroups)))) { # otherwise take out intensity column
+  }else if(any(grepl("Intensity ", colnames(peptide.txt)))) { # otherwise take out intensity column
     
     intensity_columns <-   peptide.txt[,grep("Intensity ", colnames(peptide.txt))]
     colnames(intensity_columns)<-gsub("Intensity ", "", colnames(intensity_columns))
@@ -106,12 +106,12 @@ tidy_peptides <- function(peptide.txt){
 
 
 # start from the data table for parametrized version
-peptide_tidyed <- tidy_peptides(params$input_datatable)
+#peptide_tidyed <- tidy_peptides(params$input_datatable)
 
 
 # This lines is only for debugging
-# peptide.txt  <- read.delim("peptides.txt", header = TRUE,check.names = FALSE, stringsAsFactors = FALSE)
-# peptide_tidyed <- tidy_peptides(peptide.txt)
+ peptide.txt  <- read.delim("peptides2.txt", header = TRUE,check.names = FALSE, stringsAsFactors = FALSE)
+ peptide_tidyed <- tidy_peptides(peptide.txt)
 
 
 df_intensity <- peptide_tidyed$intensity_matrix
@@ -306,6 +306,7 @@ plotly::ggplotly(p)
 
 
 ```{r echo=FALSE,fig.width= 8,fig.height=6}
+
   sparsity <- rowSums(df_intensity > 0) 
   
   index_P50 <- which(sparsity >= ncol(df_intensity)/2)
@@ -317,8 +318,11 @@ plotly::ggplotly(p)
     index_keep <- index_P100
   }
   
-  df_intensity_log10 <-log10(df_intensity[index_keep, ]+1)
+
+  df_intensity_log10 <-log10(df_intensity[index_keep, , drop = FALSE]+1)
   rownames(df_intensity_log10) <- peptide_sequence[index_keep]
+
+
   
 ```
 
@@ -390,7 +394,7 @@ if(ncol(df_intensity) > 1){
 
 # Download the neat table
 
-**The table is clean proteingroups expression table, with reversed and contaminant removed. Only the first protein id was used to represent the proteingroups.**
+**The table is clean peptides expression table, with reversed and contaminant removed.**
 **The values are the LFQ(with label free quantification turned on) or raw protein intensity from Maxquant output. **
 **You can download/export and start from this table for downstream analysis using the (i)Metalab faminly apps. **
 
