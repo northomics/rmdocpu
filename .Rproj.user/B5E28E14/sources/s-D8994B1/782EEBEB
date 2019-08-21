@@ -5,16 +5,16 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "4254931939",
+    "hash" : "0",
     "id" : "782EEBEB",
-    "lastKnownWriteTime" : 1566420781,
-    "last_content_update" : 1566420781446,
+    "lastKnownWriteTime" : 1566421174,
+    "last_content_update" : 1566421174423,
     "path" : "C:/Users/Figeys Lab/Dropbox/Project_R_packages/rmdocpu/inst/rmd/MQ_report_peptides.Rmd",
     "project_path" : "inst/rmd/MQ_report_peptides.Rmd",
     "properties" : {
-        "cursorPosition" : "324,0",
+        "cursorPosition" : "113,1",
         "last_setup_crc32" : "D8994B1ca3ad07f",
-        "scrollLine" : "303"
+        "scrollLine" : "96"
     },
     "read_only" : false,
     "read_only_alternatives" : [

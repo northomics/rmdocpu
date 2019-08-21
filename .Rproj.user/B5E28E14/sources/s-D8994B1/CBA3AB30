@@ -2,18 +2,18 @@
     "collab_server" : "",
     "contents" : "",
     "created" : 1566321122842.000,
-    "dirty" : true,
+    "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
     "hash" : "0",
     "id" : "CBA3AB30",
-    "lastKnownWriteTime" : 1566419297,
-    "last_content_update" : 1566419887517,
+    "lastKnownWriteTime" : 1566421010,
+    "last_content_update" : 1566421010217,
     "path" : "C:/Users/Figeys Lab/Dropbox/Project_R_packages/rmdocpu/inst/rmd/R_curl_ocpu.R",
     "project_path" : "inst/rmd/R_curl_ocpu.R",
     "properties" : {
-        "cursorPosition" : "112,47",
-        "scrollLine" : "79"
+        "cursorPosition" : "119,0",
+        "scrollLine" : "84"
     },
     "read_only" : false,
     "read_only_alternatives" : [

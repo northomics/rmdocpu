@@ -106,12 +106,12 @@ tidy_peptides <- function(peptide.txt){
 
 
 # start from the data table for parametrized version
-#peptide_tidyed <- tidy_peptides(params$input_datatable)
+peptide_tidyed <- tidy_peptides(params$input_datatable)
 
 
 # This lines is only for debugging
- peptide.txt  <- read.delim("peptides2.txt", header = TRUE,check.names = FALSE, stringsAsFactors = FALSE)
- peptide_tidyed <- tidy_peptides(peptide.txt)
+# peptide.txt  <- read.delim("peptides3.txt", header = TRUE,check.names = FALSE, stringsAsFactors = FALSE)
+# peptide_tidyed <- tidy_peptides(peptide.txt)
 
 
 df_intensity <- peptide_tidyed$intensity_matrix
@@ -136,7 +136,7 @@ peptide_sequence <- peptide_tidyed$peptide_sequence[-index_all_na_rows]
 **Users can use this to quickly check the overal quality of the experiment**
 
 
-# Take home figures
+# Take-home figures
 
 
 
