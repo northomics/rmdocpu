@@ -1,0 +1,19 @@
+"0","if(ncol(df_intensity) > 1){ 
+
+  sd <- PCA_result$sde
+  var <- sd^2
+  var.percent <- var/sum(var) * 100
+  
+  PCs <- paste(""PC"", 1:length(var.percent))
+  
+  
+  df_scree <- data.frame(PC  = factor(PCs, levels = PCs), ratio =var.percent)
+  
+  
+  plot_ly(data = df_scree,x = ~PC, y = ~ratio, type = ""bar"") %>% 
+    layout(title = ""Scree Plot of Principle components"", xaxis = list(title = 'Principle Component'), yaxis = list(title = 'Variance(%)'))
+  
+
+  }
+"
+"0",""

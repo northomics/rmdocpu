@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1565925108913.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "5510CF4C",
+    "lastKnownWriteTime" : 1565974861,
+    "last_content_update" : 1565974861216,
+    "path" : "C:/Users/Figeys Lab/Dropbox/Project_MetaLab/offline_apps/betadiversity/beta_diversity_beta_diversity.R",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "14,3",
+        "scrollLine" : "6"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

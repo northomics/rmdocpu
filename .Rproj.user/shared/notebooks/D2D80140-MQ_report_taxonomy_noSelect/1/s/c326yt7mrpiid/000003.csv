@@ -1,0 +1,16 @@
+"0","  plot(1,1)
+"
+"2","Warning messages:
+"
+"2","1: "
+"2","In doTryCatch(return(expr), name, parentenv, handler) :"
+"2","
+ "
+"2"," restarting interrupted promise evaluation
+"
+"2","2: "
+"2","In doTryCatch(return(expr), name, parentenv, handler) :"
+"2","
+ "
+"2"," restarting interrupted promise evaluation
+"

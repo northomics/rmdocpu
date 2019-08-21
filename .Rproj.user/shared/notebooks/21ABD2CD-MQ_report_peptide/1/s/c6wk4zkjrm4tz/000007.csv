@@ -1,0 +1,8 @@
+"0","p<- ggplot2::ggplot(data = df_sparsity_dec)+
+  geom_col(aes(x = sparsity,y = Freq))+
+  xlab(""Presence in the Peptide Intensity Matrix"")+
+  theme_bw()
+plotly::ggplotly(p)
+"
+"0",""
+"0",""

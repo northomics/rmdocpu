@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1566336843610.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "45C166E8",
+    "lastKnownWriteTime" : 1566357245,
+    "last_content_update" : 1566357245135,
+    "path" : "C:/Users/Figeys Lab/Dropbox/Project_R_packages/rmdocpu/inst/rmd/ML_report_taxonomy_standalone.Rmd",
+    "project_path" : "inst/rmd/ML_report_taxonomy_standalone.Rmd",
+    "properties" : {
+        "cursorPosition" : "11,21",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 9,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

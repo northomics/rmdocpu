@@ -1,0 +1,33 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1566236412181.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "DAB1A8D9",
+    "lastKnownWriteTime" : 2636613779552,
+    "last_content_update" : 1566236412181,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "EA4EFFAF",
+        "caption" : "volcano",
+        "contentUrl" : "grid_resource/gridviewer.html?env=package%3Adatasets&obj=volcano&cache_key=EA4EFFAF",
+        "displayedObservations" : 87,
+        "environment" : "package:datasets",
+        "expression" : "volcano",
+        "object" : "volcano",
+        "preview" : 0,
+        "totalObservations" : 87,
+        "variables" : 61
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}
