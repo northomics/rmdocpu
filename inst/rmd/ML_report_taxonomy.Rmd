@@ -14,7 +14,7 @@ output:
     number_sections: true
 # runtime: shiny
 params:  
-  summary_file_tbl: !r mtcars ### note that the value is the real value, here supposed to be a read in data.table for one click function.  
+  input_datatable: !r mtcars ### note that the value is the real value, here supposed to be a read in data.table for one click function.  
 ---
 
 <style type="text/css">
