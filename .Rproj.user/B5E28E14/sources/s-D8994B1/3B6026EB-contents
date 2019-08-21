@@ -105,8 +105,8 @@ tidy_MQ_taxonomy <- function(df_taxonomy.txt){
 ```{r file_taxonomy, echo=FALSE, fig.width= 15,fig.height=10}
 
 # start from the data table for parametrized version
-
-summary_file_taxonomy <- tidy_MQ_taxonomy(params$input_datatable)
+df_taxonomy.txt <- params$input_datatable
+summary_file_taxonomy <- tidy_MQ_taxonomy(df_taxonomy.txt)
 
 # start from the data table
 #df_taxonomy.txt  <- read_excel("MetaLab_taxonomy.xlsx", sheet = 2)
