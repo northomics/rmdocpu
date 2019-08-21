@@ -5,15 +5,15 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "0",
+    "hash" : "2148109561",
     "id" : "CBA3AB30",
-    "lastKnownWriteTime" : 1566421010,
-    "last_content_update" : 1566421010217,
+    "lastKnownWriteTime" : 1566421752,
+    "last_content_update" : 1566421752629,
     "path" : "C:/Users/Figeys Lab/Dropbox/Project_R_packages/rmdocpu/inst/rmd/R_curl_ocpu.R",
     "project_path" : "inst/rmd/R_curl_ocpu.R",
     "properties" : {
-        "cursorPosition" : "119,0",
-        "scrollLine" : "84"
+        "cursorPosition" : "143,59",
+        "scrollLine" : "104"
     },
     "read_only" : false,
     "read_only_alternatives" : [
