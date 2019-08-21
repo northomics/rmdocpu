@@ -152,11 +152,6 @@ curl::curl_download(paste0(url_server, path_target), "taxon_summary.html")
 
 
 
-
-
-
-
-
 # file <-  "MetaLab_taxonomy.xlsx"
 
 # data_table  <- readxl::read_excel(file, sheet = 2)

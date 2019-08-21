@@ -209,20 +209,6 @@ render_peptides_file <- function(file){
 #'
 #'
 
-render_taxon_file_shiny <- function(file){
-
-  data_table  <- readxl::read_excel(file, sheet = 2) # readin from xl file
-
-  myfile <- RCurl::getURL("https://raw.githubusercontent.com/ningzhibin/rmdocpu/master/inst/rmd/ML_report_taxonomy_shiny.Rmd")
-  writeLines(myfile, con="input.Rmd");
-
-  #rmarkdown::render("input.Rmd",output_format = "html_document", params = list(input_datatable =  data_table), output_file="output.html")
-
-  rmarkdown::run("input.Rmd",render_args =list(params = list(input_datatable =  data_table)) )
-
-  invisible()
-}
-
 
 
 render_taxon_file <- function(file){
