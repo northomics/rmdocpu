@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1566486307489.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "74C88479",
+    "lastKnownWriteTime" : 1566486259,
+    "last_content_update" : 1566486259,
+    "path" : "C:/Users/Figeys Lab/Dropbox/Project_R_packages/rmdocpu/inst/rmd/ML_report_function.Rmd",
+    "project_path" : "inst/rmd/ML_report_function.Rmd",
+    "properties" : {
+        "cursorPosition" : "65,2",
+        "scrollLine" : "32"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 8,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

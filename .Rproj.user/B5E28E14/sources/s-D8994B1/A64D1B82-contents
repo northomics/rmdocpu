@@ -50,6 +50,40 @@ render_rmd_url <- function(rmd_url){
 
 
 
+
+#' wrapper function of rmarkdown::render for opencpu
+#'
+#' Three general wrapper function to work with opencpu, which can render source r markdown code into html files, to be displacyed on the client end
+#'
+#' @param rmd_file For render_rmd_server, a string of the file name on the same opencpu server in the same package, only for tests
+#' @return no direct return, but write an output.html to the temp session on the opencpu server
+#' @seealso \code{\link{render}}  \code{\link{knit}}
+#' @examples
+#'   path_to_input <- system.file("rmd", rmd_file, package = "rmdocpu")
+#'   render_rmd_server(path_to_input)
+#' @export
+#'
+
+render_rmd_server <- function(rmd_file){
+  ## for test use input.Rmd
+  path_to_input <- system.file("rmd", rmd_file, package = "rmdocpu")
+
+  myfile <- readLines(path_to_input)
+  writeLines(myfile, con="input.Rmd");
+  rmarkdown::render("input.Rmd",output_format = "html_document", output_file="output.html")
+
+  invisible()
+}
+
+
+
+
+
+
+
+
+
+
 #' wrapper function of rmarkdown::render for opencpu to render a report for maxquant summary
 #'
 #' This function works on the opencpu server end, to produce an html file to send to the front end to display.
@@ -186,9 +220,6 @@ render_peptides_file <- function(file){
 
 
 
-
-
-
 #' wrapper function of rmarkdown::render for opencpu to render a report for MetaLab_taxonomy.xlsx
 #'
 #' This function works on the opencpu server end, to produce an html file, which can then be retrieved by javascript or any other customer api tool.
@@ -202,8 +233,7 @@ render_peptides_file <- function(file){
 #' @seealso \code{\link{render}}  \code{\link{knit}} \code{\link{render_MQsummary}} \code{\link{render_MQsummary_file}} \code{\link{render_proteinGroups_file}}
 #' @examples
 #'   # run locally
-#'   taxon_file <-  "MetaLab_taxonomy.xlsx"
-#'   render_taxon_file(peptides_file)
+#'   render_taxon_file("MetaLab_taxonomy.xlsx")
 #' @export
 #'
 #'
@@ -228,33 +258,41 @@ render_taxon_file <- function(file){
 
 
 
-
-
-
-
-#' wrapper function of rmarkdown::render for opencpu
+#' wrapper function of rmarkdown::render for opencpu to render a report for function.csv
 #'
-#' Three general wrapper function to work with opencpu, which can render source r markdown code into html files, to be displacyed on the client end
+#' This function works on the opencpu server end, to produce an html file, which can then be retrieved by javascript or any other customer api tool.
+#' It also works on the stand alone mode, to generate a report file, output.html in the currrent folder, using a public accessible rmd file on github.
+#' Of course, this need internect connection to run
 #'
-#' @param rmd_file For render_rmd_server, a string of the file name on the same opencpu server in the same package, only for tests
+#'
+#' @param file the file path, string is the tsv file, peptide.txt
+#'
 #' @return no direct return, but write an output.html to the temp session on the opencpu server
-#' @seealso \code{\link{render}}  \code{\link{knit}}
+#' @seealso \code{\link{render}}  \code{\link{knit}} \code{\link{render_MQsummary}} \code{\link{render_MQsummary_file}} \code{\link{render_proteinGroups_file}}
 #' @examples
-#'   path_to_input <- system.file("rmd", rmd_file, package = "rmdocpu")
-#'   render_rmd_server(path_to_input)
+#'   # run locally
+#'   render_function_file("function.csv")
 #' @export
 #'
+#'
+#'
 
-render_rmd_server <- function(rmd_file){
-  ## for test use input.Rmd
-  path_to_input <- system.file("rmd", rmd_file, package = "rmdocpu")
 
-  myfile <- readLines(path_to_input)
+
+render_function_file <- function(file){
+
+  #data_table  <- readxl::read_excel(file, sheet = 2) # readin from xl file
+  data_table <- read.csv(file, header = TRUE, sep = ",")
+
+  myfile <- RCurl::getURL("https://raw.githubusercontent.com/ningzhibin/rmdocpu/master/inst/rmd/ML_report_function.Rmd")
   writeLines(myfile, con="input.Rmd");
-  rmarkdown::render("input.Rmd",output_format = "html_document", output_file="output.html")
+
+  rmarkdown::render("input.Rmd",output_format = "html_document", params = list(input_datatable =  data_table), output_file="output.html")
 
   invisible()
 }
+
+
 
 
 

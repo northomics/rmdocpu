@@ -1,6 +1,6 @@
 ---
 title: "Maxquant peptide.txt Quick summary"
-author: suggestions please to "ningzhibinn@gmail.com"
+author: suggestions please to "imetalabca@gmail.com"
 date: "`r Sys.time()`"
 output:
   html_document:
@@ -13,7 +13,7 @@ output:
       smooth_scroll: TRUE
     number_sections: true
 params:  
-  input_datatable: !r mtcars ### note that the table not a reference or path
+  input_datatable: !r 1 ### note that the table not a reference or path, if provided (override 1), will be used for reporting, otherwise will use default setup
 ---
 
 <style type="text/css">
@@ -50,8 +50,6 @@ library(plotly)
 
 
 ```{r function_needed, recho=FALSE}
-
-
 
 tidy_peptides <- function(peptide.txt){ 
 
@@ -105,13 +103,21 @@ tidy_peptides <- function(peptide.txt){
 ```{r file_summary, echo=FALSE,fig.width= 15,fig.height=10}
 
 
-# start from the data table for parametrized version
-peptide_tidyed <- tidy_peptides(params$input_datatable)
+# input
+if(length(params$input_datatable) ==1){
+  # test with local test with local files in the same dir,
+  peptide.txt  <- read.delim("peptides3.txt", header = TRUE,check.names = FALSE, stringsAsFactors = FALSE)
+
+}else{
+  # opencpu render from data table by parametrized input
+  peptide.txt <- params$input_datatable
+}
 
 
-# This lines is only for debugging
-# peptide.txt  <- read.delim("peptides3.txt", header = TRUE,check.names = FALSE, stringsAsFactors = FALSE)
-# peptide_tidyed <- tidy_peptides(peptide.txt)
+
+# tidy and process:
+
+peptide_tidyed <- tidy_peptides(peptide.txt)
 
 
 df_intensity <- peptide_tidyed$intensity_matrix
@@ -344,46 +350,44 @@ if(ncol(df_intensity) > 1){
 
 
 
-`r if(ncol(df_intensity) > 1){ "## PCA"}`
+`r if(ncol(df_intensity) > 3){ "## PCA"}`
 
 
 ```{r echo=FALSE,fig.width= 8,fig.height=6}
 
-if(ncol(df_intensity) > 1){ 
-  
+if(ncol(df_intensity) > 3){
+
   PCA_result <- prcomp(t(df_intensity_log10))
   loading <- as.data.frame(PCA_result$x)
-  loading$Sample.Name <- rownames(loading)
-  plot_ly(loading, x = ~PC1, y = ~PC2, z = ~PC3) %>%
-  add_markers() %>%
-  add_text(text = row.names(loading))
+  plot(loading$PC1, loading$PC2)
+  plot_ly(data = loading, x = ~PC1, y = ~PC2) %>% add_markers() %>% add_text(text = row.names(loading))
 
 }
 
 
 ```
 
-`r if(ncol(df_intensity) > 1){ "**Scree plot shows the performance of the PCA analysis, the more the top procomponets accounts, the better separation**"}`
+`r if(ncol(df_intensity) > 3){ "**Scree plot shows the performance of the PCA analysis, the more the top procomponets accounts, the better separation**"}`
 
 
 ```{r echo=FALSE,fig.width= 8,fig.height=6}
 
-  # screen plot
-if(ncol(df_intensity) > 1){ 
+#screen plot
+if(ncol(df_intensity) > 3){
 
   sd <- PCA_result$sde
   var <- sd^2
   var.percent <- var/sum(var) * 100
-  
+
   PCs <- paste("PC", 1:length(var.percent))
-  
-  
+
+
   df_scree <- data.frame(PC  = factor(PCs, levels = PCs), ratio =var.percent)
-  
-  
-  plot_ly(data = df_scree,x = ~PC, y = ~ratio, type = "bar") %>% 
+
+
+  plot_ly(data = df_scree,x = ~PC, y = ~ratio, type = "bar") %>%
     layout(title = "Scree Plot of Principle components", xaxis = list(title = 'Principle Component'), yaxis = list(title = 'Variance(%)'))
-  
+
 
   }
 
@@ -403,6 +407,7 @@ if(ncol(df_intensity) > 1){
 
 
 df_intensity <- as.data.frame(df_intensity)
+
 rownames(df_intensity) <- peptide_sequence
 
 

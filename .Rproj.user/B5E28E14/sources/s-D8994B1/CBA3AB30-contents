@@ -147,25 +147,35 @@ curl::curl_download(paste0(url_server, path_target), "taxon_summary.html")
 
 
 
+# this is the function.csv
+
+#########################################################################################################
+
+url_api <- "http://206.12.91.148/ocpu/library/rmdocpu/R/render_function_file"
+
+# get the root url
+url_api_split <- strsplit(url_api, "/")[[1]]
+url_server<- paste0(url_api_split[1],"//", url_api_split[3],"/")
+
+# upload file and do the rendering
+# in this case, the proteinGroups.txt is in the working dir. it can be anywhere with the path
+# variable r is the returning information from the curl function
+r <- httr::POST(url_api, body = list(file = httr::upload_file("function.csv")))
+
+# get all the paths of all files from the opencpu end, and locate the one, which is the report
+# this step needs to be done in the script enviroment
+
+paths <- strsplit(rawToChar(r$content), "\n")[[1]]
+path_target <- paths[grep("output.html",paths)]
+
+# save/download the report file to local storage
+# the file  "maxquant_result_summary.html" now is the report
+curl::curl_download(paste0(url_server, path_target), "function_summary.html")
 
 
 
 
 
-# file <-  "MetaLab_taxonomy.xlsx"
-
-# data_table  <- readxl::read_excel(file, sheet = 2)
-
-rmarkdown::render("ML_report_taxonomy.Rmd", output_format = "html_document", params = list(input_datatable =  data_table),output_file="output.html")
-
-
-rmarkdown::run("ML_report_taxonomy.Rmd",render_args =list(params = list(input_datatable =  data_table)) )
-
-rmarkdown::run("ML_report_taxonomy_standalone.Rmd")
-
-
-
-rmarkdown::render("test.Rmd", html_document(self_contained = TRUE))
 
 
 
