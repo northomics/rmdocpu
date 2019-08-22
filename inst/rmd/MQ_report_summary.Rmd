@@ -1,6 +1,6 @@
 ---
 title: "Maxquant Summary.txt Quick View"
-author: suggestions to "ningzhibinn@gmail.com"
+author: suggestions to "imetalabca@gmail.com"
 date: "`r Sys.time()`"
 output:
   html_document:
@@ -13,7 +13,7 @@ output:
       smooth_scroll: TRUE
     number_sections: true
 params:  
-  summary_file_tbl: !r mtcars ### note that the value is the real value, here supposed to be a read in data.table for one click function.  
+  summary_file_tbl: !r 1 ### note that the value is the real value, here supposed to be a read in data.table for one click function.  
 ---
 
 <style type="text/css">
@@ -118,13 +118,19 @@ tidy_MQ_summary <- function(df_summary.txt){
 ```{r file_summary, echo=FALSE,fig.width= 15,fig.height=10}
 
 
-# start from the data table for parametrized version
-summary_file_summary <- tidy_MQ_summary(params$summary_file_tbl)
+# input
+if(length(params$input_datatable) ==1){
+  # test with local test with local files in the same dir,
+  df_summary.txt  <- read_tsv("summary3.txt", col_names = TRUE)
 
-# This 2 lines is only for debugging
-#df_summary.txt  <- read_tsv("summary3.txt", col_names = TRUE)
-#summary_file_summary <- tidy_MQ_summary(df_summary.txt)
+}else{
+  # opencpu render from data table by parametrized input
+  df_summary.txt <- params$summary_file_tbl
+}
 
+
+
+summary_file_summary <- tidy_MQ_summary(df_summary.txt)
 
 
 df_all <- as.data.frame(t(summary_file_summary$summary_all))

@@ -1,6 +1,6 @@
 ---
 title: "Maxquant proteinGroups.txt Quick summary"
-author: suggestions please to "ningzhibinn@gmail.com"
+author: suggestions please to "imetalabca@gmail.com"
 date: "`r Sys.time()`"
 output:
   html_document:
@@ -13,7 +13,7 @@ output:
       smooth_scroll: TRUE
     number_sections: true
 params:  
-  input_datatable: !r mtcars ### note that the value is the real value, here supposed to be a read in data.table for one click function.  
+  input_datatable: !r 1 ### note that the value is the real value, here supposed to be a read in data.table for one click function.  
 ---
 
 <style type="text/css">
@@ -104,15 +104,27 @@ tidy_proteingroups <- function(proteinGroups){
 ```{r file_summary, echo=FALSE,fig.width= 15,fig.height=10}
 
 
-# start from the data table for parametrized version
-proteingroups_tidyed <- tidy_proteingroups(params$input_datatable)
+# input
+if(length(params$input_datatable) ==1){
+  # test with local test with local files in the same dir,
+  proteinGroups.txt <- read.delim("proteinGroups4.txt", header = TRUE,check.names = FALSE, stringsAsFactors = FALSE)
+
+}else{
+  # opencpu render from data table by parametrized input
+  proteinGroups.txt <- params$input_datatable
+}
 
 
-# This 2 lines is only for debugging
-#proteinGroups.txt  <- read.delim("proteinGroups4.txt", header = TRUE,check.names = FALSE, stringsAsFactors = FALSE)
-#proteingroups_tidyed<- tidy_proteingroups(proteinGroups.txt)
 
 
+
+
+# tioy
+proteingroups_tidyed <- tidy_proteingroups(proteinGroups.txt)
+
+
+
+# process
 df_intensity <- proteingroups_tidyed$intensity_matrix
 
 
