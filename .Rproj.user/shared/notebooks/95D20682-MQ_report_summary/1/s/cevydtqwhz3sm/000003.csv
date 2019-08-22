@@ -1,6 +1,0 @@
-"0","length(grep(""Experiment"", colnames(summary)))>0
-"
-"1","[1]"
-"1"," TRUE"
-"1","
-"

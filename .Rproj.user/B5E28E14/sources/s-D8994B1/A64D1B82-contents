@@ -134,7 +134,7 @@ render_MQsummary <- function(data_table){
 
 render_MQsummary_file <- function(file){
 
-  data_table  <- readr::read_tsv(file, col_names = TRUE)
+  data_table <- read.delim(file, header = TRUE,check.names = FALSE, stringsAsFactors = FALSE)
 
   myfile <- RCurl::getURL("https://raw.githubusercontent.com/ningzhibin/rmdocpu/master/inst/rmd/MQ_report_summary.Rmd")
   writeLines(myfile, con="input.Rmd");

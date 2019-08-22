@@ -1,0 +1,13 @@
+"0","if(ncol(df_intensity) > 1){ 
+  
+  PCA_result <- prcomp(t(df_intensity_log10))
+  loading <- as.data.frame(PCA_result$x)
+  loading$Sample.Name <- rownames(loading)
+  plot_ly(loading, x = ~PC1, y = ~PC2, z = ~PC3) %>%
+  add_markers() %>%
+  add_text(text = row.names(loading))
+
+}
+"
+"2","Error in eval(expr, data, expr_env) : object 'PC3' not found
+"

@@ -1,0 +1,13 @@
+"0","
+df_score <- data.frame(Score  = proteingroups_tidyed$score)
+
+
+p<- ggplot2::ggplot(data=df_score, aes(Score)) +
+  geom_histogram(aes(y=..density..),color= ""black"",fill=""white"")+
+  geom_density(alpha=.2, fill=""#FF6666"")+
+  theme_bw()
+
+plotly::ggplotly(p)
+"
+"2","`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+"
