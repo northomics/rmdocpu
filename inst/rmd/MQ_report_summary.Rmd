@@ -1,7 +1,9 @@
 ---
-title: "Maxquant Summary.txt Quick View"
-author: suggestions to "imetalabca@gmail.com"
-date: "`r Sys.time()`"
+title: "MetaLab MS identification Quick Summary"
+
+author: Suggestions to imetalabca@gmail.com
+date: Report generated @`r Sys.time()`
+
 output:
   html_document:
     fig_width: 10
@@ -13,7 +15,8 @@ output:
       smooth_scroll: TRUE
     number_sections: true
 params:  
-  summary_file_tbl: !r 1 ### note that the value is the real value, here supposed to be a read in data.table for one click function.  
+  summary_file_tbl: !r 1 ### manditory note that the value is the real value, here supposed to be a read in data.table for one click function.
+  meta_table: !r 1 ### optional this meta is optional, if provided, will do some statistics
 ---
 
 <style type="text/css">
@@ -36,11 +39,10 @@ library(plotly)
 #library(DT) # for interactive data table display 
 
 # local usage test and debug
-# rmarkdown::render("MQ_report_summary_ocpu.Rmd", params = list(summary_file_tbl =  your_readin_tbl))
+# rmarkdown::render("MQ_report_summary_meta.Rmd", params = list(summary_file_tbl =  df_summary.txt))
+# or with meta information
+# rmarkdown::render("MQ_report_summary_meta.Rmd", params = list(summary_file_tbl =  df_summary.txt, meta_table = meta_table_input))
 # on local machine, your_readin_tbl is a data table, while on ocpu, your_readin_tbl is a json formatted table
-
-# version control
-# 20190807
 
 
 ```
@@ -71,13 +73,12 @@ tidy_MQ_summary <- function(df_summary.txt){
     
     # and if there are separate rows for experimental desgin,
     # otherwise, expereiment desgin is set with one raw file one experiment 
-    if(length(which(is.na(summary$Experiment))) > 0){
-     df_rawfiles <-summary[!is.na(summary$Experiment),]
+    if(length(which(nchar(summary$Experiment) ==0)) >0){ # this 
+     df_rawfiles <-summary[which(nchar(summary$Experiment) >0),]
   
       # take out rows about experiment summary
-      df_experiment <- summary[is.na(summary$Experiment),]
+      df_experiment <- summary[which(nchar(summary$Experiment) ==0),]
     
-      
       return(list("summary_all" = last_line,
                   "summary_rawfiles" = df_rawfiles,
                   "summary_experiment" = df_experiment,
@@ -106,6 +107,191 @@ tidy_MQ_summary <- function(df_summary.txt){
       ))
     
   }
+
+}
+
+
+
+MQ_QC_plot<- function(data.frame, 
+                      plot_type = c("scatter", "bar", "density", "histogram", "freqpoly", "box", "violin") ,
+                      group = NULL, 
+                      cutoff = 20, 
+                      maintitle = "", 
+                      xlabel = "",
+                      vertical =  FALSE,
+                      ...
+                ){
+  
+  
+  # in case some column names are not valid names (containing special symbol, like space, % etc)
+  names(data.frame)[1] <- "names"
+  names(data.frame)[2] <- "value"
+  
+  data.frame$plot_order_x <- 1: nrow(data.frame) # this column is going to be used as x axis
+  
+  # of there is no grouping information, give all rows the same group
+  if(is.null(group)){
+    group <- "All"
+    data.frame$All = "All"
+    
+  }
+  
+  
+  if(length(plot_type) == 0){
+    stop
+  }else{
+    plot_out <- list()
+  }
+  
+  if("scatter" %in% plot_type){
+    scatter_plot <- ggplot(data.frame) + 
+      # geom_rect(data=data.frame(xmin=-Inf, xmax=Inf, ymin= -Inf, ymax=cutoff), 
+      #           aes(xmin=xmin, xmax=xmax, ymin=ymin,ymax=ymax), 
+      #           fill="red", alpha=0.1) +
+      # geom_rect(data=data.frame(xmin=-Inf, xmax=Inf, ymin= cutoff, ymax=Inf), 
+      #           aes(xmin=xmin, xmax=xmax, ymin=ymin,ymax=ymax), 
+      #           fill="lightblue", alpha=0.5) +
+      #annotate("rect", xmin=-Inf, xmax= Inf, ymin=0, ymax=cutoff, alpha=0.1, fill="red") +
+      #annotate("rect", xmin=-Inf, xmax=Inf, ymin=cutoff, ymax=Inf, alpha=0.5, fill="lightblue") +
+      geom_point(aes_string(x = "plot_order_x", y = "value", colour = group)) +
+      geom_hline(yintercept = cutoff, linetype="dashed", color = "blue", size=1) +
+      scale_x_continuous(breaks = 1:nrow(data.frame),labels = data.frame[,1]) +
+      labs(title = maintitle, x = "", y = xlabel) + 
+      theme_bw() +
+      theme(plot.title = element_text(hjust = 0.5),
+            axis.text.x = element_text(angle = 90, hjust = 1),
+            panel.grid = element_blank())
+    
+      if(vertical){
+        scatter_plot <- scatter_plot + coord_flip()
+      }
+    
+    plot_out <- c(plot_out, list("scatter_plot" = scatter_plot))
+  }
+  if("bar" %in% plot_type){
+    bar_plot <- ggplot(data.frame) +
+      
+      #annotate("rect", xmin=-Inf, xmax= Inf, ymin=0, ymax=cutoff, alpha=0.1, fill="red") +
+      #annotate("rect", xmin=-Inf, xmax=Inf, ymin=cutoff, ymax=Inf, alpha=0.5, fill="lightblue") +
+      geom_hline(yintercept = cutoff, linetype="dashed", color = "blue", size=1) +
+      geom_col(aes_string(x = "plot_order_x", y = "value", fill = group))+
+      scale_x_continuous(breaks = 1:nrow(data.frame),labels = data.frame[,1]) +
+      
+      labs(title = maintitle, x = "",y = xlabel) + 
+      theme_bw() +
+      theme(plot.title = element_text(hjust = 0.5),
+            axis.text.x = element_text(angle = 90, hjust = 1),
+            panel.grid = element_blank())
+    
+    if(vertical){
+      bar_plot <- bar_plot + coord_flip()
+    }
+    
+    plot_out <- c(plot_out, list("bar_plot" = bar_plot))
+    
+  }
+  if("freqpoly" %in% plot_type){
+    # distritibution
+    freqpoly_plot <- ggplot(data.frame) +
+      annotate("rect", xmin=-Inf, xmax= cutoff, ymin=0, ymax=Inf, alpha=0.1, fill="red") +
+      annotate("rect", xmin=cutoff, xmax=Inf, ymin=0, ymax=Inf, alpha=0.5, fill="lightblue") +
+      geom_freqpoly(aes_string("value",colour = group) )+
+      geom_vline(xintercept = cutoff, linetype="dashed", color = "blue", size=1)+
+      labs(title = maintitle,  x = "",y = xlabel) + 
+      theme_bw() +
+      theme(plot.title = element_text(hjust = 0.5),
+            axis.text.x = element_text(angle = 90, hjust = 1),
+            panel.grid = element_blank())
+    if(vertical){
+      freqpoly_plot <- freqpoly_plot + coord_flip()
+    }
+    
+    plot_out <- c(plot_out, list("freqpoly_plot" = freqpoly_plot))
+  }
+  
+  if("histogram" %in% plot_type){
+    histogram_plot <- ggplot(data.frame) +
+      annotate("rect", xmin=-Inf, xmax= cutoff, ymin=0, ymax=Inf, alpha=0.1, fill="red") +
+      annotate("rect", xmin=cutoff, xmax=Inf, ymin=0, ymax=Inf, alpha=0.5, fill="lightblue") +
+      geom_histogram(aes_string("value", colour = group, fill = group),position = "identity",alpha = 0.5)+
+      geom_vline(xintercept = cutoff, linetype="dashed", color = "blue", size=1)+
+      labs(title = maintitle,  x = "",y = xlabel) + 
+      theme_bw() +
+      theme(plot.title = element_text(hjust = 0.5),
+            axis.text.x = element_text(angle = 90, hjust = 1),
+            panel.grid = element_blank())
+    if(vertical){
+      histogram_plot <- histogram_plot + coord_flip()
+    }
+    plot_out <- c(plot_out, list("histogram_plot" = histogram_plot))
+  }
+  
+  
+  
+  if("density" %in% plot_type){
+    density_plot <-ggplot(data.frame) +
+      annotate("rect", xmin=-Inf, xmax= cutoff, ymin=0, ymax=Inf, alpha=0.1, fill="red") +
+      annotate("rect", xmin=cutoff, xmax=Inf, ymin=0, ymax=Inf, alpha=0.5, fill="lightblue") +
+      geom_density(aes_string("value", colour = group, fill = group),position = "identity",alpha = 0.5) +
+      geom_vline(xintercept = cutoff, linetype="dashed", color = "blue", size=1)+
+      labs(title = maintitle,  x = "",y = xlabel) + 
+      theme_bw() +
+      theme(plot.title = element_text(hjust = 0.5),
+            axis.text.x = element_text(angle = 90, hjust = 1),
+            panel.grid = element_blank())
+    if(vertical){
+      density_plot <- density_plot + coord_flip()
+    }
+    plot_out <- c(plot_out, list("density_plot" = density_plot))
+  }
+  
+  
+  if("violin" %in% plot_type){
+    violin_plot <- ggplot(data.frame) +
+      geom_violin(aes_string(x =group,  y = "value", colour = group, fill = group))+
+      geom_jitter(aes_string(x =group,  y = "value",colour = group, fill = group),shape=21)  +
+      geom_hline(yintercept = cutoff, linetype="dashed", color = "blue", size=1) +
+      labs(title = maintitle,  x = "",y = xlabel) + 
+      theme_bw() +
+      theme(plot.title = element_text(hjust = 0.5),
+            axis.text.x = element_text(angle = 90, hjust = 1),
+            panel.grid = element_blank())
+    if(vertical){
+      violin_plot <- violin_plot + coord_flip()
+    }
+    plot_out <- c(plot_out, list("violin_plot" = violin_plot))
+    
+  }
+  
+  
+  if("box" %in% plot_type){
+    box_plot <- ggplot(data.frame) +
+      geom_boxplot(aes_string(x =group,  y = "value", colour = group, fill = group))+
+      geom_jitter(aes_string(x =group,  y = "value",colour = group, fill = group),shape=21)  +
+      geom_hline(yintercept = cutoff, linetype="dashed", color = "blue", size=1) +
+      labs(title = maintitle,  x = "",y = xlabel) + 
+      theme_bw() +
+      theme(plot.title = element_text(hjust = 0.5),
+            axis.text.x = element_text(angle = 90, hjust = 1),
+            panel.grid = element_blank())
+    if(vertical){
+      box_plot <- box_plot + coord_flip()
+    }
+    plot_out <- c(plot_out, list("box_plot" = box_plot))
+    
+  }
+  
+  
+  return(plot_out) 
+  
+  # Example
+  # my_test <- data.frame("samplename" = paste0("sample_", 1:20),
+  #                       "msms_id" = c(abs(rnorm(10))*10+20, abs(rnorm(10))*10+30),
+  #                       "treat_group" = c(paste0("group_", rep("A",10)), paste0("group_", rep("B",10)))
+  # )
+  # 
+  # tt <-  MQ_QC_plot(my_test, plot_type = c("scatter","bar","density", "histogram", "freqpoly", "box", "violin"), cutoff = 35, group = "treat_group", maintitle = "MSMS ID Rate", xlabel = "MS/MS ID %")
+  # now tt has all the required plot
   
   
 }
@@ -114,13 +300,13 @@ tidy_MQ_summary <- function(df_summary.txt){
 
 
 
-```{r file_summary, echo=FALSE,fig.width= 15,fig.height=10}
+```{r collectInput, echo=FALSE,fig.width= 15,fig.height=10}
 
 
 # input
 if(length(params$summary_file_tbl) == 1){
   # test with local test with local files in the same dir,
-  df_summary.txt  <- read.delim("summary2.txt", header = TRUE, check.names = FALSE, stringsAsFactors = FALSE)
+  df_summary.txt  <- read.delim("summary1_simple.txt", header = TRUE, check.names = FALSE, stringsAsFactors = FALSE)
 
 }else{
   # opencpu render from data table by parametrized input
@@ -129,10 +315,33 @@ if(length(params$summary_file_tbl) == 1){
 
 
 
+
+# Note: The folling analysis with meta infor assumes that
+# 1st columns as sample name, 2/3 column as grouping
+
+if(length(params$meta_table) >1 ){ 
+  meta_table <- params$meta_table 
+}else{
+  # meta_table <- read.delim("summary1_meta.txt", header = TRUE, check.names = FALSE, stringsAsFactors = FALSE) # test with meta file
+  meta_table <- NULL # test without meta file
+}
+# meta_table_input <- read.delim("summary1_meta.txt", header = TRUE, check.names = FALSE, stringsAsFactors = FALSE)
+
+
+```
+
+
+```{r process, echo=FALSE,fig.width= 15,fig.height=10}
+
+# process the file
+
 summary_file_summary <- tidy_MQ_summary(df_summary.txt)
 
 
+# get the raw stat line for output
 df_all <- as.data.frame(t(summary_file_summary$summary_all))
+
+
 
 
 ```
@@ -141,18 +350,33 @@ df_all <- as.data.frame(t(summary_file_summary$summary_all))
 # Take-home figures
 
 
-
 *  **Peptide Sequences Identified in total: ** `r df_all["Peptide Sequences Identified"]`
 
 *  **Avearge ms/ms identification rate(%): ** `r df_all["MS/MS Identified [%]"]`
 
-*  **Average mass deviation(ppm): ** `r df_all["Av. Absolute Mass Deviation [ppm]"]`
+
+`r if( !is.null(meta_table)){ c("* **Groups: **",unique(meta_table[,3]))} `
 
 
 
+# MSMS id rate
 
 
-# MSMS id rate by raw file
+
+<details>
+  <summary>Why you should pay attention to MSMS Id rate?</summary>
+  
+1. MS ID rate is a good repretation of the MS run quality. Raw files from Q-Exactive series should have roughly around 50% ms ID rate (Percentage of MSMS spectra identified as peptided, at a 1% FDR).
+
+2. MS ID rate should also be well-reproduced across samples and groupings. 
+
+  *  Check the raw files if they have obnormally low ID rate, usually with abnormal LC profile or low MS intensity. 
+  *  A decreasing MS ID treand along sample run time indicates the performance drop of the MS: your MS might need to be cleaned. If you did not randomize the sample run-order, the data might not be usable. 
+
+</details>
+
+
+
 
 
 ```{r echo=FALSE,fig.width= 8,fig.height=6}
@@ -161,175 +385,75 @@ raw <-summary_file_summary$summary_rawfiles
 
 data.frame <- data.frame(rawfile= raw[["Raw file"]], msms_id_rate = raw[["MS/MS Identified [%]"]])
 
-# in case some column names are not valid names (containign special symbol, like space, % etc)
-colnames(data.frame) <- c("names","value")
 
-data.frame$plot_order_x <- 1: nrow(data.frame) # this column is going to be used as x axis
-
-# of there is no grouping information, give all rows the same group
-
-group <- "All"
-data.frame$All = "All"
-
-cutoff <- 10
-xlabel <-  "MS/MS ID %"
-maintitle <- "MSMS ID Rate"
-
-
-## find more plot in the subfunction_general_update MQ_QC_plot
-scatter_plot <- ggplot(data.frame) + 
-      #annotate("rect", xmin=-Inf, xmax= Inf, ymin=0, ymax=cutoff, alpha=0.1, fill="red") +
-      #annotate("rect", xmin=-Inf, xmax=Inf, ymin=cutoff, ymax=Inf, alpha=0.5, fill="lightblue") +
-      geom_point(aes_string(x = "plot_order_x", y = "value", colour = group)) +
-      geom_hline(yintercept = cutoff, linetype="dashed", color = "blue", size=1) +
-      #scale_x_continuous(breaks = 1:nrow(data.frame),labels = data.frame[,1]) +
-      labs(title = maintitle, x = "", y = xlabel) + 
-      theme_bw() +
-      theme(plot.title = element_text(hjust = 0.5),
-            axis.text.x = element_text(angle = 90, hjust = 1),
-            panel.grid = element_blank())
+if( !is.null(meta_table)){ 
+  # put the grouping information into the data.frame
+    data.frame <- merge(data.frame, meta_table, by.x= colnames(data.frame)[1], by.y = colnames(meta_table)[1])
     
+    # the plot, with meta, by the first column of grouping information, which is column 4 (column 3 as experiment)
+    # here, can add suport for 
+    
+    plots <-  MQ_QC_plot(data.frame, plot_type = c("scatter","density","box"), group = colnames(data.frame)[4],cutoff = 20,maintitle = "MSMS ID Rate", xlabel = "MS/MS ID %")
+    
+    #plot_ly(data.frame,x = data.frame[,4], y = ~Peptide_sequence_identified, type = "box",boxpoints = "all", jitter = 0.3) 
 
-scatter_plot
+  
+}else{
+    # plot without meta
+    plots <-  MQ_QC_plot(data.frame, plot_type = c("scatter","density", "box"), cutoff = 20,maintitle = "MSMS ID Rate", xlabel = "MS/MS ID %")
+ 
+}
 
 
+plots$scatter_plot
 
+plot_ly(data.frame, x = ~rawfile, y = ~msms_id_rate, type = "scatter")
 
-violin_plot <- ggplot(data.frame) +
-  geom_violin(aes_string(x =group,  y = "value", colour = group, fill = group))+
-  geom_jitter(aes_string(x =group,  y = "value",colour = group, fill = group),shape=21)  +
-  geom_hline(yintercept = cutoff, linetype="dashed", color = "blue", size=1) +
-  labs(title = maintitle,  x = "",y = xlabel) + 
-  theme_bw() +
-  theme(plot.title = element_text(hjust = 0.5),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-        panel.grid = element_blank())
-
-scatter_plot
-
-violin_plot
-
-#ggplotly(scatter_plot)
-#ggplotly(violin_plot)
-
+plotly::ggplotly(plots$density_plot)
+plotly::ggplotly(plots$box_plot)
 
 
 
 ```
 
 
+# Peptide Sequence
 
-`r if(summary_file_summary$set_experiment){ "# Peptide sequence id by Experiment"}`
 
 
 ```{r id_by_experiment, echo=FALSE,fig.width= 8,fig.height=6}
 
-if(summary_file_summary$set_experiment){
-  exp <- summary_file_summary$summary_experiment
-  colnames(exp)[1] <- "experiment"
-  p <-ggplot2::ggplot(data=exp, aes(x=experiment, y=`Peptide Sequences Identified`)) +
-    geom_bar(stat="identity") + coord_flip()+
-    theme_bw()
+data.frame <- data.frame(rawfile= raw[["Raw file"]], Peptide_sequence_identified = raw[["Peptide Sequences Identified"]])
+
+
+if( !is.null(meta_table)){ 
+  # put the grouping information into the data.frame
+    data.frame <- merge(data.frame, meta_table, by.x= colnames(data.frame)[1], by.y = colnames(meta_table)[1])
+    
+    # the plot, with meta, by the first column of grouping information, which is column 4 (column 3 as experiment)
+    # here, can add suport for 
+    
+    plots <-  MQ_QC_plot(data.frame, plot_type = c("scatter","density", "box"), group = colnames(data.frame)[4],cutoff = 0,maintitle = "Peptide Sequences Identified", xlabel = "Peptide Sequences Identified")
   
-  plotly::ggplotly(p)
+}else{
+    # plot without meta
+    plots <-  MQ_QC_plot(data.frame, plot_type = c("scatter","density", "box"), cutoff = 0,maintitle = "Peptide Sequences Identified", xlabel = "Peptide Sequences Identified")
+ 
 }
 
 
+plots$scatter_plot
+plot_ly(data.frame, x = ~rawfile, y = ~Peptide_sequence_identified, type = "scatter")
 
-```
+plotly::ggplotly(plots$density_plot)
+plotly::ggplotly(plots$box_plot)
 
-```{r echo=FALSE,fig.width= 8,fig.height=6}
-
-if(summary_file_summary$set_experiment){
-  df_exp_id <- data.frame(id = "id",peptides = exp$`Peptide Sequences Identified`)
-
-  p<- ggplot2::ggplot(data=df_exp_id, aes(x = id, y=peptides)) +
-  geom_boxplot(outlier.colour="red", outlier.shape=16,outlier.size=5, notch=TRUE)+
-  geom_jitter(shape=16, position=position_jitter(0.2))+
-  theme_bw()
-
-  plotly::ggplotly(p)
-
-}
-# Basic box plot
 
 
 
 ```
 
-```{r echo=FALSE,fig.width= 8,fig.height=6}
-if(summary_file_summary$set_experiment){
-  p<- ggplot2::ggplot(data=df_exp_id, aes(peptides)) +
-    geom_vline(aes(xintercept=mean(peptides)),color="blue", linetype="dashed", size=2)+
-  geom_histogram(aes(y=..density..),color= "black",fill="white")+
-  geom_density(alpha=.2, fill="#FF6666")+
-  theme_bw()
-
-plotly::ggplotly(p)
-}
-# histogram
-
-
-
-```
-
-
-# peptide sequence id by raw file
-
-**The result might look the same if the experimtal design is set to leave each rawfile as an experiment**
-
-
-
-```{r echo=FALSE,fig.width= 8,fig.height=6}
-
-raw <-summary_file_summary$summary_rawfiles
-
-p <-ggplot2::ggplot(data=raw, aes(x=`Raw file`, y=`Peptide Sequences Identified`)) +
-  geom_bar(stat="identity") + coord_flip()+
-  theme_bw()
-
-plotly::ggplotly(p)
-
-```
-
-
-
-```{r echo=FALSE,fig.width= 8,fig.height=6}
-
-
-# Basic box plot
-
-df_raw_id <- data.frame(rawfiles = "id",peptides = raw$`Peptide Sequences Identified`)
-row.names(df_raw_id) <- raw$`Raw file`
-
-p<- ggplot2::ggplot(data=df_raw_id, aes(x = rawfiles, y=peptides)) +
-  geom_boxplot(outlier.colour="red", outlier.shape=16,outlier.size=5, notch=TRUE)+
-  geom_jitter(shape=16, position=position_jitter(0.2))+
-  theme_bw()
-
-plotly::ggplotly(p)
-
-```
-
-
-```{r echo=FALSE,fig.width= 8,fig.height=6}
-
-# histogram
-
-p<- ggplot2::ggplot(data=df_raw_id, aes(peptides)) +
-  geom_vline(aes(xintercept=mean(peptides)),color="blue", linetype="dashed", size=2)+
-  geom_histogram(aes(y=..density..),color= "black",fill="white")+
-  geom_density(alpha=.2, fill="#FF6666")+
-  theme_bw()
-
-ggplotly(p)
-
-```
-
-
-
-
-# Average performance
+# Averaged performance
 
 check the averaged performance from all raw files:
 

@@ -127,6 +127,8 @@ render_MQsummary <- function(data_table){
 #'   # run locally
 #'   summary_file <-  "summary.txt"
 #'   render_MQsummary_file(summary_file)
+#'   # render_MQsummary_file(file ="summary1_simple.txt")
+#    # render_MQsummary_file(file ="summary1_simple.txt", meta = "summary1_meta.txt" )
 #' @export
 #'
 #'
@@ -163,8 +165,7 @@ render_MQsummary_file <- function(file,meta = NULL){
   invisible()
 }
 
-#render_MQsummary_file_meta(file ="summary1_simple.txt")
-#render_MQsummary_file_meta(file ="summary1_simple.txt", meta = "summary1_meta.txt" )
+
 
 
 
