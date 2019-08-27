@@ -18,11 +18,6 @@
 
 url_api <- "http://206.12.91.148/ocpu/library/rmdocpu/R/render_MQsummary_file"
 
-
-
-
-
-
 # get the root url
 url_api_split <- strsplit(url_api, "/")[[1]]
 url_server<- paste0(url_api_split[1],"//", url_api_split[3],"/")
@@ -33,7 +28,7 @@ url_server<- paste0(url_api_split[1],"//", url_api_split[3],"/")
 # in this case, the summary.txt is in the working dir. it can be anywhere with the path
 # I am sure java has it's onwn way to do this post request
 # variable r is the returning information from the curl function
-r <- httr::POST(url_api, body = list(file = httr::upload_file("summary2.txt")))
+r <- httr::POST(url_api, body = list(file = httr::upload_file("summary_error.txt")))
 
 # get all the paths of all files from the opencpu end, and locate the one, which is the report
 # this step needs to be done in the script enviroment
@@ -70,7 +65,7 @@ url_server<- paste0(url_api_split[1],"//", url_api_split[3],"/")
 # upload file and do the rendering
 # in this case, the proteinGroups.txt is in the working dir. it can be anywhere with the path
 # variable r is the returning information from the curl function
-r <- httr::POST(url_api, body = list(file = upload_file("proteinGroups1.txt")))
+r <- httr::POST(url_api, body = list(file = upload_file("proteinGroups_error.txt")))
 
 # get all the paths of all files from the opencpu end, and locate the one, which is the report
 # this step needs to be done in the script enviroment
