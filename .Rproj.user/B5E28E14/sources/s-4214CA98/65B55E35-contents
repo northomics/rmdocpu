@@ -1,0 +1,344 @@
+---
+title: "MetaLab MS identification Quick Summary"
+author: Suggestions to imetalabca@gmail.com
+date: Report generated @`r Sys.time()`
+output:
+  html_document:
+    fig_width: 10
+    fig_caption: TRUE
+    toc: true
+    toc_depth: 4
+    toc_float:
+      collapsed: TRUE
+      smooth_scroll: TRUE
+    number_sections: true
+params:  
+  summary_file_tbl: !r NULL ### Manditory; main data input for the report
+  meta_table: !r NULL ### Optional; If provided, will do some statistics
+---
+
+<style type="text/css">
+.main-container {
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+
+```{r setup, include=FALSE}
+# enviroment setup
+knitr::opts_chunk$set(echo = FALSE,warning = FALSE, message = FALSE, cache = TRUE)
+
+library(tidyverse)
+library(ggplot2)
+library(plotly)
+
+# other reqruied package:
+#  DT
+
+# local usage test and debug
+# rmarkdown::render("MQ_report_summary_meta.Rmd", params = list(summary_file_tbl =  df_summary.txt))
+# or with meta information
+# rmarkdown::render("MQ_report_summary_meta.Rmd", params = list(summary_file_tbl =  df_summary.txt, meta_table = meta_table_input))
+
+```
+
+
+
+```{r function_needed, recho=FALSE}
+
+tidy_MQ_summary <- function(df_summary.txt){
+  # the format of summary.txt mainly fall into three categories
+  
+  # df_summary.txt has to be a tidyverse tbl format, from read_tsv
+  # take out the last line to organize into a data.frame
+  
+  last_line <- t(df_summary.txt[nrow(df_summary.txt),])
+  last_line[last_line[,1] == ""] <- NA
+  last_line[last_line[,1] == "0"] <- NA
+  last_line <- last_line[-1,, drop = FALSE]
+  last_line <- last_line[which(!is.na(last_line[,1])),, drop =  FALSE]
+  colnames(last_line) <- ("values")
+  
+  summary <- df_summary.txt[-nrow(df_summary.txt),] # remove the last line
+  
+  # take out rows about raw files summary 
+  
+  # if there are experiment design column, 
+  if(length(grep("Experiment", colnames(summary)))>0){
+    
+    # and if there are separate rows for experimental desgin,
+    # otherwise, expereiment desgin is set with one raw file one experiment 
+    if(length(which(nchar(summary$Experiment) ==0)) >0){ # this 
+     df_rawfiles <-summary[which(nchar(summary$Experiment) >0),]
+  
+      # take out rows about experiment summary
+      df_experiment <- summary[which(nchar(summary$Experiment) ==0),]
+    
+      return(list("summary_all" = last_line,
+                  "summary_rawfiles" = df_rawfiles,
+                  "summary_experiment" = df_experiment,
+                  "set_experiment" = TRUE
+                  
+      ))
+    }else{
+      
+     df_rawfiles <-  summary
+      return(list("summary_all" = last_line,
+                  "summary_rawfiles" = df_rawfiles,
+                  "set_experiment" = FALSE # even with experiment setup, still no need to do
+                  
+      ))
+      
+    }
+    
+    # otherwise no need to do separate experiment display
+
+  }else{
+      df_rawfiles <-  summary
+      return(list("summary_all" = last_line,
+                  "summary_rawfiles" = df_rawfiles,
+                  "set_experiment" = FALSE
+                  
+      ))
+    
+  }
+
+}
+
+
+
+MQ_QC_plot<- function(data.frame, 
+                      plot_type = c("scatter", "bar", "density", "histogram", "freqpoly", "box", "violin") ,
+                      group = NULL, 
+                      cutoff = 20, 
+                      maintitle = "", 
+                      xlabel = "",
+                      vertical =  FALSE,
+                      ...
+                ){
+  
+  
+  # in case some column names are not valid names (containing special symbol, like space, % etc)
+  names(data.frame)[1] <- "names"
+  names(data.frame)[2] <- "value"
+  
+  data.frame$plot_order_x <- 1: nrow(data.frame) # this column is going to be used as x axis
+  
+  # of there is no grouping information, give all rows the same group
+  if(is.null(group)){
+    group <- "All"
+    data.frame$All = "All"
+    
+  }
+  
+  
+  if(length(plot_type) == 0){
+    stop
+  }else{
+    plot_out <- list()
+  }
+  
+  if("scatter" %in% plot_type){
+    scatter_plot <- ggplot(data.frame) + 
+      # geom_rect(data=data.frame(xmin=-Inf, xmax=Inf, ymin= -Inf, ymax=cutoff), 
+      #           aes(xmin=xmin, xmax=xmax, ymin=ymin,ymax=ymax), 
+      #           fill="red", alpha=0.1) +
+      # geom_rect(data=data.frame(xmin=-Inf, xmax=Inf, ymin= cutoff, ymax=Inf), 
+      #           aes(xmin=xmin, xmax=xmax, ymin=ymin,ymax=ymax), 
+      #           fill="lightblue", alpha=0.5) +
+      #annotate("rect", xmin=-Inf, xmax= Inf, ymin=0, ymax=cutoff, alpha=0.1, fill="red") +
+      #annotate("rect", xmin=-Inf, xmax=Inf, ymin=cutoff, ymax=Inf, alpha=0.5, fill="lightblue") +
+      geom_point(aes_string(x = "plot_order_x", y = "value", colour = group)) +
+      geom_hline(yintercept = cutoff, linetype="dashed", color = "blue", size=1) +
+      scale_x_continuous(breaks = 1:nrow(data.frame),labels = data.frame[,1]) +
+      labs(title = maintitle, x = "", y = xlabel) + 
+      theme_bw() +
+      theme(plot.title = element_text(hjust = 0.5),
+            axis.text.x = element_text(angle = 90, hjust = 1),
+            panel.grid = element_blank())
+    
+      if(vertical){
+        scatter_plot <- scatter_plot + coord_flip()
+      }
+    
+    plot_out <- c(plot_out, list("scatter_plot" = scatter_plot))
+  }
+  if("bar" %in% plot_type){
+    bar_plot <- ggplot(data.frame) +
+      
+      #annotate("rect", xmin=-Inf, xmax= Inf, ymin=0, ymax=cutoff, alpha=0.1, fill="red") +
+      #annotate("rect", xmin=-Inf, xmax=Inf, ymin=cutoff, ymax=Inf, alpha=0.5, fill="lightblue") +
+      geom_hline(yintercept = cutoff, linetype="dashed", color = "blue", size=1) +
+      geom_col(aes_string(x = "plot_order_x", y = "value", fill = group))+
+      scale_x_continuous(breaks = 1:nrow(data.frame),labels = data.frame[,1]) +
+      
+      labs(title = maintitle, x = "",y = xlabel) + 
+      theme_bw() +
+      theme(plot.title = element_text(hjust = 0.5),
+            axis.text.x = element_text(angle = 90, hjust = 1),
+            panel.grid = element_blank())
+    
+    if(vertical){
+      bar_plot <- bar_plot + coord_flip()
+    }
+    
+    plot_out <- c(plot_out, list("bar_plot" = bar_plot))
+    
+  }
+  if("freqpoly" %in% plot_type){
+    # distritibution
+    freqpoly_plot <- ggplot(data.frame) +
+      annotate("rect", xmin=-Inf, xmax= cutoff, ymin=0, ymax=Inf, alpha=0.1, fill="red") +
+      annotate("rect", xmin=cutoff, xmax=Inf, ymin=0, ymax=Inf, alpha=0.5, fill="lightblue") +
+      geom_freqpoly(aes_string("value",colour = group) )+
+      geom_vline(xintercept = cutoff, linetype="dashed", color = "blue", size=1)+
+      labs(title = maintitle,  x = "",y = xlabel) + 
+      theme_bw() +
+      theme(plot.title = element_text(hjust = 0.5),
+            axis.text.x = element_text(angle = 90, hjust = 1),
+            panel.grid = element_blank())
+    if(vertical){
+      freqpoly_plot <- freqpoly_plot + coord_flip()
+    }
+    
+    plot_out <- c(plot_out, list("freqpoly_plot" = freqpoly_plot))
+  }
+  
+  if("histogram" %in% plot_type){
+    histogram_plot <- ggplot(data.frame) +
+      annotate("rect", xmin=-Inf, xmax= cutoff, ymin=0, ymax=Inf, alpha=0.1, fill="red") +
+      annotate("rect", xmin=cutoff, xmax=Inf, ymin=0, ymax=Inf, alpha=0.5, fill="lightblue") +
+      geom_histogram(aes_string("value", colour = group, fill = group),position = "identity",alpha = 0.5)+
+      geom_vline(xintercept = cutoff, linetype="dashed", color = "blue", size=1)+
+      labs(title = maintitle,  x = "",y = xlabel) + 
+      theme_bw() +
+      theme(plot.title = element_text(hjust = 0.5),
+            axis.text.x = element_text(angle = 90, hjust = 1),
+            panel.grid = element_blank())
+    if(vertical){
+      histogram_plot <- histogram_plot + coord_flip()
+    }
+    plot_out <- c(plot_out, list("histogram_plot" = histogram_plot))
+  }
+  
+  
+  
+  if("density" %in% plot_type){
+    density_plot <-ggplot(data.frame) +
+      annotate("rect", xmin=-Inf, xmax= cutoff, ymin=0, ymax=Inf, alpha=0.1, fill="red") +
+      annotate("rect", xmin=cutoff, xmax=Inf, ymin=0, ymax=Inf, alpha=0.5, fill="lightblue") +
+      geom_density(aes_string("value", colour = group, fill = group),position = "identity",alpha = 0.5) +
+      geom_vline(xintercept = cutoff, linetype="dashed", color = "blue", size=1)+
+      labs(title = maintitle,  x = "",y = xlabel) + 
+      theme_bw() +
+      theme(plot.title = element_text(hjust = 0.5),
+            axis.text.x = element_text(angle = 90, hjust = 1),
+            panel.grid = element_blank())
+    if(vertical){
+      density_plot <- density_plot + coord_flip()
+    }
+    plot_out <- c(plot_out, list("density_plot" = density_plot))
+  }
+  
+  
+  if("violin" %in% plot_type){
+    violin_plot <- ggplot(data.frame) +
+      geom_violin(aes_string(x =group,  y = "value", colour = group, fill = group))+
+      geom_jitter(aes_string(x =group,  y = "value",colour = group, fill = group),shape=21)  +
+      geom_hline(yintercept = cutoff, linetype="dashed", color = "blue", size=1) +
+      labs(title = maintitle,  x = "",y = xlabel) + 
+      theme_bw() +
+      theme(plot.title = element_text(hjust = 0.5),
+            axis.text.x = element_text(angle = 90, hjust = 1),
+            panel.grid = element_blank())
+    if(vertical){
+      violin_plot <- violin_plot + coord_flip()
+    }
+    plot_out <- c(plot_out, list("violin_plot" = violin_plot))
+    
+  }
+  
+  
+  if("box" %in% plot_type){
+    box_plot <- ggplot(data.frame) +
+      geom_boxplot(aes_string(x =group,  y = "value", colour = group, fill = group))+
+      geom_jitter(aes_string(x =group,  y = "value",colour = group, fill = group),shape=21)  +
+      geom_hline(yintercept = cutoff, linetype="dashed", color = "blue", size=1) +
+      labs(title = maintitle,  x = "",y = xlabel) + 
+      theme_bw() +
+      theme(plot.title = element_text(hjust = 0.5),
+            axis.text.x = element_text(angle = 90, hjust = 1),
+            panel.grid = element_blank())
+    if(vertical){
+      box_plot <- box_plot + coord_flip()
+    }
+    plot_out <- c(plot_out, list("box_plot" = box_plot))
+    
+  }
+  
+  
+  return(plot_out) 
+  
+  # Example
+  # my_test <- data.frame("samplename" = paste0("sample_", 1:20),
+  #                       "msms_id" = c(abs(rnorm(10))*10+20, abs(rnorm(10))*10+30),
+  #                       "treat_group" = c(paste0("group_", rep("A",10)), paste0("group_", rep("B",10)))
+  # )
+  # 
+  # tt <-  MQ_QC_plot(my_test, plot_type = c("scatter","bar","density", "histogram", "freqpoly", "box", "violin"), cutoff = 35, group = "treat_group", maintitle = "MSMS ID Rate", xlabel = "MS/MS ID %")
+  # now tt has all the required plot
+  
+  
+}
+
+```
+
+
+# Intro
+
+**This report provides some overall description of the database search. **
+**Users can use this to quickly check the overal quality of the experiment**
+
+
+```{r collectInput, echo=FALSE,fig.width= 15,fig.height=10}
+
+
+# input
+if(is.null(params$summary_file_tbl)){
+  # test with local files
+  df_summary.txt  <- read.delim("summary1_simple.txt", header = TRUE, check.names = FALSE, stringsAsFactors = FALSE)
+
+}else{
+  # opencpu render from data table by parametrized input
+  df_summary.txt <- params$summary_file_tbl
+}
+
+# Note: some following analysis with meta infor assumes that
+# 1st columns as sample name, 2nd column as experiment name, 3rd column and after as grouping
+
+meta_table <- params$meta_table 
+
+# or test with metal files
+# meta_table <- read.delim("summary1_meta.txt", header = TRUE, check.names = FALSE, stringsAsFactors = FALSE)
+
+
+```
+
+
+```{r process, echo=FALSE,fig.width= 15,fig.height=10}
+
+# process the file
+
+summary_file_summary <- tidy_MQ_summary(df_summary.txt)
+
+# get the raw stat line for output
+df_all <- as.data.frame(t(summary_file_summary$summary_all))
+
+
+
+```
+
+
+
