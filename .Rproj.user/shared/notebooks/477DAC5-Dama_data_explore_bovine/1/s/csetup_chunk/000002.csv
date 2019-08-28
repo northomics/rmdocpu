@@ -1,0 +1,167 @@
+"0","# this doc could be used a as general service report template "
+"0",""
+"0","# enviroment setup"
+"0","knitr::opts_chunk$set(echo = FALSE,warning = FALSE, message = FALSE, cache = TRUE)"
+"0","# if you have a large file (large dataset to process) to knit, set cache = TRUE to speed up the test process"
+"0",""
+"0","source(""subfunctions_general.r"")"
+"2","Loading required package: RColorBrewer
+"
+"0","source(""subfunctions_general_update.r"")"
+"0","library(tidyverse)"
+"0","library(DT) # for interactive data table display "
+"2","
+Attaching package: ‘DT’
+
+"
+"2","The following objects are masked from ‘package:shiny’:
+
+    dataTableOutput, renderDataTable
+
+"
+"0","library(clusterProfiler) # for general enrichment analysis"
+"2","
+"
+"2","Registered S3 method overwritten by 'enrichplot':
+  method               from
+  fortify.enrichResult DOSE
+"
+"2","clusterProfiler v3.12.0  For help: https://guangchuangyu.github.io/software/clusterProfiler
+
+If you use clusterProfiler in published research, please cite:
+Guangchuang Yu, Li-Gen Wang, Yanyan Han, Qing-Yu He. clusterProfiler: an R package for comparing biological themes among gene clusters. OMICS: A Journal of Integrative Biology. 2012, 16(5):284-287.
+"
+"2","
+Attaching package: ‘clusterProfiler’
+
+"
+"2","The following object is masked from ‘package:purrr’:
+
+    simplify
+
+"
+"0","library(ReactomePA) # for pathway ananlysis"
+"2","ReactomePA v1.28.0  For help: https://guangchuangyu.github.io/ReactomePA
+
+If you use ReactomePA in published research, please cite:
+Guangchuang Yu, Qing-Yu He. ReactomePA: an R/Bioconductor package for reactome pathway analysis and visualization. Molecular BioSystems 2016, 12(2):477-479
+"
+"0","library(DOSE) # for disease enrichment analysis"
+"2","DOSE v3.10.1  For help: https://guangchuangyu.github.io/DOSE
+
+If you use DOSE in published research, please cite:
+Guangchuang Yu, Li-Gen Wang, Guang-Rong Yan, Qing-Yu He. DOSE: an R/Bioconductor package for Disease Ontology Semantic and Enrichment analysis. Bioinformatics 2015, 31(4):608-609
+
+"
+"0","# library(org.Hs.eg.db) # for human gene id converstion"
+"0","library(org.Bt.eg.db) # for bovine"
+"2","Loading required package: AnnotationDbi
+"
+"2","Loading required package: stats4
+"
+"2","Loading required package: BiocGenerics
+"
+"2","Loading required package: parallel
+"
+"2","
+Attaching package: ‘BiocGenerics’
+
+"
+"2","The following objects are masked from ‘package:parallel’:
+
+    clusterApply, clusterApplyLB, clusterCall, clusterEvalQ, clusterExport, clusterMap, parApply, parCapply, parLapply, parLapplyLB,
+    parRapply, parSapply, parSapplyLB
+
+"
+"2","The following objects are masked from ‘package:dplyr’:
+
+    combine, intersect, setdiff, union
+
+"
+"2","The following objects are masked from ‘package:stats’:
+
+    IQR, mad, sd, var, xtabs
+
+"
+"2","The following objects are masked from ‘package:base’:
+
+    anyDuplicated, append, as.data.frame, basename, cbind, colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find, get,
+    grep, grepl, intersect, is.unsorted, lapply, Map, mapply, match, mget, order, paste, pmax, pmax.int, pmin, pmin.int, Position,
+    rank, rbind, Reduce, rownames, sapply, setdiff, sort, table, tapply, union, unique, unsplit, which, which.max, which.min
+
+"
+"2","Loading required package: Biobase
+"
+"2","Welcome to Bioconductor
+
+    Vignettes contain introductory material; view with 'browseVignettes()'. To cite Bioconductor, see 'citation(""Biobase"")', and for
+    packages 'citation(""pkgname"")'.
+
+"
+"2","Loading required package: IRanges
+"
+"2","Loading required package: S4Vectors
+"
+"2","
+Attaching package: ‘S4Vectors’
+
+"
+"2","The following object is masked from ‘package:plotly’:
+
+    rename
+
+"
+"2","The following objects are masked from ‘package:dplyr’:
+
+    first, rename
+
+"
+"2","The following object is masked from ‘package:tidyr’:
+
+    expand
+
+"
+"2","The following object is masked from ‘package:base’:
+
+    expand.grid
+
+"
+"2","
+Attaching package: ‘IRanges’
+
+"
+"2","The following object is masked from ‘package:plotly’:
+
+    slice
+
+"
+"2","The following objects are masked from ‘package:dplyr’:
+
+    collapse, desc, slice
+
+"
+"2","The following object is masked from ‘package:purrr’:
+
+    reduce
+
+"
+"2","The following object is masked from ‘package:grDevices’:
+
+    windows
+
+"
+"2","
+"
+"0","# check this link to download the database for your species"
+"0","# browseURL(https://bioconductor.org/packages/release/BiocViews.html#___AnnotationData)"
+"0",""
+"0",""
+"0","library(enrichplot)"
+"0",""
+"0","# todo list: "
+"0","# debug the id subfunction"
+"0","# nonparameter method to do the variable selection"
+"0","# interactive network display"
+"0","# ROC curve"
+"0","# volcano plot"
+"0",""

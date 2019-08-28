@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1567015351363.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "2F1260AE",
+    "lastKnownWriteTime" : 1560447764,
+    "last_content_update" : 1560447764,
+    "path" : "C:/Users/Figeys Lab/Dropbox/Project_data_analysis/dama_service3/subfunctions_general.r",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "1352,13",
+        "scrollLine" : "1349"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 12,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

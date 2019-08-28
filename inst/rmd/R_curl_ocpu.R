@@ -26,9 +26,10 @@ url_server<- paste0(url_api_split[1],"//", url_api_split[3],"/")
 
 # upload file and do the rendering
 # in this case, the summary.txt is in the working dir. it can be anywhere with the path
-# I am sure java has it's onwn way to do this post request
-# variable r is the returning information from the curl function
-r <- httr::POST(url_api, body = list(file = httr::upload_file("summary_error.txt")))
+# meta file is optional
+
+#r <- httr::POST(url_api, body = list(file = httr::upload_file("summary1_simple.txt")))
+r <- httr::POST(url_api, body = list(file = httr::upload_file("summary1_simple.txt"), meta = httr::upload_file("summary1_meta.txt")))
 
 # get all the paths of all files from the opencpu end, and locate the one, which is the report
 # this step needs to be done in the script enviroment

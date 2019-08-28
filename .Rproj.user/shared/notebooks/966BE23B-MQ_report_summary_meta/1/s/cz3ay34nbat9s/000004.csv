@@ -1,4 +1,0 @@
-"0","  meta_table <- read.delim(""summary1_meta.txt"", header = TRUE, check.names = FALSE, stringsAsFactors = FALSE)
-"
-"2","Error in file(file, ""rt"") : cannot open the connection
-"

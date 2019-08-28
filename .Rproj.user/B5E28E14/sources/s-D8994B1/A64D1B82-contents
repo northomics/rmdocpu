@@ -338,9 +338,6 @@ render_function_file <- function(file){
 
 
 
-
-
-
 # the rendering function needs to right a temperary file, whether in the same path as the input, or defined by the user
 # if the input is on the server, usually the path is not writable, therefore you need to set the intermediate_dir
 # an workround way is to read in the file, and write into a temp file. therefore everything is going to be in the temp file

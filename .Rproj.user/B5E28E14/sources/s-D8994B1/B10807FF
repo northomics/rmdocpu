@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1567005706461.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "B10807FF",
+    "lastKnownWriteTime" : 1560522506,
+    "last_content_update" : 1567015078712,
+    "path" : "C:/Users/Figeys Lab/Dropbox/Project_data_analysis/dama_service3/Dama_data_explore_bovine.Rmd",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "197,0",
+        "last_setup_crc32" : "",
+        "scrollLine" : "169"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 9,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

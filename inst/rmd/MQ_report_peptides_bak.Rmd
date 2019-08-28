@@ -1,0 +1,437 @@
+---
+title: "Maxquant peptide.txt Quick summary"
+author: suggestions please to "imetalabca@gmail.com"
+date: "`r Sys.time()`"
+output:
+  html_document:
+    fig_width: 10
+    fig_caption: TRUE
+    toc: true
+    toc_depth: 4
+    toc_float:
+      collapsed: TRUE
+      smooth_scroll: TRUE
+    number_sections: true
+params:  
+  input_datatable: !r 1 ###  will be used for reporting, otherwise will use default setup
+---
+
+<style type="text/css">
+.main-container {
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+
+```{r setup, include=FALSE}
+# enviroment setup
+knitr::opts_chunk$set(echo = FALSE,warning = FALSE, message = FALSE, cache = TRUE)
+
+library(tidyverse)
+library(ggplot2)
+library(d3heatmap)
+library(plotly)
+#library(gplots)
+#library(corrplot)
+#library(DT) # for interactive data table display 
+
+# local usage test and debug
+# rmarkdown::render("MQ_report_summary_ocpu.Rmd", params = list(summary_file_tbl =  your_readin_tbl))
+# on local machine, your_readin_tbl is a data table, while on ocpu, your_readin_tbl is a json formatted table
+
+# version control
+# 20190807
+
+
+```
+
+
+
+```{r function_needed, recho=FALSE}
+
+tidy_peptides <- function(peptide.txt){ 
+
+  peptide_sequence <- peptide.txt$Sequence # only keep the first one
+  
+  # do the row wise filtering
+  index_contaminant <- grep("\\+", peptide.txt$`Potential contaminant`) # note that + is a special character
+  index_reverse <- grep("\\+", peptide.txt$Reverse)
+  index_to_remove <- c(index_contaminant,index_reverse)
+  
+  peptide.txt <- peptide.txt[-index_to_remove,] # filtered table
+  peptide_sequence <- peptide_sequence[-index_to_remove] # filtered ids
+
+  n_contaminant <- length(index_contaminant)
+  n_reversed <- length(index_reverse)
+
+  
+  # extra the intensity column matrix
+  if(any(grepl("LFQ intensity ", colnames(peptide.txt)))){ # if there are LFQ intensity columns, take out the LFQ columns
+    intensity_columns <- peptide.txt[,grep("LFQ intensity ", colnames(peptide.txt))]
+    colnames(intensity_columns) <- gsub("LFQ intensity ", "", colnames(intensity_columns))
+    
+  }else if(any(grepl("Intensity ", colnames(peptide.txt)))) { # otherwise take out intensity column
+    
+    intensity_columns <-   peptide.txt[,grep("Intensity ", colnames(peptide.txt))]
+    colnames(intensity_columns)<-gsub("Intensity ", "", colnames(intensity_columns))
+    
+  }else{ # this is for the special case that no experiment desgin setup, only one column of intensity
+    intensity_columns <-   peptide.txt[,grep("Intensity", colnames(peptide.txt)),drop =  FALSE]
+  } 
+  
+  return(list("intensity_matrix" = intensity_columns,
+              "peptide_sequence" =peptide_sequence,
+              "n_contaminant" = n_contaminant,
+              "n_reversed" = n_reversed,
+              "score" = peptide.txt$Score,
+              "Charges" =peptide.txt$Charges,
+              "length" = peptide.txt$Length,
+              "misscleavage" = peptide.txt$"Missed cleavages"
+
+              ))
+  
+}
+
+
+
+```
+
+
+
+```{r file_summary, echo=FALSE,fig.width= 15,fig.height=10}
+
+
+# input
+if(length(params$input_datatable) ==1){
+  # test with local test with local files in the same dir,
+  peptide.txt  <- read.delim("peptides3_simple.txt", header = TRUE,check.names = FALSE, stringsAsFactors = FALSE)
+
+}else{
+  # opencpu render from data table by parametrized input
+  peptide.txt <- params$input_datatable
+}
+
+
+
+# tidy and process:
+
+peptide_tidyed <- tidy_peptides(peptide.txt)
+
+
+df_intensity <- peptide_tidyed$intensity_matrix
+
+
+sparsity <- rowSums(df_intensity > 0) # here sparsity is number of present values
+
+index_all_na_rows <- which(sparsity == 0)
+
+df_intensity <- df_intensity[-index_all_na_rows,,drop = FALSE]
+
+peptide_sequence <- peptide_tidyed$peptide_sequence[-index_all_na_rows]
+
+
+
+```
+
+# Intro
+
+**This report provides some basic description of the peptide identificaiton from maxquant database search. **
+**The report is based on the peptide.txt, without defined experimental design/grouping information**
+**Users can use this to quickly check the overal quality of the experiment**
+
+
+# Take-home figures
+
+
+
+*  **Number of contaminant: ** `r peptide_tidyed$n_contaminant`
+
+*  **Number of reversed: ** `r peptide_tidyed$n_reversed`
+
+*  **Number of qualified peptides: ** `r nrow(peptide_tidyed$intensity_matrix)`
+
+*  **Number of quailfied peptide without intensity information(0 intensities):  ** `r length(index_all_na_rows)`
+
+*  **Number of experiment:  ** `r ncol(df_intensity)`
+
+*  **All experiments:  ** `r colnames(df_intensity)`
+
+
+
+
+# Peptide Charge States
+
+
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+peptide_charge <- as.data.frame(table(peptide_tidyed$Charges))
+colnames(peptide_charge) = c("Charge_state", "Freq")
+
+
+p<- ggplot2::ggplot(data = peptide_charge)+
+  geom_col(aes(x = Charge_state,y = Freq))+
+  theme_bw()
+plotly::ggplotly(p)
+
+#plot_ly(peptide_charge, x = ~Charge_state, y = ~Freq, type = "bar") %>% add_markers() 
+
+
+
+```
+
+# Peptide Length
+
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+peptide_length <- as.data.frame(table(peptide_tidyed$length))
+colnames(peptide_length) = c("peptide_length", "Freq")
+
+
+p<- ggplot2::ggplot(data = peptide_length)+
+  geom_col(aes(x = peptide_length,y = Freq))+
+  theme_bw()
+plotly::ggplotly(p)
+
+#plot_ly(peptide_charge, x = ~Charge_state, y = ~Freq, type = "bar") %>% add_markers() 
+
+
+
+```
+
+
+
+# Peptide Score distribution
+
+
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+df_score <- data.frame(Score  = peptide_tidyed$score)
+
+
+p<- ggplot2::ggplot(data=df_score, aes(Score)) +
+  geom_histogram(aes(y=..density..),color= "black",fill="white")+
+  geom_density(alpha=.2, fill="#FF6666")+
+  theme_bw()
+
+plotly::ggplotly(p)
+
+
+```
+
+
+
+
+# Peptide Intensity distribution
+
+Columns starting with "LFQ_intensity_" will be selected if exist (meaning LFQ option was checked for label free quantification, which is deliberately processed by Maxquant already), otherwise Intensity_ columns will be used instead for protein experession.
+
+
+## Sparisty
+
+
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+df_sparsity <- as.data.frame(table(sparsity))
+df_sparsity_dec <- df_sparsity[order(df_sparsity$sparsity,decreasing = TRUE),]
+df_sparsity_dec$sparsity <- factor(df_sparsity_dec$sparsity, levels = df_sparsity_dec$sparsity)
+
+
+p<- ggplot2::ggplot(data = df_sparsity_dec)+
+  geom_col(aes(x = sparsity,y = Freq))+
+  xlab("Presence in the Peptide Intensity Matrix")+
+  theme_bw()
+plotly::ggplotly(p)
+
+
+
+
+
+
+```
+
+
+
+##  Sparsity cummulative curve
+
+
+Figure shows how many peptides have more than N presence, which helps to set the presence cutoff
+
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+
+#df_sparsity_dec <- df_sparsity[order(df_sparsity$sparsity,decreasing = TRUE),]
+
+df_sparsity_dec$cumsum <-  cumsum(df_sparsity_dec$Freq)
+
+# redefine the sparisty sequence, in order to keep the order in the plot, This is the best way as far as I know
+#df_sparsity_dec$sparsity <- factor(df_sparsity_dec$sparsity, levels = df_sparsity_dec$sparsity)
+
+
+p<- ggplot2::ggplot(data = df_sparsity_dec)+
+  geom_col(aes(x = sparsity,y = cumsum))+
+  xlab("Presence in the Peptide Intensity Matrix")+
+  theme_bw()
+plotly::ggplotly(p)
+
+
+```
+
+
+
+
+
+## Intensity disitribution acrross samples/experiments
+
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+#note: in this log10 intenisty matrix, 0 is converted into infinity, therefore will not show in the box plot, and does not affect the distribution
+df_intensity_log10 <-log10(df_intensity)
+
+data_matrix_log10_melt<-reshape2::melt(as.matrix(df_intensity_log10))
+
+colnames(data_matrix_log10_melt) <- c("Proteins", "Samples", "Log10(Inensity)")
+
+p<-ggplot(data_matrix_log10_melt)+
+    geom_boxplot(aes(x = Samples, y = `Log10(Inensity)`)) +
+    theme_bw()+
+    theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  
+
+plotly::ggplotly(p)
+
+
+```
+
+
+`r if(ncol(df_intensity) > 1){ "# Overall Expression Profile"} `
+
+`r if(ncol(df_intensity) > 1){ "## Heatmap"} `
+
+
+
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+  sparsity <- rowSums(df_intensity > 0) 
+  
+  index_P50 <- which(sparsity >= ncol(df_intensity)/2)
+  index_P100 <- which(sparsity == ncol(df_intensity))
+  
+  if(length(index_P100) < 1000){
+    index_keep <- index_P50
+  }else{
+    index_keep <- index_P100
+  }
+  
+
+  df_intensity_log10 <-log10(df_intensity[index_keep, , drop = FALSE]+1)
+  rownames(df_intensity_log10) <- peptide_sequence[index_keep]
+
+
+  
+```
+
+
+`r   if(length(index_P100) < 1000){ "Heatmap of Presence50" }else{ "Heatmap of Presence 100" }`
+
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+# only if there is experiment desgin and  number of columns in protein experssion value is more than 1, 
+# since the quantity of pepetide is usually too large, here we only do heatmap of P50
+if(ncol(df_intensity) > 1){ 
+
+  d3heatmap(df_intensity_log10,show_grid = FALSE, color = "OrRd")
+  
+}
+
+
+```
+
+
+
+`r if(ncol(df_intensity) > 3){ "## PCA"}`
+
+
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+if(ncol(df_intensity) > 3){
+
+  PCA_result <- prcomp(t(df_intensity_log10))
+  loading <- as.data.frame(PCA_result$x)
+  #plot(loading$PC1, loading$PC2)
+  #plot_ly(data = loading, x = ~PC1, y = ~PC2) %>% add_markers() %>% add_text(text = row.names(loading))
+  
+  
+  
+
+
+  plot_ly(loading, x = ~PC1, y = ~PC2, z = ~PC3) %>%
+  add_markers() %>%
+  add_text(text = row.names(loading))
+  
+  
+
+}
+
+
+```
+
+`r if(ncol(df_intensity) > 3){ "**Scree plot shows the performance of the PCA analysis, the more the top procomponets accounts, the better separation**"}`
+
+
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+#screen plot
+if(ncol(df_intensity) > 3){
+
+  sd <- PCA_result$sde
+  var <- sd^2
+  var.percent <- var/sum(var) * 100
+
+  PCs <- paste("PC", 1:length(var.percent))
+
+
+  df_scree <- data.frame(PC  = factor(PCs, levels = PCs), ratio =var.percent)
+
+
+  plot_ly(data = df_scree,x = ~PC, y = ~ratio, type = "bar") %>%
+    layout(title = "Scree Plot of Principle components", xaxis = list(title = 'Principle Component'), yaxis = list(title = 'Variance(%)'))
+
+
+  }
+
+
+```
+
+
+
+# Download the neat table
+
+**The table is clean peptides expression table, with reversed and contaminant removed.**
+**The values are the LFQ(with label free quantification turned on) or raw protein intensity from Maxquant output. **
+**You can download/export and start from this table for downstream analysis using the (i)Metalab faminly apps. **
+
+
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+
+df_intensity <- as.data.frame(df_intensity)
+
+rownames(df_intensity) <- peptide_sequence
+
+
+DT::datatable(df_intensity, extensions = 'Buttons',options = list(dom = "Blfrtip",scrollX=TRUE, buttons =       list('copy', 'print', list(
+        extend = 'collection',
+        buttons = c('csv', 'excel', 'pdf'),
+        text = 'Download'
+      ))))
+
+
+
+
+```
+
+
+
+

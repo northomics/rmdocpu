@@ -7,19 +7,20 @@
     "folds" : "",
     "hash" : "0",
     "id" : "A64D1B82",
-    "lastKnownWriteTime" : 1566938888,
-    "last_content_update" : 1566938888660,
+    "lastKnownWriteTime" : 1567004207,
+    "last_content_update" : 1567004207064,
     "path" : "C:/Users/Figeys Lab/Dropbox/Project_R_packages/rmdocpu/R/rmdtext.R",
     "project_path" : "R/rmdtext.R",
     "properties" : {
-        "cursorPosition" : "153,113",
+        "cursorPosition" : "166,0",
+        "docOutlineSize" : "176.5386981851168",
         "docOutlineVisible" : "1",
-        "scrollLine" : "137"
+        "scrollLine" : "144"
     },
     "read_only" : false,
     "read_only_alternatives" : [
     ],
-    "relative_order" : 8,
+    "relative_order" : 2,
     "source_on_save" : false,
     "source_window" : "",
     "type" : "r_source"
