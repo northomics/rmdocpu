@@ -1,0 +1,16 @@
+base
+rmarkdown
+htmlwidgets
+ggplot2
+plotly
+visNetwork
+RColorBrewer
+tidyverse
+tibble
+tidyr
+readr
+purrr
+dplyr
+stringr
+forcats
+d3heatmap

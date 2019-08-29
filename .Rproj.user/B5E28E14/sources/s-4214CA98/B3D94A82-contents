@@ -27,7 +27,7 @@ params:
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE,warning = FALSE, message = FALSE, cache = TRUE)
+knitr::opts_chunk$set(echo = FALSE,warning = FALSE, message = FALSE, cache = FALSE)
 
 # enviroment setup
 source("https://raw.githubusercontent.com/ningzhibin/rmdocpu/master/inst/subfunctions_general.r")
@@ -120,7 +120,7 @@ if(is.null(params$input_datatable)){
 
 meta_table <- params$meta_table 
 
-meta_table <- read.delim("peptides3_meta.txt", header = TRUE, check.names = FALSE, stringsAsFactors = FALSE) # test with meta file
+#meta_table <- read.delim("peptides3_meta.txt", header = TRUE, check.names = FALSE, stringsAsFactors = FALSE) # test with meta file
 
 
 ```
@@ -362,14 +362,34 @@ if(ncol(df_intensity) > 3){ # otherwise, no point doing PCA
   df_intensity_log10 <- log10(df_intensity+1)
  
   if(is.null(meta_table)){
+    
+    #pca <-PCA_wrapper_prcomp2(data_matrix = as.matrix(df_intensity_log10), inputation = TRUE)
+    
+    
     PCA_result <- prcomp(t(df_intensity_log10))
     loading <- as.data.frame(PCA_result$x)
     #plot(loading$PC1, loading$PC2)
     #plot_ly(data = loading, x = ~PC1, y = ~PC2) %>% add_markers() %>% add_text(text = row.names(loading))
-    
-    plot_ly(loading, x = ~PC1, y = ~PC2, z = ~PC3) %>%
+
+    p1 <- plot_ly(loading, x = ~PC1, y = ~PC2, z = ~PC3) %>%
     add_markers() %>%
     add_text(text = row.names(loading))
+    
+    
+    
+    # for screen plot
+    sd <- PCA_result$sde
+    var <- sd^2
+    var.percent <- var/sum(var) * 100
+  
+    PCs <- paste("PC", 1:length(var.percent))
+    df_scree <- data.frame(PC  = factor(PCs, levels = PCs), ratio =var.percent)
+  
+  
+    p2 <- plot_ly(data = df_scree,x = ~PC, y = ~ratio, type = "bar") %>%
+      layout(title = "Scree Plot of Principle components", xaxis = list(title = 'Principle Component'), yaxis = list(title = 'Variance(%)'))
+  
+    htmltools::tagList(list(p1, p2)) 
     
   }else{
 
@@ -377,72 +397,32 @@ if(ncol(df_intensity) > 3){ # otherwise, no point doing PCA
     
     pca <-PCA_wrapper_prcomp2(data_matrix = as.matrix(df_intensity_log10), data_meta =  meta_table[,c(1,3)], inputation = TRUE)
 
+    
+    # plotting
+    print(pca$pca_scree_plot)
   
-    p1 <- plot_ly(x =1, y =1)
-    
-    
-    p2 <- pca$pca_component_plot_3d_interactive
-    
+      cat("Scree plot ##  shows the performance of the PCA analysis, the more percentage the top procomponets accounts, the better separation")
+ 
     print(pca$pca_component_plot)
     
+      cat("2d PCA Component plot ##")
+    
     print(pca$pca_confidence)
+    
+      cat("2d PCA Component plot ## with confidence boundaries")
 
     print(pca$pca_component_plot_kmeans)
     
-  
+      cat("2d PCA Component plot with K-means grouping, which is non-supervised grouping ")
+    
+    pca$pca_component_plot_3d_interactive
+    
   }
 
 }
 
 
-
 ```
-
-
-```{r echo=FALSE,fig.width= 8,fig.height=6}
-
-if(!is.null(p1)){
-  p1
-}
-
-cat("dddd")
-
-if(!is.null(p2)){
-  p2
-}
-
-cat("eee")
-
-
-
-
-```
-
-
-```{r echo=FALSE,fig.width= 8,fig.height=6}
-
-#screen plot
-if(ncol(df_intensity) > 3){
-  # PCA_result <- prcomp(t(df_intensity_log10))
-  # sd <- PCA_result$sde
-  # var <- sd^2
-  # var.percent <- var/sum(var) * 100
-  # 
-  # PCs <- paste("PC", 1:length(var.percent))
-  # df_scree <- data.frame(PC  = factor(PCs, levels = PCs), ratio =var.percent)
-  # 
-  # 
-  # plot_ly(data = df_scree,x = ~PC, y = ~ratio, type = "bar") %>%
-  #   layout(title = "Scree Plot of Principle components", xaxis = list(title = 'Principle Component'), yaxis = list(title = 'Variance(%)'))
-  print(pca$pca_scree_plot)
-  
-  cat("Scree plot ##  shows the performance of the PCA analysis, the more percentage the top procomponets accounts, the better separation")
-  }
-
-
-```
-
-
 
 
 
@@ -453,6 +433,7 @@ if(ncol(df_intensity) > 3){
 **The values are the LFQ(with label free quantification turned on) or raw protein intensity from Maxquant output. **
 **You can download/export and start from this table for downstream analysis using the (i)Metalab faminly apps. **
 
+**The talbe can be further visualized by our shiny apps [shiny.imetalab.ca](shiny.imetalab.ca)**
 
 ```{r echo=FALSE,fig.width= 8,fig.height=6}
 

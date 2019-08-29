@@ -447,7 +447,8 @@ plotly::ggplotly(plots$box_plot)
 
 # Averaged performance
 
-check the averaged performance from all raw files:
+**check the averaged performance from all raw files:**
+
 
 ```{r echo=FALSE}
 nrows <- nrow(summary_file_summary$summary_all)
