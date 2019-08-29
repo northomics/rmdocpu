@@ -183,10 +183,11 @@ render_peptides_file <- function(file, meta = NULL){
 
   if(!is.null(meta)){
     meta_table <- read.delim(meta, header = TRUE, check.names = FALSE, stringsAsFactors = FALSE) # test with meta file
-    rmarkdown::render("input.Rmd",output_format = "html_document", params = list(summary_file_tbl =  data_table, meta_table = meta_table), output_file="output.html")
+
+    rmarkdown::render("input.Rmd",output_format = "html_document", params = list(input_datatable =  data_table, meta_table = meta_table), output_file="output.html")
 
   }else{
-    rmarkdown::render("input.Rmd",output_format = "html_document", params = list(summary_file_tbl =  data_table), output_file="output.html")
+    rmarkdown::render("input.Rmd",output_format = "html_document", params = list(input_datatable =  data_table), output_file="output.html")
   }
 
   invisible()
