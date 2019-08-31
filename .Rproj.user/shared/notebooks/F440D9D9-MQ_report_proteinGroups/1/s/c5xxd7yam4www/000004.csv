@@ -1,0 +1,4 @@
+"0","    pca <-PCA_wrapper_prcomp2(data_matrix = as.matrix(df_intensity_log10), data_meta =  meta_table[,c(1,3)], inputation = TRUE)
+"
+"2","Error: number of cluster centres must lie between 1 and nrow(x)
+"

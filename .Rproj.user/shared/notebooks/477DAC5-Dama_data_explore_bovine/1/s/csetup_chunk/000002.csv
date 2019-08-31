@@ -5,20 +5,9 @@
 "0","# if you have a large file (large dataset to process) to knit, set cache = TRUE to speed up the test process"
 "0",""
 "0","source(""subfunctions_general.r"")"
-"2","Loading required package: RColorBrewer
-"
 "0","source(""subfunctions_general_update.r"")"
 "0","library(tidyverse)"
 "0","library(DT) # for interactive data table display "
-"2","
-Attaching package: ‘DT’
-
-"
-"2","The following objects are masked from ‘package:shiny’:
-
-    dataTableOutput, renderDataTable
-
-"
 "0","library(clusterProfiler) # for general enrichment analysis"
 "2","
 "
@@ -69,8 +58,8 @@ Attaching package: ‘BiocGenerics’
 "
 "2","The following objects are masked from ‘package:parallel’:
 
-    clusterApply, clusterApplyLB, clusterCall, clusterEvalQ, clusterExport, clusterMap, parApply, parCapply, parLapply, parLapplyLB,
-    parRapply, parSapply, parSapplyLB
+    clusterApply, clusterApplyLB, clusterCall, clusterEvalQ, clusterExport, clusterMap, parApply, parCapply, parLapply,
+    parLapplyLB, parRapply, parSapply, parSapplyLB
 
 "
 "2","The following objects are masked from ‘package:dplyr’:
@@ -85,17 +74,27 @@ Attaching package: ‘BiocGenerics’
 "
 "2","The following objects are masked from ‘package:base’:
 
-    anyDuplicated, append, as.data.frame, basename, cbind, colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find, get,
-    grep, grepl, intersect, is.unsorted, lapply, Map, mapply, match, mget, order, paste, pmax, pmax.int, pmin, pmin.int, Position,
-    rank, rbind, Reduce, rownames, sapply, setdiff, sort, table, tapply, union, unique, unsplit, which, which.max, which.min
+    anyDuplicated, append, as.data.frame, basename, cbind, colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find,
+    get, grep, grepl, intersect, is.unsorted, lapply, Map, mapply, match, mget, order, paste, pmax, pmax.int, pmin, pmin.int,
+    Position, rank, rbind, Reduce, rownames, sapply, setdiff, sort, table, tapply, union, unique, unsplit, which, which.max,
+    which.min
 
 "
 "2","Loading required package: Biobase
 "
 "2","Welcome to Bioconductor
 
-    Vignettes contain introductory material; view with 'browseVignettes()'. To cite Bioconductor, see 'citation(""Biobase"")', and for
-    packages 'citation(""pkgname"")'.
+    Vignettes contain introductory material; view with 'browseVignettes()'. To cite Bioconductor, see 'citation(""Biobase"")',
+    and for packages 'citation(""pkgname"")'.
+
+"
+"2","
+Attaching package: ‘Biobase’
+
+"
+"2","The following object is masked from ‘package:robustbase’:
+
+    rowMedians
 
 "
 "2","Loading required package: IRanges
@@ -104,11 +103,6 @@ Attaching package: ‘BiocGenerics’
 "
 "2","
 Attaching package: ‘S4Vectors’
-
-"
-"2","The following object is masked from ‘package:plotly’:
-
-    rename
 
 "
 "2","The following objects are masked from ‘package:dplyr’:
@@ -121,6 +115,11 @@ Attaching package: ‘S4Vectors’
     expand
 
 "
+"2","The following object is masked from ‘package:plotly’:
+
+    rename
+
+"
 "2","The following object is masked from ‘package:base’:
 
     expand.grid
@@ -128,11 +127,6 @@ Attaching package: ‘S4Vectors’
 "
 "2","
 Attaching package: ‘IRanges’
-
-"
-"2","The following object is masked from ‘package:plotly’:
-
-    slice
 
 "
 "2","The following objects are masked from ‘package:dplyr’:
@@ -145,9 +139,28 @@ Attaching package: ‘IRanges’
     reduce
 
 "
+"2","The following object is masked from ‘package:plotly’:
+
+    slice
+
+"
 "2","The following object is masked from ‘package:grDevices’:
 
     windows
+
+"
+"2","
+Attaching package: ‘AnnotationDbi’
+
+"
+"2","The following object is masked from ‘package:dplyr’:
+
+    select
+
+"
+"2","The following object is masked from ‘package:plotly’:
+
+    select
 
 "
 "2","

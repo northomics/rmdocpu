@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1567223741347.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "E89291",
+    "lastKnownWriteTime" : 1567223946,
+    "last_content_update" : 1567223946010,
+    "path" : "C:/Users/Figeys Lab/Dropbox/Project_R_packages/rmdocpu/inst/subfunctions_general.r",
+    "project_path" : "inst/subfunctions_general.r",
+    "properties" : {
+        "cursorPosition" : "1,59",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

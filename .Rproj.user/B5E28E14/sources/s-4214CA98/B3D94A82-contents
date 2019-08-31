@@ -107,7 +107,7 @@ tidy_peptides <- function(peptide.txt){
 # input
 if(is.null(params$input_datatable)){
   # test with local test with local files in the same dir,
-  peptide.txt  <- read.delim("peptides3_simple.txt", header = TRUE,check.names = FALSE, stringsAsFactors = FALSE)
+  peptide.txt  <- read.delim("peptides3.txt", header = TRUE,check.names = FALSE, stringsAsFactors = FALSE)
 
 }else{
   # opencpu render from data table by parametrized input
@@ -162,7 +162,6 @@ peptide_sequence <- peptide_tidyed$peptide_sequence[-index_all_na_rows]
 *  **All experiments:  ** `r colnames(df_intensity)`
 
 `r if( !is.null(meta_table)){ c("* **Meta/grouping info provided: **",unique(meta_table[,3]))}else{ "* **No meta information provided**"} `
-
 
 
 # Peptide Charge States
@@ -350,7 +349,7 @@ if(ncol(df_intensity) > 1){ # only if there are more than 1 columns in experssio
 
 
 
-`r if(ncol(df_intensity) > 3){ "## PCA analysis"}`
+`r if(ncol(df_intensity) > 3){"# PCA Analysis"}`
 
 
 
@@ -364,8 +363,6 @@ if(ncol(df_intensity) > 3){ # otherwise, no point doing PCA
   if(is.null(meta_table)){
     
     #pca <-PCA_wrapper_prcomp2(data_matrix = as.matrix(df_intensity_log10), inputation = TRUE)
-    
-    
     PCA_result <- prcomp(t(df_intensity_log10))
     loading <- as.data.frame(PCA_result$x)
     #plot(loading$PC1, loading$PC2)
@@ -423,6 +420,36 @@ if(ncol(df_intensity) > 3){ # otherwise, no point doing PCA
 
 
 ```
+
+
+`r if(length(unique(meta_table[,3])) >=2) {"# ANOVA TEST  \n**Peptides with significiant(p < 0.05) change between any groups**"}`
+
+
+
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+if(length(unique(meta_table[,3])) >=2){
+
+pvalues_anova <- matrix_PostHoc(df_intensity,meta_table[,3])
+
+df_intensity_p <- cbind(pvalues_anova, df_intensity)
+
+rownames(df_intensity_p) <- peptide_sequence
+
+df_intensity_p_filtered <- df_intensity_p[which(!is.na(df_intensity_p$p_PostHoc_pairs)),] 
+
+DT::datatable(df_intensity_p_filtered, extensions = 'Buttons',options = list(dom = "Blfrtip",scrollX=TRUE, buttons = list('copy', 'print', list(
+        extend = 'collection',
+        buttons = c('csv', 'excel', 'pdf'),
+        text = 'Download'
+      ))))
+
+}
+
+
+
+```
+
 
 
 

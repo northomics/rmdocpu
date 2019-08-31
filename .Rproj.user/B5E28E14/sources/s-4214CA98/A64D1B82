@@ -5,17 +5,17 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "0",
+    "hash" : "3087875145",
     "id" : "A64D1B82",
-    "lastKnownWriteTime" : 1567040779,
-    "last_content_update" : 1567040779686,
+    "lastKnownWriteTime" : 1567050451,
+    "last_content_update" : 1567050451775,
     "path" : "C:/Users/Figeys Lab/Dropbox/Project_R_packages/rmdocpu/R/rmdtext.R",
     "project_path" : "R/rmdtext.R",
     "properties" : {
-        "cursorPosition" : "193,1",
+        "cursorPosition" : "327,0",
         "docOutlineSize" : "176.5386981851168",
         "docOutlineVisible" : "1",
-        "scrollLine" : "163"
+        "scrollLine" : "286"
     },
     "read_only" : false,
     "read_only_alternatives" : [

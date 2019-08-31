@@ -1,3 +1,7 @@
+# 20190830: PostHoc, add a ANOVA pvalue to the return
+#           find_p_location, changed the failed information
+
+
 
 # Starting_install_packages -----------------------------------------------
 
@@ -1156,7 +1160,8 @@ PostHoc<-function(vector, factor, p_threshold = 0.05){
   if(p.value_anova < 0.05){
     p_PostHoc_matrix <- pairwise.t.test(as.numeric(vector),as.factor(factor),p.adj = "fdr")$p.value
     p_PostHoc_pairs <- find_p_location(p_PostHoc_matrix, p_threshold = p_threshold) # find_p_location is the self define functions
-    return(p_PostHoc_pairs)
+    #return(p_PostHoc_pairs)
+    return(paste0("ANOVA p=",p.value_anova,"; ",p_PostHoc_pairs))
   }else{
     return(NA)
   }
@@ -1219,7 +1224,7 @@ find_p_location<-function(p_matrix, p_threshold=0.05){
     }
     return(ALL_significant_pairs)
   }else{
-    return("Inconsistent betwen p values  ANOVA and paired t.test")
+    return("Failed in locating pairs by t.test")
     # to pick up the significant pairs after posthoc analysis after anova
     # sometimes using different p.adjust method for anova  and ttest
     # therefore it's marked here if there is any inconcistency
