@@ -102,27 +102,6 @@ tidy_proteingroups <- function(proteinGroups){
 }
 
 
-find_p_location<-function(p_matrix, p_threshold=0.05){
-  xx <- which(p_matrix < p_threshold,arr.ind=TRUE)
-  if(length(xx) > 0){ # only perform the picking up if there is any significant one
-    ALL_significant_pairs <- NULL
-    for(i in 1:nrow(xx)){
-      #group1 name/dimention1 name:rownames(xx)[i]
-      #group2 name/dimention2 name:colnames(p_matrix)[xx[i,2]]
-      #p value: p_matrix[xx[i,1],xx[i,2]]
-      significant_pair <- paste0(p_matrix[xx[i,1],xx[i,2]],"(",rownames(xx)[i],"~",colnames(p_matrix)[xx[i,2]],"); ")
-      ALL_significant_pairs <- paste0(ALL_significant_pairs,significant_pair)
-    }
-    return(ALL_significant_pairs)
-  }else{
-    return("No significant ttest pvalues")
-    # to pick up the significant pairs after posthoc analysis after anova
-    # sometimes using different p.adjust method for anova  and ttest
-    # therefore it's marked here if there is any inconcistency
-  }
-}
-
-
 ```
 
 
