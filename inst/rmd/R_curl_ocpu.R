@@ -49,11 +49,9 @@ curl::curl_download(paste0(url_server, path_target), "maxquant_result_summary.ht
 
 
 
-#########################################################################################################
+# proteingroups.txt test----
 
-# this is the proteingroups.txt test
 
-#########################################################################################################
 url_api <- "http://206.12.91.148/ocpu/library/rmdocpu/R/render_proteinGroups_file"
 
 # get the root url
