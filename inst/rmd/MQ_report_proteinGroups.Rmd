@@ -112,7 +112,7 @@ tidy_proteingroups <- function(proteinGroups){
 # input
 if(is.null(params$input_datatable)){
   # test with local test with local files in the same dir,
-  proteinGroups.txt <- read.delim("proteinGroups1_simple.txt", header = TRUE,check.names = FALSE, stringsAsFactors = FALSE)
+  proteinGroups.txt <- read.delim("proteinGroups_zk.txt", header = TRUE,check.names = FALSE, stringsAsFactors = FALSE)
 
 }else{
   # opencpu render from data table by parametrized input
@@ -124,7 +124,7 @@ if(is.null(params$input_datatable)){
 
 meta_table <- params$meta_table 
 
-meta_table <- read.delim("proteinGroups1_meta.txt", header = TRUE, check.names = FALSE, stringsAsFactors = FALSE) # test with meta file
+#meta_table <- read.delim("proteinGroups1_meta.txt", header = TRUE, check.names = FALSE, stringsAsFactors = FALSE) # test with meta file
 
 ```
 

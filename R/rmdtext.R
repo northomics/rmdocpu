@@ -216,7 +216,7 @@ render_peptides_file <- function(file, meta = NULL){
 #'
 #'
 
-render_proteinGroups_file <- function(file,meta = NULL){
+render_proteinGroups_file <- function(file, meta = NULL){
 
   #data_table  <- readr::read_tsv(file, col_names = TRUE)
   data_table  <- read.delim(file, header = TRUE,check.names = FALSE, stringsAsFactors = FALSE) # NOTE the read in options
@@ -262,7 +262,8 @@ render_proteinGroups_file <- function(file,meta = NULL){
 
 render_taxon_file <- function(file,meta = NULL){
 
-  data_table  <- readxl::read_excel(file, sheet = 2) # readin from xl file
+  data_table  <-  read.delim(file, header = TRUE,check.names = FALSE, stringsAsFactors = FALSE) # readin from xl file
+
 
   myfile <- RCurl::getURL("https://raw.githubusercontent.com/ningzhibin/rmdocpu/master/inst/rmd/ML_report_taxonomy.Rmd")
   writeLines(myfile, con="input.Rmd");
