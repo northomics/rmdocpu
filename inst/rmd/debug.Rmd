@@ -1,80 +1,42 @@
 ---
-title: "Untitled"
+title: "debug"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE,warning = FALSE, message = FALSE, cache = FALSE)
-
+library(canvasXpress)
 ```
 
 
 
+```{r echo=FALSE,fig.width= 12,fig.height=6}
 
-`r if(2>1){"* **Meta/grouping info provided: ** LETTERS"}`
+  y=read.table("http://www.canvasxpress.org/data/cX-heatmapR-dat.txt", header=TRUE, sep="\t", quote="", row.names=1, fill=TRUE, check.names=FALSE, stringsAsFactors=FALSE)
+  x=read.table("http://www.canvasxpress.org/data/cX-heatmapR-smp.txt", header=TRUE, sep="\t", quote="", row.names=1, fill=TRUE, check.names=FALSE, stringsAsFactors=FALSE)
+  z=read.table("http://www.canvasxpress.org/data/cX-heatmapR-var.txt", header=TRUE, sep="\t", quote="", row.names=1, fill=TRUE, check.names=FALSE, stringsAsFactors=FALSE)
+  
+  
+  canvasXpress(
+    data=y,
+    smpAnnot=x,
+    varAnnot=z,
+    colorSpectrum=list("blue", "white", "red"),
+    graphType="Heatmap",
+    heatmapCellBoxColor="rgb(255,255,255)",
+    samplesClustered=TRUE,
+    showTransition=TRUE,
+    title="Clustered data",
+    variablesClustered=TRUE,
+    width = 800, 
+    height = 600
+  )
 
-
-```{r}
-
-# Description: pick up the significant pairs
-# Arguments: p value matrix from pairwise.t.test like functions
-# Values: list of the pairs
-# Details:
-# see data format by the following example
-attach(airquality)
-Month <- factor(Month, labels = month.abb[5:9])
-result<-pairwise.t.test(Ozone, Month)
-# the inpute data is result$p.value
-# threshold is 0.05 by default, can be changed to 0.01
-
-find_p_location<-function(p_matrix, p_threshold=0.05){
-  xx <- which(p_matrix < p_threshold,arr.ind=TRUE)
-  if(length(xx) > 0){ # only perform the picking up if there is any significant one
-    ALL_significant_pairs <- NULL
-    for(i in 1:nrow(xx)){
-      #group1 name/dimention1 name:rownames(xx)[i]
-      #group2 name/dimention2 name:colnames(p_matrix)[xx[i,2]]
-      #p value: p_matrix[xx[i,1],xx[i,2]]
-      significant_pair <- paste0(p_matrix[xx[i,1],xx[i,2]],"(",rownames(xx)[i],"~",colnames(p_matrix)[xx[i,2]],"); ")
-      ALL_significant_pairs <- paste0(ALL_significant_pairs,significant_pair)
-    }
-    return(ALL_significant_pairs)
-  }else{
-    return("Failed in locating pairs by ttest")
-    # to pick up the significant pairs after posthoc analysis after anova
-    # sometimes using different p.adjust method for anova  and ttest
-    # therefore it's marked here if there is any inconcistency
-  }
-}
-
-PostHoc<-function(vector, factor, p_threshold = 0.05){
-  p.value_anova <- anova(lm(as.numeric(vector)~as.factor(factor)))$Pr[1]
-  if(p.value_anova < 0.05){
-    p_PostHoc_matrix <- pairwise.t.test(as.numeric(vector),as.factor(factor),p.adj = "fdr")$p.value
-    p_PostHoc_pairs <- find_p_location(p_PostHoc_matrix, p_threshold = p_threshold) # find_p_location is the self define functions
-    return(paste0("ANOVA p=",p.value_anova,"; ",p_PostHoc_pairs))
-    # return(p_PostHoc_pairs)
-  }else{
-    return(NA)
-  }
-}
-
-matrix_PostHoc<-function(data,groups) {
-  p_PostHoc_pairs<-apply(data,1,PostHoc,factor=groups) # this is a good example how to apply second parometer to "apply" functions
-  return(as.data.frame(p_PostHoc_pairs))                            # PostHoc is self defined functions
-}
-
-pvalues_anova <- matrix_PostHoc(df_intensity,meta_table[,3])
-
-p<- PostHoc(Ozone, Month)
 
 
 ```
 
 
-# Including Plots
-
-You can also embed plots, for example:
 
 ```{r echo=FALSE,fig.width= 8,fig.height=6}
 # if(1==1){

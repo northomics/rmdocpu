@@ -1,0 +1,421 @@
+---
+title: "Function Annoation Quick View"
+author: Suggestions to imetalabca@gmail.com
+date: Report generated @`r Sys.time()`
+output:
+  html_document:
+    fig_width: 10
+    fig_caption: TRUE
+    toc: true
+    toc_depth: 4
+    toc_float:
+      collapsed: TRUE
+      smooth_scroll: TRUE
+    number_sections: true
+params:  
+  input_datatable: !r NULL ### Manditory; main data input for the report
+  meta_table: !r NULL ### Optional; If provided, will do some statistics 
+---
+
+<style type="text/css">
+.main-container {
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+
+```{r setup, include=FALSE}
+
+source("https://raw.githubusercontent.com/ningzhibin/rmdocpu/master/inst/subfunctions_general.r")
+source("https://raw.githubusercontent.com/ningzhibin/rmdocpu/master/inst/subfunctions_general_update.r")
+
+# enviroment setup
+knitr::opts_chunk$set(echo = FALSE,warning = FALSE, message = FALSE, cache = FALSE)
+
+library(tidyverse)
+library(ggplot2)
+library(plotly)
+library(readxl)
+library(pheatmap)
+library(reshape2)
+library(vegan)
+library(ggdendro)
+# library(gridExtra)
+
+#library(plotly)
+# library(DT)
+# for interactive data table display 
+
+# local usage test and debug
+# rmarkdown::render("MQ_report_function_ocpu.Rmd", params = list(summary_file_tbl =  your_readin_tbl))
+# on local machine, your_readin_tbl is a data table, while on ocpu, your_readin_tbl is a json formatted table
+
+# version control
+# 20190821 created function rmd
+# 20190904 added heatmap and PCA, can show meta info if provided
+
+```
+
+
+```{r file_function, echo=FALSE, fig.width= 15,fig.height=10}
+
+# input
+if(is.null(params$input_datatable)){
+  # test with local test with local files in the same dir,
+   data_fun <- read.csv("function_new.csv", header = TRUE, sep = ",")
+
+}else{
+  # opencpu render from data table by parametrized input
+  data_fun <- params$input_datatable
+}
+
+
+# Note: The folling analysis with meta info assumes that
+# 1st columns as sample name, 2nd column as experiment name, 3rd column and after as grouping
+
+meta_table <- params$meta_table
+
+#meta_table <- read.delim("function_meta_20190904.txt", header = TRUE, check.names = FALSE, stringsAsFactors = FALSE)
+
+# use if(!is.null(meta_table))  to deal with data with meta 
+
+
+# data_fun <- data_fun[data_fun$Protein_ID == 1,]
+
+
+```
+
+# Intro
+
+**This report provides some basic description and visualization of the MetaLab function results. **
+**The report is based on the function.csv, without defined experimental design/grouping information.**
+**Users can use this to quickly check the functional profile of the dataset.**
+
+
+# Sample overview
+
+Protein groups annotation | Number (percentage)
+--------------------- | -----------------------
+Protein groups in your sample | `r nrow(data_fun)`
+Protein groups with COG annotation: | `r paste(nrow(data_fun[data_fun$COG.accession != "",]),"(",paste0(round(100*nrow(data_fun[data_fun$COG.accession != "",])/nrow(data_fun)),"%"),")")`
+Protein groups with NOG annotation: | `r paste(nrow(data_fun[data_fun$NOG.accession != "",]),"(",paste0(round(100*nrow(data_fun[data_fun$NOG.accession != "",])/nrow(data_fun)),"%"),")")`
+Protein groups with KEGG annotation:  | `r paste(nrow(data_fun[data_fun$KEGG.name != "",]),"(",paste0(round(100*nrow(data_fun[data_fun$KEGG.name != "",])/nrow(data_fun)),"%"),")")`
+Protein groups with GOBP annotation: | `r   paste(nrow(data_fun[data_fun$GOBP.accession != "",]),"(",paste0(round(100*nrow(data_fun[data_fun$GOBP.accession != "",])/nrow(data_fun)),"%"),")")`
+Protein groups with GOCC annotation: | `r   paste(nrow(data_fun[data_fun$GOCC.accession != "",]),"(",paste0(round(100*nrow(data_fun[data_fun$GOCC.accession != "",])/nrow(data_fun)),"%"),")")`
+Protein groups with GOMF annotation: | `r   paste(nrow(data_fun[data_fun$GOMF.accession != "",]),"(",paste0(round(100*nrow(data_fun[data_fun$GOMF.accession != "",])/nrow(data_fun)),"%"),")")`
+Unique COG accessions annotated: | `r length(unique(data_fun$COG.accession))-1`
+Unique NOG accessions annotated: | `r length(unique(data_fun$NOG.accession))-1`
+Unique KEGG accessions annotated: | `r length(unique(data_fun$KEGG.accession))-1`
+Meta/grouping info provided: | `r if( !is.null(meta_table)){unique(meta_table[,3])}else{ "No meta information provided"} `
+
+# Overview with pie charts
+## Overview of COG categories
+The figure below displays the composition of COG categories in each of your sample. Intensities in the pie chart are based on summed proteinGroup intensities across all samples.
+
+```{r COG_pie, echo=FALSE,fig.width= 10, fig.height=5}
+
+# Get the columns out of the table
+if(any(grepl("intensity.", colnames(data_fun), ignore.case=TRUE))){
+   intensity_columns <- data_fun[,grep("intensity.", colnames(data_fun), ignore.case=TRUE)]
+   colnames(intensity_columns)<-gsub("intensity.", "", colnames(intensity_columns), ignore.case=TRUE)
+  }
+
+# Calculate subtotal for each category
+intensity_columns_C <- cbind(data_fun$COG.category, intensity_columns)
+data_fun_COG <- aggregate(. ~ data_fun$COG.category, data = intensity_columns_C[,-1], FUN = sum)
+data_fun_COG$`data_fun$COG.category` <- as.character(data_fun_COG$`data_fun$COG.category`)
+data_fun_COG$`data_fun$COG.category`[1] <- "Unmatched"
+data_fun_COG <- data_fun_COG[which(rowSums(data_fun_COG[,-1])>0),]
+
+
+# Prepare data for plotting
+Intensity <- rowSums(data_fun_COG[,-1])
+rowSum_COG <- as.data.frame(Intensity)
+COG_cat <- data_fun_COG[,1]
+rowSum_COG <- cbind(COG_cat, rowSum_COG)
+  
+#Draw pie chart
+plot_ly(rowSum_COG, labels = ~COG_cat, values = ~Intensity, type = 'pie') %>%
+        layout(title = 'Composition of COG categories',
+        xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+        yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+```
+
+## Overview of NOG categories
+The figure below displays the composition of NOG categories in each of your sample. Intensities in the pie chart are based on summed proteinGroup intensities across all samples.
+
+```{r NOG_pie, echo=FALSE,fig.width= 10, fig.height=5}
+
+# Calculate subtotal for each category
+intensity_columns_N <- cbind(data_fun$NOG.category, intensity_columns)
+data_fun_NOG <- aggregate(. ~ data_fun$NOG.category, data = intensity_columns_N[,-1], FUN = sum)
+data_fun_NOG$`data_fun$NOG.category` <- as.character(data_fun_NOG$`data_fun$NOG.category`)
+data_fun_NOG$`data_fun$NOG.category`[1] <- "Unmatched"
+data_fun_NOG <- data_fun_NOG[which(rowSums(data_fun_NOG[,-1])>0),]
+
+# Prepare data for plotting
+IntensityN <- rowSums(data_fun_NOG[,-1])
+rowSum_NOG <- as.data.frame(IntensityN)
+NOG_cat <- data_fun_NOG[,1]
+rowSum_NOG <- cbind(NOG_cat, rowSum_NOG)
+  
+#Draw pie chart
+plot_ly(rowSum_NOG, labels = ~NOG_cat, values = ~IntensityN, type = 'pie') %>%
+        layout(title = 'Composition of NOG categories',
+        xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+        yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+```
+
+## Overview of KEGG pathways
+The figure below displays the composition of KEGG pathways in each of your sample. Intensities in the pie chart are based on summed proteinGroup intensities across all samples.
+
+```{r KEGG_pie, echo=FALSE,fig.width= 10, fig.height=5}
+
+# Calculate subtotal for each category
+intensity_columns_K <- cbind(data_fun$KEGG.name, intensity_columns)
+data_fun_KEGG <- aggregate(. ~ data_fun$KEGG.name, data = intensity_columns_K[,-1], FUN = sum)
+data_fun_KEGG$`data_fun$KEGG.name` <- as.character(data_fun_KEGG$`data_fun$KEGG.name`)
+data_fun_KEGG$`data_fun$KEGG.name`[1] <- "Unmatched"
+data_fun_KEGG <- data_fun_KEGG[which(rowSums(data_fun_KEGG[,-1])>0),]
+
+# Prepare data for plotting
+IntensityK <- rowSums(data_fun_KEGG[,-1])
+rowSum_KEGG <- as.data.frame(IntensityK)
+KEGG_cat <- data_fun_KEGG[,1]
+rowSum_KEGG <- cbind(KEGG_cat, rowSum_KEGG)
+  
+#Draw pie chart
+plot_ly(rowSum_KEGG, labels = ~KEGG_cat, values = ~IntensityK, type = 'pie') %>%
+        layout(title = 'Composition of KEGG pathways',
+        xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+        yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+```
+
+# Functional composition in each sample
+## COG composition in each sample
+
+The figure below displays the composition of COG categories in each of your sample. Intensities in the bar plot are based on summed proteinGroup intensities corresponding to each category.
+
+```{r COG, echo=FALSE,fig.width= 12, fig.height=5}
+
+
+# Prepare data for plotting
+
+colnames(data_fun_COG)[colnames(data_fun_COG)=="data_fun$COG.category"] <- "Name"
+data_fun_COG_gg <- melt(data = data_fun_COG,id.vars = c("Name"), variable.name = "Sample", value.name = "Intensity")
+
+#Draw stacked column bar
+ggplotly(ggplot(data_fun_COG_gg, aes(x = Sample, y = Intensity, fill = Name)) +
+         geom_bar(stat='identity') + theme_bw() +
+         ylab("Intensity") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+) %>% style(legendgroup = NULL)
+
+```
+
+## NOG composition in each sample
+
+Similar to the COG summary, the figure below displays the composition of NOG categories in each of your sample.
+
+```{r NOG, echo=FALSE,fig.width= 12, fig.height=5}
+
+
+
+# Prepare data for plotting  
+
+colnames(data_fun_NOG)[colnames(data_fun_NOG)=="data_fun$NOG.category"] <- "Name"
+data_fun_NOG_gg <- melt(data = data_fun_NOG,id.vars = c("Name"), variable.name = "Sample", value.name = "Intensity")
+
+#Draw stacked column bar
+ggplotly(ggplot(data_fun_NOG_gg, aes(x = Sample, y = Intensity, fill = Name)) +
+         geom_bar(stat='identity') + theme_bw() +
+         ylab("Intensity") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  )
+
+```
+
+## KEGG composition in each sample
+The figure below displays the composition of KEGG pathways in each of your sample.
+
+```{r KEGG, echo=FALSE,fig.width= 12, fig.height=5}
+
+
+# Prepare data for plotting  
+colnames(data_fun_KEGG)[colnames(data_fun_KEGG)=="data_fun$KEGG.name"] <- "Name"
+data_fun_KEGG_gg <- melt(data = data_fun_KEGG,id.vars = c("Name"), variable.name = "Sample", value.name = "Intensity")
+  
+#Draw stacked column bar
+ggplotly(ggplot(data_fun_KEGG_gg, aes(x = Sample, y = Intensity, fill = Name)) +
+             geom_bar(stat='identity') + theme_bw() +
+             ylab("Intensity") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+)
+```
+
+`r if(ncol(data_fun_COG) > 1){ "# Heatmap of functional composition"} `
+`r if(ncol(data_fun_COG) > 1){ "## Heatmap of COG composition"} `
+
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+rownames(data_fun_COG) <- data_fun_COG[,1]
+
+if(is.null(meta_table)){
+  d3heatmap::d3heatmap(data_fun_COG[,-1],show_grid = FALSE, color = "RdYlBu", scale = "row")
+}else{
+  library(pheatmap)  
+  Group <- meta_table$Grouping
+  meta <- as.data.frame(Group)
+  rownames(meta) <- colnames(data_fun_COG[,-1])
+  pheatmap(data_fun_COG[,-1], annotation_col = meta, scale = "row")
+}
+
+
+```
+
+`r if(ncol(data_fun_NOG) > 1){ "## Heatmap of NOG composition"} `
+
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+rownames(data_fun_NOG) <- data_fun_NOG[,1]
+
+if(is.null(meta_table)){
+  d3heatmap::d3heatmap(data_fun_NOG[,-1],show_grid = FALSE, color = "RdYlBu", scale = "row")
+}else{
+  pheatmap(data_fun_NOG[,-1], annotation_col = meta, scale = "row")
+}
+
+
+```
+
+`r if(ncol(data_fun_KEGG) > 1){ "## Heatmap of KEGG composition"} `
+```{r echo=FALSE,fig.width= 8,fig.height=12}
+
+rownames(data_fun_KEGG) <- data_fun_KEGG[,1]
+
+if(is.null(meta_table)){
+  d3heatmap::d3heatmap(data_fun_KEGG[,-1],show_grid = FALSE, color = "RdYlBu", scale = "row")
+}else{
+  pheatmap(data_fun_KEGG[,-1], annotation_col = meta, scale = "row")
+}
+
+
+```
+
+`r if(ncol(data_fun_COG) > 3){ "# PCA plots"} `
+`r if(ncol(data_fun_COG) > 3){ "## PCA plots of COG composition"} `
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+df_COG_log10 <- log10(data_fun_COG[,-1]+1)
+
+if(is.null(meta_table)){
+  PCA_result <- prcomp(t(df_COG_log10))
+  loading <- as.data.frame(PCA_result$x)
+
+    # for screen plot
+    sd <- PCA_result$sde
+    var <- sd^2
+    var.percent <- var/sum(var) * 100
+    PCs <- paste0("PC", 1:length(var.percent))
+    df_scree <- data.frame(PC  = factor(PCs, levels = PCs), ratio = round(var.percent,1))
+    PCs <- paste0("PC", 1:length(var.percent), " (", df_scree[1:length(var.percent),2],"%)")
+
+    plot_ly(loading, x = ~PC1, y = ~PC2, z = ~PC3) %>%
+          add_markers() %>%
+          add_text(text = row.names(loading)) %>%
+          layout(
+          scene = list(
+            xaxis = list(title = PCs[1]),
+            yaxis = list(title = PCs[2]),
+            zaxis = list(title = PCs[3])
+          ))
+
+    
+}else{
+  PCA_result <- prcomp(t(df_COG_log10))
+  loading <- as.data.frame(PCA_result$x)
+  meta_3D_PCA <- cbind(rownames(loading), meta_table$Grouping)
+  PCA_plot_3d_interactive_3(prcomp_out = PCA_result, grouping = meta_3D_PCA)
+}
+
+
+```
+
+
+`r if(ncol(data_fun_NOG) > 3){ "## PCA plots of NOG composition"} `
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+df_NOG_log10 <- log10(data_fun_NOG[,-1]+1)
+
+if(is.null(meta_table)){
+  PCA_result <- prcomp(t(df_NOG_log10))
+  loading <- as.data.frame(PCA_result$x)
+
+    # for screen plot
+    sd <- PCA_result$sde
+    var <- sd^2
+    var.percent <- var/sum(var) * 100
+    PCs <- paste0("PC", 1:length(var.percent))
+    df_scree <- data.frame(PC  = factor(PCs, levels = PCs), ratio = round(var.percent,1))
+    PCs <- paste0("PC", 1:length(var.percent), " (", df_scree[1:length(var.percent),2],"%)")
+
+    plot_ly(loading, x = ~PC1, y = ~PC2, z = ~PC3) %>%
+          add_markers() %>%
+          add_text(text = row.names(loading)) %>%
+          layout(
+          scene = list(
+            xaxis = list(title = PCs[1]),
+            yaxis = list(title = PCs[2]),
+            zaxis = list(title = PCs[3])
+          ))
+
+    
+}else{
+  PCA_result <- prcomp(t(df_NOG_log10))
+  loading <- as.data.frame(PCA_result$x)
+  meta_3D_PCA <- cbind(rownames(loading), meta_table$Grouping)
+  PCA_plot_3d_interactive_3(prcomp_out = PCA_result, grouping = meta_3D_PCA)
+}
+
+
+```
+
+`r if(ncol(data_fun_KEGG) > 3){ "## PCA plots of KEGG composition"} `
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+df_KEGG_log10 <- log10(data_fun_KEGG[,-1]+1)
+
+if(is.null(meta_table)){
+  PCA_result <- prcomp(t(df_KEGG_log10))
+  loading <- as.data.frame(PCA_result$x)
+
+    # for screen plot
+    sd <- PCA_result$sde
+    var <- sd^2
+    var.percent <- var/sum(var) * 100
+    PCs <- paste0("PC", 1:length(var.percent))
+    df_scree <- data.frame(PC  = factor(PCs, levels = PCs), ratio = round(var.percent,1))
+    PCs <- paste0("PC", 1:length(var.percent), " (", df_scree[1:length(var.percent),2],"%)")
+
+    plot_ly(loading, x = ~PC1, y = ~PC2, z = ~PC3) %>%
+          add_markers() %>%
+          add_text(text = row.names(loading)) %>%
+          layout(
+          scene = list(
+            xaxis = list(title = PCs[1]),
+            yaxis = list(title = PCs[2]),
+            zaxis = list(title = PCs[3])
+          ))
+
+    
+}else{
+  PCA_result <- prcomp(t(df_KEGG_log10))
+  loading <- as.data.frame(PCA_result$x)
+  meta_3D_PCA <- cbind(rownames(loading), meta_table$Grouping)
+  PCA_plot_3d_interactive_3(prcomp_out = PCA_result, grouping = meta_3D_PCA)
+}
+
+
+```

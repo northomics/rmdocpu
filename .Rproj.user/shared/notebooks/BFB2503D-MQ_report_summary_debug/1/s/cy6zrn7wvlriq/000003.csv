@@ -1,7 +1,0 @@
-"0","exp <- summary_file_summary$summary_experiment
-p <-ggplot(data=exp, aes(x= 'Raw file', y='Peptide Sequences Identified')) +
-  geom_bar(stat=""identity"") + coord_flip()
-
-ggplotly(p)
-"
-"0",""
