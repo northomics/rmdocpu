@@ -63,9 +63,11 @@ tidy_peptides <- function(peptide.txt){
   index_reverse <- grep("\\+", peptide.txt$Reverse)
   index_to_remove <- c(index_contaminant,index_reverse)
   
-  peptide.txt <- peptide.txt[-index_to_remove,] # filtered table
-  peptide_sequence <- peptide_sequence[-index_to_remove] # filtered ids
-
+  if(length(index_to_remove) >0){ # some times there are no rows to remove
+      peptide.txt <- peptide.txt[-index_to_remove,] # filtered table
+      peptide_sequence <- peptide_sequence[-index_to_remove] # filtered ids
+  }
+  
   n_contaminant <- length(index_contaminant)
   n_reversed <- length(index_reverse)
 
@@ -107,7 +109,7 @@ tidy_peptides <- function(peptide.txt){
 # input
 if(is.null(params$input_datatable)){
   # test with local test with local files in the same dir,
-  peptide.txt  <- read.delim("peptides2.txt", header = TRUE,check.names = FALSE, stringsAsFactors = FALSE)
+  peptide.txt  <- read.delim("final_peptides.txt", header = TRUE,check.names = FALSE, stringsAsFactors = FALSE)
 
 }else{
   # opencpu render from data table by parametrized input
