@@ -103,12 +103,11 @@ tidy_MQ_taxonomy <- function(df_taxonomy.txt){
 
 ```{r file_taxonomy, echo=FALSE, fig.width= 15,fig.height=10}
 
-
-
 # input
 if(is.null(params$input_datatable)){
   # test with local test with local files in the same dir,
-  df_taxonomy.txt  <- read_excel("MetaLab_taxonomy.xlsx", sheet = 2)
+  #df_taxonomy.txt  <- read_excel("BuiltIn.taxa.refine.csv", sheet = 2)
+  df_taxonomy.txt <- read.delim("BuiltIn.taxa.refine.csv", header = TRUE,sep = ",",check.names = FALSE, stringsAsFactors = FALSE) 
 
 }else{
   # opencpu render from data table by parametrized input
@@ -226,7 +225,10 @@ The figure below displays the alpha-diversity (Shannon-Wiener index) on the spec
 
 ```
 
-# Beta diversity
+
+`r if(ncol(summary_file_taxonomy$extract_species) >2){"# Beta diversity   \n**The figure below displays the beta-diversity on the species level, visualized using PCoA**"}`
+
+
 
 The figure below displays the beta-diversity on the species level, visualized using PCoA.
 ```{r beta, echo=FALSE,fig.width= 8,fig.height=8}
@@ -234,15 +236,31 @@ The figure below displays the beta-diversity on the species level, visualized us
 data_matrix_t <- t(summary_file_taxonomy$extract_species)
 d.bray <- vegan::vegdist(data_matrix_t)
 show.d.bray <- as.matrix(d.bray)
-pc.bray <- cmdscale(d.bray, k=3, eig = TRUE)
 
-beta_diversity <- as.data.frame(pc.bray$points)
-beta_diversity <- as.data.frame(cbind(names = rownames(beta_diversity), beta_diversity))
+if(nrow(data_matrix_t) >3){
+  pc.bray <- cmdscale(d.bray, k=3, eig = TRUE)
 
-plot_ly(beta_diversity, x = ~V1, y = ~V2, z = ~V3, color = ~names, colors = c("red","orange","yellow","green","cyan","blue","purple","black","gray50","gray80")) %>%
+  beta_diversity <- as.data.frame(pc.bray$points)
+  beta_diversity <- as.data.frame(cbind(names = rownames(beta_diversity), beta_diversity))
+
+ plot_ly(beta_diversity, x = ~V1, y = ~V2, z = ~V3, color = ~names, colors = c("red","orange","yellow","green","cyan","blue","purple","black","gray50","gray80")) %>%
   add_markers() %>%
   add_text(text = ~names) %>%
   hide_legend()
+
+}else if (nrow(data_matrix_t) ==3){
+  pc.bray <- cmdscale(d.bray, k=2, eig = TRUE)
+
+  beta_diversity <- as.data.frame(pc.bray$points)
+  beta_diversity <- as.data.frame(cbind(names = rownames(beta_diversity), beta_diversity))
+
+ plot_ly(beta_diversity, x = ~V1, y = ~V2, color = ~names, colors = c("red","orange","yellow","green","cyan","blue","purple","black","gray50","gray80")) %>%
+  add_markers() %>%
+  add_text(text = ~names) %>%
+  hide_legend()
+}
+
+
 
 ```
 

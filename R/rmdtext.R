@@ -262,7 +262,7 @@ render_proteinGroups_file <- function(file, meta = NULL){
 
 render_taxon_file <- function(file,meta = NULL){
 
-  data_table  <-  read.delim(file, header = TRUE,check.names = FALSE, stringsAsFactors = FALSE) # readin from xl file
+  data_table  <-  read.delim(file, header = TRUE,check.names = FALSE,sep = ",", stringsAsFactors = FALSE) # readin from xl file
 
 
   myfile <- RCurl::getURL("https://raw.githubusercontent.com/ningzhibin/rmdocpu/master/inst/rmd/ML_report_taxonomy.Rmd")
