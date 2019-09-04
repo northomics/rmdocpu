@@ -7,14 +7,14 @@
     "folds" : "",
     "hash" : "0",
     "id" : "7F3F59A9",
-    "lastKnownWriteTime" : 1567631102,
-    "last_content_update" : 1567631102674,
+    "lastKnownWriteTime" : 1567632299,
+    "last_content_update" : 1567632299314,
     "path" : "C:/Users/Figeys Lab/Dropbox/Project_R_packages/rmdocpu/inst/rmd/ML_report_function.Rmd",
     "project_path" : "inst/rmd/ML_report_function.Rmd",
     "properties" : {
-        "cursorPosition" : "77,31",
+        "cursorPosition" : "67,0",
         "last_setup_crc32" : "D8994B1603433bb",
-        "scrollLine" : "48"
+        "scrollLine" : "56"
     },
     "read_only" : false,
     "read_only_alternatives" : [

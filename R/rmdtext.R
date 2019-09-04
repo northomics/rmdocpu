@@ -306,7 +306,7 @@ render_taxon_file <- function(file,meta = NULL){
 
 
 
-render_function_file <- function(file,meta = NULL){
+render_function_file <- function(file, meta = NULL){
 
   #data_table  <- readxl::read_excel(file, sheet = 2) # readin from xl file
   data_table <- read.csv(file, header = TRUE, sep = ",")
