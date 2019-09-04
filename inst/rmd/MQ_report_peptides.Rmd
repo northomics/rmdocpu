@@ -107,7 +107,7 @@ tidy_peptides <- function(peptide.txt){
 # input
 if(is.null(params$input_datatable)){
   # test with local test with local files in the same dir,
-  peptide.txt  <- read.delim("peptides3.txt", header = TRUE,check.names = FALSE, stringsAsFactors = FALSE)
+  peptide.txt  <- read.delim("peptides2.txt", header = TRUE,check.names = FALSE, stringsAsFactors = FALSE)
 
 }else{
   # opencpu render from data table by parametrized input
@@ -331,7 +331,7 @@ if(ncol(df_intensity) > 1){ # only if there are more than 1 columns in experssio
 
 `r if(ncol(df_intensity) > 1){ "## Heatmap"} `
 
-`r if(length(index_P100) < 1000){ "Heatmap of Presence50" }else{ "Heatmap of Presence 100" }`
+`r if(ncol(df_intensity) > 1){if(length(index_P100) < 1000){ "Heatmap of Presence50" }else{ "Heatmap of Presence 100" } }`
 
 
 ```{r echo=FALSE,fig.width= 8,fig.height=6}

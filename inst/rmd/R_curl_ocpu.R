@@ -14,7 +14,7 @@
 #library(httr)
 
 
-# this is the opencpu url of the function for generating report for summary.txt
+# summary.txt----
 
 url_api <- "http://206.12.91.148/ocpu/library/rmdocpu/R/render_MQsummary_file"
 
@@ -49,7 +49,7 @@ curl::curl_download(paste0(url_server, path_target), "maxquant_result_summary.ht
 
 
 
-# proteingroups.txt test----
+# proteingroups.txt----
 
 
 url_api <- "http://206.12.91.148/ocpu/library/rmdocpu/R/render_proteinGroups_file"
@@ -64,13 +64,15 @@ url_server<- paste0(url_api_split[1],"//", url_api_split[3],"/")
 # upload file and do the rendering
 # in this case, the proteinGroups.txt is in the working dir. it can be anywhere with the path
 # variable r is the returning information from the curl function
-r <- httr::POST(url_api, body = list(file = httr::upload_file("proteinGroups1.txt")))
+r <- httr::POST(url_api, body = list(file = httr::upload_file("final_proteins.txt")))
 
 # get all the paths of all files from the opencpu end, and locate the one, which is the report
 # this step needs to be done in the script enviroment
 
 paths <- strsplit(rawToChar(r$content), "\n")[[1]]
 path_target <- paths[grep("output.html",paths)]
+
+path_target
 
 # save/download the report file to local storage
 # the file  "maxquant_result_summary.html" now is the report
@@ -93,7 +95,8 @@ url_server<- paste0(url_api_split[1],"//", url_api_split[3],"/")
 # upload file and do the rendering
 # in this case, the proteinGroups.txt is in the working dir. it can be anywhere with the path
 # variable r is the returning information from the curl function
-r <- httr::POST(url_api, body = list(file = httr::upload_file("final_peptides.txt")))
+r <- httr::POST(url_api, body = list(file = httr::upload_file("peptides2.txt")))
+r$status_code
 
 # get all the paths of all files from the opencpu end, and locate the one, which is the report
 # this step needs to be done in the script enviroment
@@ -109,7 +112,7 @@ curl::curl_download(paste0(url_server, path_target), "peptides_summary.html")
 
 
 
-# this is the MetaLab_taxonomy.csv ----
+# MetaLab_taxonomy.csv ----
 
 
 url_api <- "http://206.12.91.148/ocpu/library/rmdocpu/R/render_taxon_file"
@@ -137,9 +140,8 @@ curl::curl_download(paste0(url_server, path_target), "taxon_summary.html")
 
 
 
-# this is the function.csv
+# function.csv ----
 
-#########################################################################################################
 
 url_api <- "http://206.12.91.148/ocpu/library/rmdocpu/R/render_function_file"
 
@@ -199,6 +201,10 @@ curl::curl_download(paste0(url_server, path_target), "function_summary.html")
 
 
 
+
+
+
+  if(ncol(df_intensity) > 1){if(length(index_P100) < 1000){ "Heatmap of Presence50" }else{ "Heatmap of Presence 100" } }
 
 
 
