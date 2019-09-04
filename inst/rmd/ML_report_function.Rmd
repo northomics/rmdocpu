@@ -61,7 +61,7 @@ library(ggdendro)
 # input
 if(is.null(params$input_datatable)){
   # test with local test with local files in the same dir,
-   data_fun <- read.csv("function.csv", header = TRUE, sep = ",")
+   data_fun <- read.csv("function_new.csv", header = TRUE, sep = ",")
 
 }else{
   # opencpu render from data table by parametrized input
@@ -76,7 +76,7 @@ meta_table <- params$meta_table
 # use if(!is.null(meta_table))  to deal with data with meta 
 
 
-data_fun <- data_fun[data_fun$Protein_ID == 1,]
+# data_fun <- data_fun[data_fun$Protein_ID == 1,]
 
 
 ```
