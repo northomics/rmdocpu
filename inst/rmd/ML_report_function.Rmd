@@ -77,7 +77,7 @@ if(is.null(params$input_datatable)){
 
 meta_table <- params$meta_table
 
-# meta_table <- read.delim("function_meta_20190904.txt", header = TRUE, check.names = FALSE, stringsAsFactors = FALSE)
+#meta_table <- read.delim("function_meta_20190904.txt", header = TRUE, check.names = FALSE, stringsAsFactors = FALSE)
 
 # data_fun <- data_fun[data_fun$Protein_ID == 1,]
 

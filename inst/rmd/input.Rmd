@@ -1,5 +1,5 @@
 ---
-title: "Function Annoation Quick View"
+title: "Peptide identification Quick summary"
 author: Suggestions to imetalabca@gmail.com
 date: Report generated @`r Sys.time()`
 output:
@@ -14,7 +14,7 @@ output:
     number_sections: true
 params:  
   input_datatable: !r NULL ### Manditory; main data input for the report
-  meta_table: !r NULL ### Optional; If provided, will do some statistics 
+  meta_table: !r NULL ### Optional; If provided, will do some statistics
 ---
 
 <style type="text/css">
@@ -27,396 +27,459 @@ params:
 
 
 ```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,warning = FALSE, message = FALSE, cache = FALSE)
 
+# enviroment setup
 source("https://raw.githubusercontent.com/ningzhibin/rmdocpu/master/inst/subfunctions_general.r")
 source("https://raw.githubusercontent.com/ningzhibin/rmdocpu/master/inst/subfunctions_general_update.r")
 
-# enviroment setup
-knitr::opts_chunk$set(echo = FALSE,warning = FALSE, message = FALSE, cache = FALSE)
-
 library(tidyverse)
 library(ggplot2)
+library(d3heatmap)
 library(plotly)
-library(readxl)
-library(pheatmap)
-library(reshape2)
-library(vegan)
-library(ggdendro)
-# library(gridExtra)
 
-#library(plotly)
-# library(DT)
-# for interactive data table display 
+# other reqruied package:
+#  DT
+
+#library(gplots)
 
 # local usage test and debug
-# rmarkdown::render("MQ_report_function_ocpu.Rmd", params = list(summary_file_tbl =  your_readin_tbl))
-# on local machine, your_readin_tbl is a data table, while on ocpu, your_readin_tbl is a json formatted table
-
-# version control
-# 20190821 created function rmd
-# 20190904 added heatmap and PCA, can show meta info if provided
+# rmarkdown::render("MQ_report_peptides.Rmd", params = list(input_datatable =  your_readin_tbl))
+# or with meta information
+# rmarkdown::render("MQ_report_peptides.Rmd", params = list(input_datatable =  your_readin_tbl, meta_table = meta_table_input))
 
 ```
 
 
-```{r file_function, echo=FALSE, fig.width= 15,fig.height=10}
+
+```{r function_needed, recho=FALSE}
+
+tidy_peptides <- function(peptide.txt){ 
+
+  peptide_sequence <- peptide.txt$Sequence # only keep the first one
+  
+  # do the row wise filtering
+  index_contaminant <- grep("\\+", peptide.txt$`Potential contaminant`) # note that + is a special character
+  index_reverse <- grep("\\+", peptide.txt$Reverse)
+  index_to_remove <- c(index_contaminant,index_reverse)
+  
+  if(length(index_to_remove) >0){ # some times there are no rows to remove
+      peptide.txt <- peptide.txt[-index_to_remove,] # filtered table
+      peptide_sequence <- peptide_sequence[-index_to_remove] # filtered ids
+  }
+  
+  n_contaminant <- length(index_contaminant)
+  n_reversed <- length(index_reverse)
+
+  
+  # extra the intensity column matrix
+  if(any(grepl("LFQ intensity ", colnames(peptide.txt)))){ # if there are LFQ intensity columns, take out the LFQ columns
+    intensity_columns <- peptide.txt[,grep("LFQ intensity ", colnames(peptide.txt))]
+    colnames(intensity_columns) <- gsub("LFQ intensity ", "", colnames(intensity_columns))
+    
+  }else if(any(grepl("Intensity ", colnames(peptide.txt)))) { # otherwise take out intensity column
+    
+    intensity_columns <-   peptide.txt[,grep("Intensity ", colnames(peptide.txt))]
+    colnames(intensity_columns)<-gsub("Intensity ", "", colnames(intensity_columns))
+    
+  }else{ # this is for the special case that no experiment desgin setup, only one column of intensity
+    intensity_columns <-   peptide.txt[,grep("Intensity", colnames(peptide.txt)),drop =  FALSE]
+  } 
+  
+  return(list("intensity_matrix" = intensity_columns,
+              "peptide_sequence" =peptide_sequence,
+              "n_contaminant" = n_contaminant,
+              "n_reversed" = n_reversed,
+              "score" = peptide.txt$Score,
+              "Charges" =peptide.txt$Charges,
+              "length" = peptide.txt$Length,
+              "misscleavage" = peptide.txt$"Missed cleavages"
+
+              ))
+  
+}
+
+```
+
+
+
+```{r collect_input, echo=FALSE,fig.width= 15,fig.height=10}
+
 
 # input
 if(is.null(params$input_datatable)){
   # test with local test with local files in the same dir,
-   data_fun <- read.csv("function_new.csv", header = TRUE, sep = ",")
+  peptide.txt  <- read.delim("final_peptides.txt", header = TRUE,check.names = FALSE, stringsAsFactors = FALSE)
 
 }else{
   # opencpu render from data table by parametrized input
-  data_fun <- params$input_datatable
+  peptide.txt <- params$input_datatable
 }
 
 
 # Note: The folling analysis with meta info assumes that
 # 1st columns as sample name, 2nd column as experiment name, 3rd column and after as grouping
 
-meta_table <- params$meta_table
+meta_table <- params$meta_table 
 
-#meta_table <- read.delim("function_meta_20190904.txt", header = TRUE, check.names = FALSE, stringsAsFactors = FALSE)
-
-# use if(!is.null(meta_table))  to deal with data with meta 
+#meta_table <- read.delim("peptides3_meta.txt", header = TRUE, check.names = FALSE, stringsAsFactors = FALSE) # test with meta file
 
 
-# data_fun <- data_fun[data_fun$Protein_ID == 1,]
+```
 
+
+```{r tidy_file, echo=FALSE,fig.width= 15,fig.height=10}
+
+# tidy and process:
+
+peptide_tidyed <- tidy_peptides(peptide.txt)
+
+df_intensity <- peptide_tidyed$intensity_matrix
+sparsity <- rowSums(df_intensity > 0) # here sparsity is number of present values
+index_all_na_rows <- which(sparsity == 0)
+df_intensity <- df_intensity[-index_all_na_rows,,drop = FALSE]
+peptide_sequence <- peptide_tidyed$peptide_sequence[-index_all_na_rows]
 
 ```
 
 # Intro
 
-**This report provides some basic description and visualization of the MetaLab function results. **
-**The report is based on the function.csv, without defined experimental design/grouping information.**
-**Users can use this to quickly check the functional profile of the dataset.**
+**This report provides some basic description of the peptide identificaiton from database search. **
+**Users can use this to quickly check the overal quality of the experiment**
+**Users can download the clean peptide quantification matrix for downstream analysis**
+
+# Take-home figures
 
 
-# Sample overview
+*  **Number of contaminant: ** `r peptide_tidyed$n_contaminant`
 
-Protein groups annotation | Number (percentage)
---------------------- | -----------------------
-Protein groups in your sample | `r nrow(data_fun)`
-Protein groups with COG annotation: | `r paste(nrow(data_fun[data_fun$COG.accession != "",]),"(",paste0(round(100*nrow(data_fun[data_fun$COG.accession != "",])/nrow(data_fun)),"%"),")")`
-Protein groups with NOG annotation: | `r paste(nrow(data_fun[data_fun$NOG.accession != "",]),"(",paste0(round(100*nrow(data_fun[data_fun$NOG.accession != "",])/nrow(data_fun)),"%"),")")`
-Protein groups with KEGG annotation:  | `r paste(nrow(data_fun[data_fun$KEGG.name != "",]),"(",paste0(round(100*nrow(data_fun[data_fun$KEGG.name != "",])/nrow(data_fun)),"%"),")")`
-Protein groups with GOBP annotation: | `r   paste(nrow(data_fun[data_fun$GOBP.accession != "",]),"(",paste0(round(100*nrow(data_fun[data_fun$GOBP.accession != "",])/nrow(data_fun)),"%"),")")`
-Protein groups with GOCC annotation: | `r   paste(nrow(data_fun[data_fun$GOCC.accession != "",]),"(",paste0(round(100*nrow(data_fun[data_fun$GOCC.accession != "",])/nrow(data_fun)),"%"),")")`
-Protein groups with GOMF annotation: | `r   paste(nrow(data_fun[data_fun$GOMF.accession != "",]),"(",paste0(round(100*nrow(data_fun[data_fun$GOMF.accession != "",])/nrow(data_fun)),"%"),")")`
-Unique COG accessions annotated: | `r length(unique(data_fun$COG.accession))-1`
-Unique NOG accessions annotated: | `r length(unique(data_fun$NOG.accession))-1`
-Unique KEGG accessions annotated: | `r length(unique(data_fun$KEGG.accession))-1`
-Meta/grouping info provided: | `r if( !is.null(meta_table)){unique(meta_table[,3])}else{ "No meta information provided"} `
+*  **Number of reversed: ** `r peptide_tidyed$n_reversed`
 
-# Overview with pie charts
-## Overview of COG categories
-The figure below displays the composition of COG categories in each of your sample. Intensities in the pie chart are based on summed proteinGroup intensities across all samples.
+*  **Number of qualified peptides: ** `r nrow(peptide_tidyed$intensity_matrix)`
 
-```{r COG_pie, echo=FALSE,fig.width= 10, fig.height=5}
+*  **Number of quailfied peptide without intensity information(0 intensities):  ** `r length(index_all_na_rows)`
 
-# Get the columns out of the table
-if(any(grepl("intensity.", colnames(data_fun), ignore.case=TRUE))){
-   intensity_columns <- data_fun[,grep("intensity.", colnames(data_fun), ignore.case=TRUE)]
-   colnames(intensity_columns)<-gsub("intensity.", "", colnames(intensity_columns), ignore.case=TRUE)
+*  **Number of experiment:  ** `r ncol(df_intensity)`
+
+*  **All experiments:  ** `r colnames(df_intensity)`
+
+`r if( !is.null(meta_table)){ c("* **Meta/grouping info provided: **",unique(meta_table[,3]))}else{ "* **No meta information provided**"} `
+
+
+# Peptide Charge States
+
+
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+peptide_charge <- as.data.frame(table(peptide_tidyed$Charges))
+colnames(peptide_charge) = c("Charge_state", "Freq")
+
+
+p<- ggplot2::ggplot(data = peptide_charge)+
+  geom_col(aes(x = Charge_state,y = Freq))+
+  theme_bw()
+plotly::ggplotly(p)
+
+#plot_ly(peptide_charge, x = ~Charge_state, y = ~Freq, type = "bar") %>% add_markers() 
+
+
+
+```
+
+# Peptide Length
+
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+peptide_length <- as.data.frame(table(peptide_tidyed$length))
+colnames(peptide_length) = c("peptide_length", "Freq")
+
+
+p<- ggplot2::ggplot(data = peptide_length)+
+  geom_col(aes(x = peptide_length,y = Freq))+
+  theme_bw()
+plotly::ggplotly(p)
+
+#plot_ly(peptide_charge, x = ~Charge_state, y = ~Freq, type = "bar") %>% add_markers() 
+
+```
+
+
+
+# Peptide Score distribution
+
+
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+df_score <- data.frame(Score  = peptide_tidyed$score)
+
+
+p<- ggplot2::ggplot(data=df_score, aes(Score)) +
+  geom_histogram(aes(y=..density..),color= "black",fill="white")+
+  geom_density(alpha=.2, fill="#FF6666")+
+  theme_bw()
+
+plotly::ggplotly(p)
+
+
+```
+
+
+# Peptide Intensity distribution
+
+In most cases, label-free quantification provides a decent way for metaproteomics profiling. 
+
+
+## Sparisty Profile
+
+**Presence of valid intensity across samples**
+
+
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+df_sparsity <- as.data.frame(table(sparsity))
+df_sparsity_dec <- df_sparsity[order(df_sparsity$sparsity,decreasing = TRUE),]
+df_sparsity_dec$sparsity <- factor(df_sparsity_dec$sparsity, levels = df_sparsity_dec$sparsity)
+
+
+p<- ggplot2::ggplot(data = df_sparsity_dec)+
+  geom_col(aes(x = sparsity,y = Freq))+
+  xlab("Presence in the Peptide Intensity Matrix")+
+  theme_bw()
+plotly::ggplotly(p)
+
+
+```
+
+
+
+##  Sparsity cummulative curve
+
+
+Figure shows how many peptides have more than N presence, which helps to set the presence cutoff
+
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+
+#df_sparsity_dec <- df_sparsity[order(df_sparsity$sparsity,decreasing = TRUE),]
+
+df_sparsity_dec$cumsum <-  cumsum(df_sparsity_dec$Freq)
+
+# redefine the sparisty sequence, in order to keep the order in the plot, This is the best way as far as I know
+#df_sparsity_dec$sparsity <- factor(df_sparsity_dec$sparsity, levels = df_sparsity_dec$sparsity)
+
+
+p<- ggplot2::ggplot(data = df_sparsity_dec)+
+  geom_col(aes(x = sparsity,y = cumsum))+
+  xlab("Presence in the Peptide Intensity Matrix")+
+  theme_bw()
+plotly::ggplotly(p)
+
+
+```
+
+
+
+
+
+# Intensity disitribution acrross samples/experiments
+
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+#note: in this log10 intenisty matrix, 0 is converted into infinity, therefore will not show in the box plot, and does not affect the distribution
+df_intensity_log10 <-log10(df_intensity)
+
+data_matrix_log10_melt<-reshape2::melt(as.matrix(df_intensity_log10))
+
+colnames(data_matrix_log10_melt) <- c("Proteins", "Samples", "Log10(Inensity)")
+
+p<-ggplot(data_matrix_log10_melt)+
+    geom_boxplot(aes(x = Samples, y = `Log10(Inensity)`)) +
+    theme_bw()+
+    theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  
+
+plotly::ggplotly(p)
+
+
+```
+
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+# sometimes the quantity of pepetide is too large, only show limited number of rows
+
+if(ncol(df_intensity) > 1){ # only if there are more than 1 columns in experssion matrix 
+  
+  sparsity <- rowSums(df_intensity > 0) 
+  
+  index_P50 <- which(sparsity >= ncol(df_intensity)/2)
+  index_P100 <- which(sparsity == ncol(df_intensity))
+  
+  if(length(index_P100) < 1000){ # if Q100 has less than 1000 rows, then plot Q50 on heatmap
+    index_keep <- index_P50
+  }else{
+    index_keep <- index_P100
   }
 
-# Calculate subtotal for each category
-intensity_columns_C <- cbind(data_fun$COG.category, intensity_columns)
-data_fun_COG <- aggregate(. ~ data_fun$COG.category, data = intensity_columns_C[,-1], FUN = sum)
-data_fun_COG$`data_fun$COG.category` <- as.character(data_fun_COG$`data_fun$COG.category`)
-data_fun_COG$`data_fun$COG.category`[1] <- "Unmatched"
-data_fun_COG <- data_fun_COG[which(rowSums(data_fun_COG[,-1])>0),]
-
-
-# Prepare data for plotting
-Intensity <- rowSums(data_fun_COG[,-1])
-rowSum_COG <- as.data.frame(Intensity)
-COG_cat <- data_fun_COG[,1]
-rowSum_COG <- cbind(COG_cat, rowSum_COG)
   
-#Draw pie chart
-plot_ly(rowSum_COG, labels = ~COG_cat, values = ~Intensity, type = 'pie') %>%
-        layout(title = 'Composition of COG categories',
-        xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-        yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
-
-```
-
-## Overview of NOG categories
-The figure below displays the composition of NOG categories in each of your sample. Intensities in the pie chart are based on summed proteinGroup intensities across all samples.
-
-```{r NOG_pie, echo=FALSE,fig.width= 10, fig.height=5}
-
-# Calculate subtotal for each category
-intensity_columns_N <- cbind(data_fun$NOG.category, intensity_columns)
-data_fun_NOG <- aggregate(. ~ data_fun$NOG.category, data = intensity_columns_N[,-1], FUN = sum)
-data_fun_NOG$`data_fun$NOG.category` <- as.character(data_fun_NOG$`data_fun$NOG.category`)
-data_fun_NOG$`data_fun$NOG.category`[1] <- "Unmatched"
-data_fun_NOG <- data_fun_NOG[which(rowSums(data_fun_NOG[,-1])>0),]
-
-# Prepare data for plotting
-IntensityN <- rowSums(data_fun_NOG[,-1])
-rowSum_NOG <- as.data.frame(IntensityN)
-NOG_cat <- data_fun_NOG[,1]
-rowSum_NOG <- cbind(NOG_cat, rowSum_NOG)
-  
-#Draw pie chart
-plot_ly(rowSum_NOG, labels = ~NOG_cat, values = ~IntensityN, type = 'pie') %>%
-        layout(title = 'Composition of NOG categories',
-        xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-        yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
-
-```
-
-## Overview of KEGG pathways
-The figure below displays the composition of KEGG pathways in each of your sample. Intensities in the pie chart are based on summed proteinGroup intensities across all samples.
-
-```{r KEGG_pie, echo=FALSE,fig.width= 10, fig.height=5}
-
-# Calculate subtotal for each category
-intensity_columns_K <- cbind(data_fun$KEGG.name, intensity_columns)
-data_fun_KEGG <- aggregate(. ~ data_fun$KEGG.name, data = intensity_columns_K[,-1], FUN = sum)
-data_fun_KEGG$`data_fun$KEGG.name` <- as.character(data_fun_KEGG$`data_fun$KEGG.name`)
-data_fun_KEGG$`data_fun$KEGG.name`[1] <- "Unmatched"
-data_fun_KEGG <- data_fun_KEGG[which(rowSums(data_fun_KEGG[,-1])>0),]
-
-# Prepare data for plotting
-IntensityK <- rowSums(data_fun_KEGG[,-1])
-rowSum_KEGG <- as.data.frame(IntensityK)
-KEGG_cat <- data_fun_KEGG[,1]
-rowSum_KEGG <- cbind(KEGG_cat, rowSum_KEGG)
-  
-#Draw pie chart
-plot_ly(rowSum_KEGG, labels = ~KEGG_cat, values = ~IntensityK, type = 'pie') %>%
-        layout(title = 'Composition of KEGG pathways',
-        xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-        yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
-
-```
-
-# Functional composition in each sample
-## COG composition in each sample
-
-The figure below displays the composition of COG categories in each of your sample. Intensities in the bar plot are based on summed proteinGroup intensities corresponding to each category.
-
-```{r COG, echo=FALSE,fig.width= 12, fig.height=5}
-
-
-# Prepare data for plotting
-
-colnames(data_fun_COG)[colnames(data_fun_COG)=="data_fun$COG.category"] <- "Name"
-data_fun_COG_gg <- melt(data = data_fun_COG,id.vars = c("Name"), variable.name = "Sample", value.name = "Intensity")
-
-#Draw stacked column bar
-ggplotly(ggplot(data_fun_COG_gg, aes(x = Sample, y = Intensity, fill = Name)) +
-         geom_bar(stat='identity') + theme_bw() +
-         ylab("Intensity") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
-) %>% style(legendgroup = NULL)
-
-```
-
-## NOG composition in each sample
-
-Similar to the COG summary, the figure below displays the composition of NOG categories in each of your sample.
-
-```{r NOG, echo=FALSE,fig.width= 12, fig.height=5}
-
-
-
-# Prepare data for plotting  
-
-colnames(data_fun_NOG)[colnames(data_fun_NOG)=="data_fun$NOG.category"] <- "Name"
-data_fun_NOG_gg <- melt(data = data_fun_NOG,id.vars = c("Name"), variable.name = "Sample", value.name = "Intensity")
-
-#Draw stacked column bar
-ggplotly(ggplot(data_fun_NOG_gg, aes(x = Sample, y = Intensity, fill = Name)) +
-         geom_bar(stat='identity') + theme_bw() +
-         ylab("Intensity") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
-  )
-
-```
-
-## KEGG composition in each sample
-The figure below displays the composition of KEGG pathways in each of your sample.
-
-```{r KEGG, echo=FALSE,fig.width= 12, fig.height=5}
-
-
-# Prepare data for plotting  
-colnames(data_fun_KEGG)[colnames(data_fun_KEGG)=="data_fun$KEGG.name"] <- "Name"
-data_fun_KEGG_gg <- melt(data = data_fun_KEGG,id.vars = c("Name"), variable.name = "Sample", value.name = "Intensity")
-  
-#Draw stacked column bar
-ggplotly(ggplot(data_fun_KEGG_gg, aes(x = Sample, y = Intensity, fill = Name)) +
-             geom_bar(stat='identity') + theme_bw() +
-             ylab("Intensity") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
-)
-```
-
-`r if(ncol(data_fun_COG) > 1){ "# Heatmap of functional composition"} `
-`r if(ncol(data_fun_COG) > 1){ "## Heatmap of COG composition"} `
-
-```{r echo=FALSE,fig.width= 8,fig.height=6}
-
-rownames(data_fun_COG) <- data_fun_COG[,1]
-
-if(is.null(meta_table)){
-  d3heatmap::d3heatmap(data_fun_COG[,-1],show_grid = FALSE, color = "RdYlBu", scale = "row")
-}else{
-  library(pheatmap)  
-  Group <- meta_table$Grouping
-  meta <- as.data.frame(Group)
-  rownames(meta) <- colnames(data_fun_COG[,-1])
-  pheatmap(data_fun_COG[,-1], annotation_col = meta, scale = "row")
 }
 
 
+
 ```
 
-`r if(ncol(data_fun_NOG) > 1){ "## Heatmap of NOG composition"} `
+
+
+`r if(ncol(df_intensity) > 1){ "# Overall Expression Profile"} `
+
+`r if(ncol(df_intensity) > 1){ "## Heatmap"} `
+
+`r if(ncol(df_intensity) > 1){if(length(index_P100) < 1000){ "Heatmap of Presence50" }else{ "Heatmap of Presence 100" } }`
+
+
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+# sometimes the quantity of pepetide is too large, only show limited number of rows
+
+if(ncol(df_intensity) > 1){ # only if there are more than 1 columns in experssion matrix 
+  
+  df_intensity_heatmap_log10 <-log10(df_intensity[index_keep, , drop = FALSE]+1)
+  rownames(df_intensity_heatmap_log10) <- peptide_sequence[index_keep]
+  d3heatmap(df_intensity_heatmap_log10,show_grid = FALSE, color = "OrRd")
+  
+}
+  
+```
+
+
+
+`r if(ncol(df_intensity) > 3){"# PCA Analysis"}`
+
+
+
 
 ```{r echo=FALSE,fig.width= 8,fig.height=6}
 
-rownames(data_fun_NOG) <- data_fun_NOG[,1]
+if(ncol(df_intensity) > 3){ # otherwise, no point doing PCA
 
-if(is.null(meta_table)){
-  d3heatmap::d3heatmap(data_fun_NOG[,-1],show_grid = FALSE, color = "RdYlBu", scale = "row")
-}else{
-  pheatmap(data_fun_NOG[,-1], annotation_col = meta, scale = "row")
-}
+  df_intensity_log10 <- log10(df_intensity+1)
+ 
+  if(is.null(meta_table)){
+    
+    #pca <-PCA_wrapper_prcomp2(data_matrix = as.matrix(df_intensity_log10), inputation = TRUE)
+    PCA_result <- prcomp(t(df_intensity_log10))
+    loading <- as.data.frame(PCA_result$x)
+    #plot(loading$PC1, loading$PC2)
+    #plot_ly(data = loading, x = ~PC1, y = ~PC2) %>% add_markers() %>% add_text(text = row.names(loading))
 
-
-```
-
-`r if(ncol(data_fun_KEGG) > 1){ "## Heatmap of KEGG composition"} `
-```{r echo=FALSE,fig.width= 8,fig.height=12}
-
-rownames(data_fun_KEGG) <- data_fun_KEGG[,1]
-
-if(is.null(meta_table)){
-  d3heatmap::d3heatmap(data_fun_KEGG[,-1],show_grid = FALSE, color = "RdYlBu", scale = "row")
-}else{
-  pheatmap(data_fun_KEGG[,-1], annotation_col = meta, scale = "row")
-}
-
-
-```
-
-`r if(ncol(data_fun_COG) > 3){ "# PCA plots"} `
-`r if(ncol(data_fun_COG) > 3){ "## PCA plots of COG composition"} `
-```{r echo=FALSE,fig.width= 8,fig.height=6}
-
-df_COG_log10 <- log10(data_fun_COG[,-1]+1)
-
-if(is.null(meta_table)){
-  PCA_result <- prcomp(t(df_COG_log10))
-  loading <- as.data.frame(PCA_result$x)
-
+    p1 <- plot_ly(loading, x = ~PC1, y = ~PC2, z = ~PC3) %>%
+    add_markers() %>%
+    add_text(text = row.names(loading))
+    
+    
+    
     # for screen plot
     sd <- PCA_result$sde
     var <- sd^2
     var.percent <- var/sum(var) * 100
-    PCs <- paste0("PC", 1:length(var.percent))
-    df_scree <- data.frame(PC  = factor(PCs, levels = PCs), ratio = round(var.percent,1))
-    PCs <- paste0("PC", 1:length(var.percent), " (", df_scree[1:length(var.percent),2],"%)")
+  
+    PCs <- paste("PC", 1:length(var.percent))
+    df_scree <- data.frame(PC  = factor(PCs, levels = PCs), ratio =var.percent)
+  
+  
+    p2 <- plot_ly(data = df_scree,x = ~PC, y = ~ratio, type = "bar") %>%
+      layout(title = "Scree Plot of Principle components", xaxis = list(title = 'Principle Component'), yaxis = list(title = 'Variance(%)'))
+  
+    htmltools::tagList(list(p1, p2)) 
+    
+  }else{
 
-    plot_ly(loading, x = ~PC1, y = ~PC2, z = ~PC3) %>%
-          add_markers() %>%
-          add_text(text = row.names(loading)) %>%
-          layout(
-          scene = list(
-            xaxis = list(title = PCs[1]),
-            yaxis = list(title = PCs[2]),
-            zaxis = list(title = PCs[3])
-          ))
+    # do pca analysis with meta groupign information
+    
+    pca <-PCA_wrapper_prcomp2(data_matrix = as.matrix(df_intensity_log10), data_meta =  meta_table[,c(1,3)], inputation = TRUE)
 
     
-}else{
-  PCA_result <- prcomp(t(df_COG_log10))
-  loading <- as.data.frame(PCA_result$x)
-  meta_3D_PCA <- cbind(rownames(loading), meta_table$Grouping)
-  PCA_plot_3d_interactive_3(prcomp_out = PCA_result, grouping = meta_3D_PCA)
+    # plotting
+    print(pca$pca_scree_plot)
+  
+      cat("Scree plot ##  shows the performance of the PCA analysis, the more percentage the top procomponets accounts, the better separation")
+ 
+    print(pca$pca_component_plot)
+    
+      cat("2d PCA Component plot ##")
+    
+    print(pca$pca_confidence)
+    
+      cat("2d PCA Component plot ## with confidence boundaries")
+
+    print(pca$pca_component_plot_kmeans)
+    
+      cat("2d PCA Component plot with K-means grouping, which is non-supervised grouping ")
+    
+    pca$pca_component_plot_3d_interactive
+    
+  }
+
 }
 
 
 ```
 
 
-`r if(ncol(data_fun_NOG) > 3){ "## PCA plots of NOG composition"} `
+`r if(length(unique(meta_table[,3])) >=2) {"# ANOVA TEST  \n**Peptides with significiant(p < 0.05) change between any groups**"}`
+
+
+
 ```{r echo=FALSE,fig.width= 8,fig.height=6}
 
-df_NOG_log10 <- log10(data_fun_NOG[,-1]+1)
+if(length(unique(meta_table[,3])) >=2){
 
-if(is.null(meta_table)){
-  PCA_result <- prcomp(t(df_NOG_log10))
-  loading <- as.data.frame(PCA_result$x)
+pvalues_anova <- matrix_PostHoc(df_intensity,meta_table[,3])
 
-    # for screen plot
-    sd <- PCA_result$sde
-    var <- sd^2
-    var.percent <- var/sum(var) * 100
-    PCs <- paste0("PC", 1:length(var.percent))
-    df_scree <- data.frame(PC  = factor(PCs, levels = PCs), ratio = round(var.percent,1))
-    PCs <- paste0("PC", 1:length(var.percent), " (", df_scree[1:length(var.percent),2],"%)")
+df_intensity_p <- cbind(pvalues_anova, df_intensity)
 
-    plot_ly(loading, x = ~PC1, y = ~PC2, z = ~PC3) %>%
-          add_markers() %>%
-          add_text(text = row.names(loading)) %>%
-          layout(
-          scene = list(
-            xaxis = list(title = PCs[1]),
-            yaxis = list(title = PCs[2]),
-            zaxis = list(title = PCs[3])
-          ))
+rownames(df_intensity_p) <- peptide_sequence
 
-    
-}else{
-  PCA_result <- prcomp(t(df_NOG_log10))
-  loading <- as.data.frame(PCA_result$x)
-  meta_3D_PCA <- cbind(rownames(loading), meta_table$Grouping)
-  PCA_plot_3d_interactive_3(prcomp_out = PCA_result, grouping = meta_3D_PCA)
+df_intensity_p_filtered <- df_intensity_p[which(!is.na(df_intensity_p$p_PostHoc_pairs)),] 
+
+DT::datatable(df_intensity_p_filtered, extensions = 'Buttons',options = list(dom = "Blfrtip",scrollX=TRUE, buttons = list('copy', 'print', list(
+        extend = 'collection',
+        buttons = c('csv', 'excel', 'pdf'),
+        text = 'Download'
+      ))))
+
 }
+
 
 
 ```
 
-`r if(ncol(data_fun_KEGG) > 3){ "## PCA plots of KEGG composition"} `
+
+
+
+
+# Download the neat table
+
+**The table is clean peptides expression table, with reversed and contaminant removed.**
+**The values are the LFQ(with label free quantification turned on) or raw protein intensity from Maxquant output. **
+**You can download/export and start from this table for downstream analysis using the (i)Metalab faminly apps. **
+
+**The talbe can be further visualized by our shiny apps [shiny.imetalab.ca](shiny.imetalab.ca)**
+
 ```{r echo=FALSE,fig.width= 8,fig.height=6}
 
-df_KEGG_log10 <- log10(data_fun_KEGG[,-1]+1)
 
-if(is.null(meta_table)){
-  PCA_result <- prcomp(t(df_KEGG_log10))
-  loading <- as.data.frame(PCA_result$x)
+df_intensity <- as.data.frame(df_intensity)
 
-    # for screen plot
-    sd <- PCA_result$sde
-    var <- sd^2
-    var.percent <- var/sum(var) * 100
-    PCs <- paste0("PC", 1:length(var.percent))
-    df_scree <- data.frame(PC  = factor(PCs, levels = PCs), ratio = round(var.percent,1))
-    PCs <- paste0("PC", 1:length(var.percent), " (", df_scree[1:length(var.percent),2],"%)")
+rownames(df_intensity) <- peptide_sequence
 
-    plot_ly(loading, x = ~PC1, y = ~PC2, z = ~PC3) %>%
-          add_markers() %>%
-          add_text(text = row.names(loading)) %>%
-          layout(
-          scene = list(
-            xaxis = list(title = PCs[1]),
-            yaxis = list(title = PCs[2]),
-            zaxis = list(title = PCs[3])
-          ))
-
-    
-}else{
-  PCA_result <- prcomp(t(df_KEGG_log10))
-  loading <- as.data.frame(PCA_result$x)
-  meta_3D_PCA <- cbind(rownames(loading), meta_table$Grouping)
-  PCA_plot_3d_interactive_3(prcomp_out = PCA_result, grouping = meta_3D_PCA)
-}
-
+DT::datatable(df_intensity, extensions = 'Buttons',options = list(dom = "Blfrtip",scrollX=TRUE, buttons = list('copy', 'print', list(
+        extend = 'collection',
+        buttons = c('csv', 'excel', 'pdf'),
+        text = 'Download'
+      ))))
 
 ```
+
+
+
+
 

@@ -317,7 +317,7 @@ if(ncol(df_intensity) > 3){ # otherwise, no point to do PCA
 
     # do pca analysis with meta groupign information
     
-    pca <-PCA_wrapper_prcomp2(data_matrix = as.matrix(df_intensity_log10), data_meta =  meta_table[,c(1,3)], inputation = TRUE)
+    pca <-PCA_wrapper_prcomp2(data_matrix = as.matrix(df_intensity_log10), data_meta =  meta_table[,c(2,3)], inputation = TRUE)
 
     
     # plotting
