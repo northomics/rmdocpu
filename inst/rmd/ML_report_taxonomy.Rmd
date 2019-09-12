@@ -268,14 +268,17 @@ if(nrow(data_matrix_t) >3){
 
 Visualize sample clustering based on the species-level composition.
 Distance measure used is "euclidean", and agglomeration method used is "ward.D".
+(Clustering analysis will be performed when there are more than 2 samples)
 
 ```{r cluster_fig, echo=FALSE,fig.width= 8, fig.height=4}
-
+if(ncol(summary_file_taxonomy$extract_species) >2){
   distance <- dist(t(summary_file_taxonomy$extract_species), method = "euclidean")
   fit <- hclust(distance, method= "ward.D")
   ggdendrogram(fit, rotate = TRUE, theme_dendro = FALSE, size = 2) + xlab("Samples") + ylab("Distance") +
                theme_bw()
   
+}
+
 
 ```
 

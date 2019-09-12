@@ -115,7 +115,7 @@ The figure below displays the composition of COG categories in each of your samp
 
 # Get the columns out of the table
 if(any(grepl("intensity.", colnames(data_fun), ignore.case=TRUE))){
-   intensity_columns <- data_fun[,grep("intensity.", colnames(data_fun), ignore.case=TRUE)]
+   intensity_columns <- data_fun[,grep("intensity.", colnames(data_fun), ignore.case=TRUE), drop = FALSE]
    colnames(intensity_columns)<-gsub("intensity.", "", colnames(intensity_columns), ignore.case=TRUE)
   }
 
