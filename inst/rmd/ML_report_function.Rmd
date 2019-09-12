@@ -64,7 +64,7 @@ library(ggdendro)
 # input
 if(is.null(params$input_datatable)){
   # test with local test with local files in the same dir,
-   data_fun <- read.csv("function_data_20190904.csv", header = TRUE, sep = ",")
+   data_fun <- read.csv("functions.csv", header = TRUE, sep = ",")
 
 }else{
   # opencpu render from data table by parametrized input
@@ -77,9 +77,8 @@ if(is.null(params$input_datatable)){
 
 meta_table <- params$meta_table
 
-#meta_table <- read.delim("function_meta_20190904.txt", header = TRUE, check.names = FALSE, stringsAsFactors = FALSE)
+#meta_table <- read.delim("metadata.txt", header = TRUE, check.names = FALSE, stringsAsFactors = FALSE)
 
-# data_fun <- data_fun[data_fun$Protein_ID == 1,]
 
 
 ```
@@ -262,11 +261,9 @@ rownames(data_fun_COG) <- data_fun_COG[,1]
 if(is.null(meta_table)){
   d3heatmap::d3heatmap(data_fun_COG[,-1],show_grid = FALSE, color = "RdYlBu", scale = "row")
 }else{
-  library(pheatmap)  
-  Group <- meta_table$Grouping
-  meta <- as.data.frame(Group)
+  meta <- meta_table[,3, drop = FALSE]# for the report, only the first meta is used
   rownames(meta) <- colnames(data_fun_COG[,-1])
-  pheatmap(data_fun_COG[,-1], annotation_col = meta, scale = "row")
+  pheatmap::pheatmap(data_fun_COG[,-1], annotation_col = meta, scale = "row")
 }
 
 
@@ -281,7 +278,9 @@ rownames(data_fun_NOG) <- data_fun_NOG[,1]
 if(is.null(meta_table)){
   d3heatmap::d3heatmap(data_fun_NOG[,-1],show_grid = FALSE, color = "RdYlBu", scale = "row")
 }else{
-  pheatmap(data_fun_NOG[,-1], annotation_col = meta, scale = "row")
+  meta <- meta_table[,3, drop = FALSE]# for the report, only the first meta is used
+  rownames(meta) <- colnames(data_fun_COG[,-1])
+  pheatmap::pheatmap(data_fun_NOG[,-1], annotation_col = meta, scale = "row")
 }
 
 
@@ -296,7 +295,9 @@ rownames(data_fun_KEGG) <- data_fun_KEGG[,1]
 if(is.null(meta_table)){
   d3heatmap::d3heatmap(data_fun_KEGG[,-1],show_grid = FALSE, color = "RdYlBu", scale = "row")
 }else{
-  pheatmap(data_fun_KEGG[,-1], annotation_col = meta, scale = "row")
+  meta <- meta_table[,3, drop = FALSE]# for the report, only the first meta is used
+  rownames(meta) <- colnames(data_fun_COG[,-1])
+  pheatmap:: pheatmap(data_fun_KEGG[,-1], annotation_col = meta, scale = "row")
 }
 
 
@@ -336,7 +337,7 @@ if(is.null(meta_table)){
 }else{
   PCA_result <- prcomp(t(df_COG_log10))
   loading <- as.data.frame(PCA_result$x)
-  meta_3D_PCA <- cbind(rownames(loading), meta_table$Grouping)
+  meta_3D_PCA <- cbind(rownames(loading), meta_table[,3])
   PCA_plot_3d_interactive_3(prcomp_out = PCA_result, grouping = meta_3D_PCA)
 }
 
@@ -377,7 +378,7 @@ if(is.null(meta_table)){
 }else{
   PCA_result <- prcomp(t(df_NOG_log10))
   loading <- as.data.frame(PCA_result$x)
-  meta_3D_PCA <- cbind(rownames(loading), meta_table$Grouping)
+  meta_3D_PCA <- cbind(rownames(loading), meta_table[,3])
   PCA_plot_3d_interactive_3(prcomp_out = PCA_result, grouping = meta_3D_PCA)
 }
 
@@ -418,7 +419,7 @@ if(is.null(meta_table)){
 }else{
   PCA_result <- prcomp(t(df_KEGG_log10))
   loading <- as.data.frame(PCA_result$x)
-  meta_3D_PCA <- cbind(rownames(loading), meta_table$Grouping)
+  meta_3D_PCA <- cbind(rownames(loading), meta_table[,3])
   PCA_plot_3d_interactive_3(prcomp_out = PCA_result, grouping = meta_3D_PCA)
 }
 

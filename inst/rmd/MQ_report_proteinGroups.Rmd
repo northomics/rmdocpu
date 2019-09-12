@@ -122,7 +122,7 @@ if(is.null(params$input_datatable)){
 
 meta_table <- params$meta_table 
 
-#meta_table <- read.delim("proteinGroups1_meta.txt", header = TRUE, check.names = FALSE, stringsAsFactors = FALSE) # test with meta file
+#meta_table <- read.delim("metadata.txt", header = TRUE, check.names = FALSE, stringsAsFactors = FALSE) # test with meta file
 
 ```
 
@@ -346,13 +346,13 @@ if(ncol(df_intensity) > 3){ # otherwise, no point to do PCA
 
 
 
-`r if(length(unique(meta_table[,3])) >=2) {"# ANOVA TEST  \n**Proteins with significiant(p < 0.05) change between any groups**"}`
+`r if(length(unique(meta_table[,3])) >=2 && all(table(meta_table[,3]) >=2)) {"# ANOVA TEST  \n**Proteins with significiant(p < 0.05) change between any groups**"}`
 
 
 
 ```{r echo=FALSE,fig.width= 8,fig.height=6}
-
-if(length(unique(meta_table[,3])) >=2){
+# will do this block while: 1, more than (includeing) two meta/groups, 2, each group has more than (includeing) 2 samples.
+if(length(unique(meta_table[,3])) >=2 && all(table(meta_table[,3]) >=2)){
 
 pvalues_anova <- matrix_PostHoc(df_intensity,meta_table[,3])
 
