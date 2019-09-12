@@ -120,14 +120,14 @@ if(any(grepl("intensity.", colnames(data_fun), ignore.case=TRUE))){
 
 # Calculate subtotal for each category
 intensity_columns_C <- cbind(data_fun$COG.category, intensity_columns)
-data_fun_COG <- aggregate(. ~ data_fun$COG.category, data = intensity_columns_C[,-1], FUN = sum)
+data_fun_COG <- aggregate(. ~ data_fun$COG.category, data = intensity_columns_C[,-1, drop = FALSE], FUN = sum)
 data_fun_COG$`data_fun$COG.category` <- as.character(data_fun_COG$`data_fun$COG.category`)
 data_fun_COG$`data_fun$COG.category`[1] <- "Unmatched"
-data_fun_COG <- data_fun_COG[which(rowSums(data_fun_COG[,-1])>0),]
+data_fun_COG <- data_fun_COG[which(rowSums(data_fun_COG[,-1,drop =  FALSE])>0),]
 
 
 # Prepare data for plotting
-Intensity <- rowSums(data_fun_COG[,-1])
+Intensity <- rowSums(data_fun_COG[,-1, drop = FALSE])
 rowSum_COG <- as.data.frame(Intensity)
 COG_cat <- data_fun_COG[,1]
 rowSum_COG <- cbind(COG_cat, rowSum_COG)
@@ -147,13 +147,13 @@ The figure below displays the composition of NOG categories in each of your samp
 
 # Calculate subtotal for each category
 intensity_columns_N <- cbind(data_fun$NOG.category, intensity_columns)
-data_fun_NOG <- aggregate(. ~ data_fun$NOG.category, data = intensity_columns_N[,-1], FUN = sum)
+data_fun_NOG <- aggregate(. ~ data_fun$NOG.category, data = intensity_columns_N[,-1,drop = FALSE], FUN = sum)
 data_fun_NOG$`data_fun$NOG.category` <- as.character(data_fun_NOG$`data_fun$NOG.category`)
 data_fun_NOG$`data_fun$NOG.category`[1] <- "Unmatched"
-data_fun_NOG <- data_fun_NOG[which(rowSums(data_fun_NOG[,-1])>0),]
+data_fun_NOG <- data_fun_NOG[which(rowSums(data_fun_NOG[,-1,drop = FALSE])>0),]
 
 # Prepare data for plotting
-IntensityN <- rowSums(data_fun_NOG[,-1])
+IntensityN <- rowSums(data_fun_NOG[,-1,drop = FALSE])
 rowSum_NOG <- as.data.frame(IntensityN)
 NOG_cat <- data_fun_NOG[,1]
 rowSum_NOG <- cbind(NOG_cat, rowSum_NOG)
@@ -173,13 +173,13 @@ The figure below displays the composition of KEGG pathways in each of your sampl
 
 # Calculate subtotal for each category
 intensity_columns_K <- cbind(data_fun$KEGG.name, intensity_columns)
-data_fun_KEGG <- aggregate(. ~ data_fun$KEGG.name, data = intensity_columns_K[,-1], FUN = sum)
+data_fun_KEGG <- aggregate(. ~ data_fun$KEGG.name, data = intensity_columns_K[,-1,drop = FALSE], FUN = sum)
 data_fun_KEGG$`data_fun$KEGG.name` <- as.character(data_fun_KEGG$`data_fun$KEGG.name`)
 data_fun_KEGG$`data_fun$KEGG.name`[1] <- "Unmatched"
-data_fun_KEGG <- data_fun_KEGG[which(rowSums(data_fun_KEGG[,-1])>0),]
+data_fun_KEGG <- data_fun_KEGG[which(rowSums(data_fun_KEGG[,-1,drop = FALSE])>0),]
 
 # Prepare data for plotting
-IntensityK <- rowSums(data_fun_KEGG[,-1])
+IntensityK <- rowSums(data_fun_KEGG[,-1,drop = FALSE])
 rowSum_KEGG <- as.data.frame(IntensityK)
 KEGG_cat <- data_fun_KEGG[,1]
 rowSum_KEGG <- cbind(KEGG_cat, rowSum_KEGG)
@@ -251,53 +251,62 @@ ggplotly(ggplot(data_fun_KEGG_gg, aes(x = Sample, y = Intensity, fill = Name)) +
 )
 ```
 
-`r if(ncol(data_fun_COG) > 1){ "# Heatmap of functional composition"} `
-`r if(ncol(data_fun_COG) > 1){ "## Heatmap of COG composition"} `
+`r if(ncol(data_fun_COG) > 2){ "# Heatmap of functional composition"} `
+`r if(ncol(data_fun_COG) > 2){ "## Heatmap of COG composition"} `
 
 ```{r echo=FALSE,fig.width= 8,fig.height=6}
 
-rownames(data_fun_COG) <- data_fun_COG[,1]
+if(ncol(data_fun_COG) > 2){
+  rownames(data_fun_COG) <- data_fun_COG[,1]
+  if(is.null(meta_table)){
+    d3heatmap::d3heatmap(data_fun_COG[,-1,drop = FALSE],show_grid = FALSE, color = "RdYlBu", scale = "row")
+  }else{
+    meta <- meta_table[,3, drop = FALSE]# for the report, only the first meta is used
+    rownames(meta) <- colnames(data_fun_COG[,-1,drop = FALSE])
+    pheatmap::pheatmap(data_fun_COG[,-1,drop = FALSE], annotation_col = meta, scale = "row")
+  }
 
-if(is.null(meta_table)){
-  d3heatmap::d3heatmap(data_fun_COG[,-1],show_grid = FALSE, color = "RdYlBu", scale = "row")
-}else{
-  meta <- meta_table[,3, drop = FALSE]# for the report, only the first meta is used
-  rownames(meta) <- colnames(data_fun_COG[,-1])
-  pheatmap::pheatmap(data_fun_COG[,-1], annotation_col = meta, scale = "row")
+}
+
+
+
+```
+
+`r if(ncol(data_fun_NOG) > 2){ "## Heatmap of NOG composition"} `
+
+```{r echo=FALSE,fig.width= 8,fig.height=6}
+
+
+if(ncol(data_fun_NOG) > 2){
+  rownames(data_fun_NOG) <- data_fun_NOG[,1]
+  if(is.null(meta_table)){
+    d3heatmap::d3heatmap(data_fun_NOG[,-1,drop = FALSE],show_grid = FALSE, color = "RdYlBu", scale = "row")
+  }else{
+    meta <- meta_table[,3, drop = FALSE]# for the report, only the first meta is used
+    rownames(meta) <- colnames(data_fun_COG[,-1,drop = FALSE])
+    pheatmap::pheatmap(data_fun_NOG[,-1,drop = FALSE], annotation_col = meta, scale = "row")
+  }
+
 }
 
 
 ```
 
-`r if(ncol(data_fun_NOG) > 1){ "## Heatmap of NOG composition"} `
-
-```{r echo=FALSE,fig.width= 8,fig.height=6}
-
-rownames(data_fun_NOG) <- data_fun_NOG[,1]
-
-if(is.null(meta_table)){
-  d3heatmap::d3heatmap(data_fun_NOG[,-1],show_grid = FALSE, color = "RdYlBu", scale = "row")
-}else{
-  meta <- meta_table[,3, drop = FALSE]# for the report, only the first meta is used
-  rownames(meta) <- colnames(data_fun_COG[,-1])
-  pheatmap::pheatmap(data_fun_NOG[,-1], annotation_col = meta, scale = "row")
-}
-
-
-```
-
-`r if(ncol(data_fun_KEGG) > 1){ "## Heatmap of KEGG composition"} `
+`r if(ncol(data_fun_KEGG) > 2){ "## Heatmap of KEGG composition"} `
 
 ```{r echo=FALSE,fig.width= 8,fig.height=12}
-
-rownames(data_fun_KEGG) <- data_fun_KEGG[,1]
+if(ncol(data_fun_KEGG) > 2){
+  rownames(data_fun_KEGG) <- data_fun_KEGG[,1]
 
 if(is.null(meta_table)){
-  d3heatmap::d3heatmap(data_fun_KEGG[,-1],show_grid = FALSE, color = "RdYlBu", scale = "row")
+  d3heatmap::d3heatmap(data_fun_KEGG[,-1,drop = FALSE],show_grid = FALSE, color = "RdYlBu", scale = "row")
 }else{
   meta <- meta_table[,3, drop = FALSE]# for the report, only the first meta is used
-  rownames(meta) <- colnames(data_fun_COG[,-1])
-  pheatmap:: pheatmap(data_fun_KEGG[,-1], annotation_col = meta, scale = "row")
+  rownames(meta) <- colnames(data_fun_COG[,-1,drop = FALSE])
+  pheatmap:: pheatmap(data_fun_KEGG[,-1,drop = FALSE], annotation_col = meta, scale = "row")
+}
+
+  
 }
 
 
@@ -309,37 +318,41 @@ if(is.null(meta_table)){
 
 ```{r echo=FALSE,fig.width= 8,fig.height=6}
 
-df_COG_log10 <- log10(data_fun_COG[,-1]+1)
+if(ncol(data_fun_COG) > 3){
+  df_COG_log10 <- log10(data_fun_COG[,-1,drop = FALSE]+1)
 
-if(is.null(meta_table)){
-  PCA_result <- prcomp(t(df_COG_log10))
-  loading <- as.data.frame(PCA_result$x)
+  if(is.null(meta_table)){
+    PCA_result <- prcomp(t(df_COG_log10))
+    loading <- as.data.frame(PCA_result$x)
+  
+      # for screen plot
+      sd <- PCA_result$sde
+      var <- sd^2
+      var.percent <- var/sum(var) * 100
+      PCs <- paste0("PC", 1:length(var.percent))
+      df_scree <- data.frame(PC  = factor(PCs, levels = PCs), ratio = round(var.percent,1))
+      PCs <- paste0("PC", 1:length(var.percent), " (", df_scree[1:length(var.percent),2],"%)")
+  
+      plot_ly(loading, x = ~PC1, y = ~PC2, z = ~PC3) %>%
+            add_markers() %>%
+            add_text(text = row.names(loading)) %>%
+            layout(
+            scene = list(
+              xaxis = list(title = PCs[1]),
+              yaxis = list(title = PCs[2]),
+              zaxis = list(title = PCs[3])
+            ))
+  
+      
+  }else{
+    PCA_result <- prcomp(t(df_COG_log10))
+    loading <- as.data.frame(PCA_result$x)
+    meta_3D_PCA <- cbind(rownames(loading), meta_table[,3])
+    PCA_plot_3d_interactive_3(prcomp_out = PCA_result, grouping = meta_3D_PCA)
+  }
 
-    # for screen plot
-    sd <- PCA_result$sde
-    var <- sd^2
-    var.percent <- var/sum(var) * 100
-    PCs <- paste0("PC", 1:length(var.percent))
-    df_scree <- data.frame(PC  = factor(PCs, levels = PCs), ratio = round(var.percent,1))
-    PCs <- paste0("PC", 1:length(var.percent), " (", df_scree[1:length(var.percent),2],"%)")
-
-    plot_ly(loading, x = ~PC1, y = ~PC2, z = ~PC3) %>%
-          add_markers() %>%
-          add_text(text = row.names(loading)) %>%
-          layout(
-          scene = list(
-            xaxis = list(title = PCs[1]),
-            yaxis = list(title = PCs[2]),
-            zaxis = list(title = PCs[3])
-          ))
-
-    
-}else{
-  PCA_result <- prcomp(t(df_COG_log10))
-  loading <- as.data.frame(PCA_result$x)
-  meta_3D_PCA <- cbind(rownames(loading), meta_table[,3])
-  PCA_plot_3d_interactive_3(prcomp_out = PCA_result, grouping = meta_3D_PCA)
 }
+
 
 
 ```
@@ -349,38 +362,41 @@ if(is.null(meta_table)){
 
 
 ```{r echo=FALSE,fig.width= 8,fig.height=6}
+if(ncol(data_fun_NOG) > 3){
+  df_NOG_log10 <- log10(data_fun_NOG[,-1,drop = FALSE]+1)
 
-df_NOG_log10 <- log10(data_fun_NOG[,-1]+1)
+  if(is.null(meta_table)){
+    PCA_result <- prcomp(t(df_NOG_log10))
+    loading <- as.data.frame(PCA_result$x)
+  
+      # for screen plot
+      sd <- PCA_result$sde
+      var <- sd^2
+      var.percent <- var/sum(var) * 100
+      PCs <- paste0("PC", 1:length(var.percent))
+      df_scree <- data.frame(PC  = factor(PCs, levels = PCs), ratio = round(var.percent,1))
+      PCs <- paste0("PC", 1:length(var.percent), " (", df_scree[1:length(var.percent),2],"%)")
+  
+      plot_ly(loading, x = ~PC1, y = ~PC2, z = ~PC3) %>%
+            add_markers() %>%
+            add_text(text = row.names(loading)) %>%
+            layout(
+            scene = list(
+              xaxis = list(title = PCs[1]),
+              yaxis = list(title = PCs[2]),
+              zaxis = list(title = PCs[3])
+            ))
+  
+      
+  }else{
+    PCA_result <- prcomp(t(df_NOG_log10))
+    loading <- as.data.frame(PCA_result$x)
+    meta_3D_PCA <- cbind(rownames(loading), meta_table[,3])
+    PCA_plot_3d_interactive_3(prcomp_out = PCA_result, grouping = meta_3D_PCA)
+  }
 
-if(is.null(meta_table)){
-  PCA_result <- prcomp(t(df_NOG_log10))
-  loading <- as.data.frame(PCA_result$x)
-
-    # for screen plot
-    sd <- PCA_result$sde
-    var <- sd^2
-    var.percent <- var/sum(var) * 100
-    PCs <- paste0("PC", 1:length(var.percent))
-    df_scree <- data.frame(PC  = factor(PCs, levels = PCs), ratio = round(var.percent,1))
-    PCs <- paste0("PC", 1:length(var.percent), " (", df_scree[1:length(var.percent),2],"%)")
-
-    plot_ly(loading, x = ~PC1, y = ~PC2, z = ~PC3) %>%
-          add_markers() %>%
-          add_text(text = row.names(loading)) %>%
-          layout(
-          scene = list(
-            xaxis = list(title = PCs[1]),
-            yaxis = list(title = PCs[2]),
-            zaxis = list(title = PCs[3])
-          ))
-
-    
-}else{
-  PCA_result <- prcomp(t(df_NOG_log10))
-  loading <- as.data.frame(PCA_result$x)
-  meta_3D_PCA <- cbind(rownames(loading), meta_table[,3])
-  PCA_plot_3d_interactive_3(prcomp_out = PCA_result, grouping = meta_3D_PCA)
 }
+
 
 
 ```
@@ -390,37 +406,43 @@ if(is.null(meta_table)){
 
 
 ```{r echo=FALSE,fig.width= 8,fig.height=6}
+if(ncol(data_fun_KEGG) > 3){
+  
+  df_KEGG_log10 <- log10(data_fun_KEGG[,-1,drop = FALSE]+1)
 
-df_KEGG_log10 <- log10(data_fun_KEGG[,-1]+1)
+  if(is.null(meta_table)){
+    PCA_result <- prcomp(t(df_KEGG_log10))
+    loading <- as.data.frame(PCA_result$x)
+  
+      # for screen plot
+      sd <- PCA_result$sde
+      var <- sd^2
+      var.percent <- var/sum(var) * 100
+      PCs <- paste0("PC", 1:length(var.percent))
+      df_scree <- data.frame(PC  = factor(PCs, levels = PCs), ratio = round(var.percent,1))
+      PCs <- paste0("PC", 1:length(var.percent), " (", df_scree[1:length(var.percent),2],"%)")
+  
+      plot_ly(loading, x = ~PC1, y = ~PC2, z = ~PC3) %>%
+            add_markers() %>%
+            add_text(text = row.names(loading)) %>%
+            layout(
+            scene = list(
+              xaxis = list(title = PCs[1]),
+              yaxis = list(title = PCs[2]),
+              zaxis = list(title = PCs[3])
+            ))
+  
+      
+  }else{
+    PCA_result <- prcomp(t(df_KEGG_log10))
+    loading <- as.data.frame(PCA_result$x)
+    meta_3D_PCA <- cbind(rownames(loading), meta_table[,3])
+    PCA_plot_3d_interactive_3(prcomp_out = PCA_result, grouping = meta_3D_PCA)
+  }
 
-if(is.null(meta_table)){
-  PCA_result <- prcomp(t(df_KEGG_log10))
-  loading <- as.data.frame(PCA_result$x)
-
-    # for screen plot
-    sd <- PCA_result$sde
-    var <- sd^2
-    var.percent <- var/sum(var) * 100
-    PCs <- paste0("PC", 1:length(var.percent))
-    df_scree <- data.frame(PC  = factor(PCs, levels = PCs), ratio = round(var.percent,1))
-    PCs <- paste0("PC", 1:length(var.percent), " (", df_scree[1:length(var.percent),2],"%)")
-
-    plot_ly(loading, x = ~PC1, y = ~PC2, z = ~PC3) %>%
-          add_markers() %>%
-          add_text(text = row.names(loading)) %>%
-          layout(
-          scene = list(
-            xaxis = list(title = PCs[1]),
-            yaxis = list(title = PCs[2]),
-            zaxis = list(title = PCs[3])
-          ))
-
-    
-}else{
-  PCA_result <- prcomp(t(df_KEGG_log10))
-  loading <- as.data.frame(PCA_result$x)
-  meta_3D_PCA <- cbind(rownames(loading), meta_table[,3])
-  PCA_plot_3d_interactive_3(prcomp_out = PCA_result, grouping = meta_3D_PCA)
+  
+  
+  
 }
 
 
