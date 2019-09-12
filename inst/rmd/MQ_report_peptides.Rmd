@@ -48,6 +48,8 @@ library(plotly)
 # or with meta information
 # rmarkdown::render("MQ_report_peptides.Rmd", params = list(input_datatable =  your_readin_tbl, meta_table = meta_table_input))
 
+
+# todo meta check
 ```
 
 
@@ -77,14 +79,12 @@ tidy_peptides <- function(peptide.txt){
     intensity_columns <- peptide.txt[,grep("LFQ intensity ", colnames(peptide.txt))]
     colnames(intensity_columns) <- gsub("LFQ intensity ", "", colnames(intensity_columns))
     
-  }else if(any(grepl("Intensity ", colnames(peptide.txt)))) { # otherwise take out intensity column
+  }else{ # otherwise take out intensity column, even if there is one column, without any experiment desgin
     
-    intensity_columns <-   peptide.txt[,grep("Intensity ", colnames(peptide.txt))]
+    intensity_columns <-   peptide.txt[,grep("Intensity ", colnames(peptide.txt)),drop =  FALSE]
     colnames(intensity_columns)<-gsub("Intensity ", "", colnames(intensity_columns))
     
-  }else{ # this is for the special case that no experiment desgin setup, only one column of intensity
-    intensity_columns <-   peptide.txt[,grep("Intensity", colnames(peptide.txt)),drop =  FALSE]
-  } 
+  }
   
   return(list("intensity_matrix" = intensity_columns,
               "peptide_sequence" =peptide_sequence,
@@ -109,7 +109,7 @@ tidy_peptides <- function(peptide.txt){
 # input
 if(is.null(params$input_datatable)){
   # test with local test with local files in the same dir,
-  peptide.txt  <- read.delim("final_peptides.txt", header = TRUE,check.names = FALSE, stringsAsFactors = FALSE)
+  peptide.txt  <- read.delim("peptides.txt", header = TRUE,check.names = FALSE, stringsAsFactors = FALSE)
 
 }else{
   # opencpu render from data table by parametrized input

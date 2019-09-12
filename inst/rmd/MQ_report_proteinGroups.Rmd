@@ -83,12 +83,10 @@ tidy_proteingroups <- function(proteinGroups){
   if(any(grepl("LFQ intensity ", colnames(proteinGroups)))){ # if there are LFQ intensity columns, take out the LFQ columns
     intensity_columns <- proteinGroups[,grep("LFQ intensity ", colnames(proteinGroups))]
     colnames(intensity_columns)<-gsub("LFQ intensity ", "", colnames(intensity_columns))
-  }else if(any(grepl("Intensity ", colnames(proteinGroups)))) { # otherwise take out intensity column
-    intensity_columns <-   proteinGroups[,grep("Intensity ", colnames(proteinGroups))]
+  }else{ # otherwise take out intensity column， even only one column
+    intensity_columns <-   proteinGroups[,grep("Intensity ", colnames(proteinGroups)),drop =  FALSE]
     colnames(intensity_columns)<-gsub("Intensity ", "", colnames(intensity_columns))
-  }else{ # this is for the special case that no experiment desgin setup, only one column of intensity
-    intensity_columns <-   proteinGroups[,grep("Intensity", colnames(proteinGroups)),drop =  FALSE]
-  } 
+  }
   
   return(list("intensity_matrix" = intensity_columns,
               "n_contaminant" = n_contaminant,
@@ -112,7 +110,7 @@ tidy_proteingroups <- function(proteinGroups){
 # input
 if(is.null(params$input_datatable)){
   # test with local test with local files in the same dir,
-  proteinGroups.txt <- read.delim("proteinGroups_zk.txt", header = TRUE,check.names = FALSE, stringsAsFactors = FALSE)
+  proteinGroups.txt <- read.delim("proteinGroups.txt", header = TRUE,check.names = FALSE, stringsAsFactors = FALSE)
 
 }else{
   # opencpu render from data table by parametrized input
