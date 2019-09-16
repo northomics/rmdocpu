@@ -1,5 +1,0 @@
-"0","sparsity <- rowSums(df_intensity > 0) # here sparsity is number of present values
-"
-"2","Error in matrix(if (is.null(value)) logical() else value, nrow = nr, dimnames = list(rn,  : 
-  length of 'dimnames' [2] not equal to array extent
-"

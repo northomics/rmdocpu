@@ -25,6 +25,12 @@ params:
 }
 </style>
 
+```{r, echo=FALSE}
+htmltools::img(src = "https://raw.githubusercontent.com/ningzhibin/rmdocpu/master/inst/rmd/iMetaReport.png", 
+               alt = 'logo', 
+               style = 'position:absolute; top:0; right:0; padding:10px;width:150px;height:150px;')
+```
+
 
 ```{r setup, include=FALSE}
 # enviroment setup
@@ -119,6 +125,11 @@ if(is.null(params$input_datatable)){
 # 1st columns as sample name, 2nd column as experiment name, 3rd column and after as grouping
 
 meta_table <- params$meta_table 
+# if there is any null value in the meta colum, set the meta as NULL
+if(any(is.na(meta_table$meta1))){
+  meta_table <- NULL
+}
+
 
 # use if(!is.null(meta_table))  to deal with data with meta 
 
