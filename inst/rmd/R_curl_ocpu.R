@@ -172,8 +172,8 @@ url_server<- paste0(url_api_split[1],"//", url_api_split[3],"/")
 # upload file and do the rendering
 # in this case, the proteinGroups.txt is in the working dir. it can be anywhere with the path
 # variable r is the returning information from the curl function
-#r <- httr::POST(url_api, body = list(file = httr::upload_file("function_data_20190904.csv")))
-r <- httr::POST(url_api, body = list(file = httr::upload_file("function_data_20190904.csv"), meta = httr::upload_file("function_meta_20190904.txt")))
+#r <- httr::POST(url_api, body = list(file = httr::upload_file("functions.csv")))
+r <- httr::POST(url_api, body = list(file = httr::upload_file("functions.csv"), meta = httr::upload_file("metadata.txt")))
 
 r$status_code
 

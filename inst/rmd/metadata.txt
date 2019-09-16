@@ -1,0 +1,4 @@
+File	Experiment	meta1
+C:\ShareRawFiles\metalab_2.0_test\Wenju_20190831_RapidAIMV42_1_CYC.raw	CYC	
+C:\ShareRawFiles\metalab_2.0_test\Wenju_20190831_RapidAIMV42_2_ADV_2.raw	ADV	
+C:\ShareRawFiles\metalab_2.0_test\Wenju_20190831_RapidAIMV42_3_MAL.raw	MAL	

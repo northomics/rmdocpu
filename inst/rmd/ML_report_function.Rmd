@@ -52,6 +52,9 @@ library(ggdendro)
 # rmarkdown::render("MQ_report_function_ocpu.Rmd", params = list(summary_file_tbl =  your_readin_tbl))
 # on local machine, your_readin_tbl is a data table, while on ocpu, your_readin_tbl is a json formatted table
 
+# todo
+# check the metafile, if meta is not qualified, do not use it.
+
 # version control
 # 20190821 created function rmd
 # 20190904 added heatmap and PCA, can show meta info if provided
@@ -76,6 +79,11 @@ if(is.null(params$input_datatable)){
 # 1st columns as sample name, 2nd column as experiment name, 3rd column and after as grouping
 
 meta_table <- params$meta_table
+
+# if there is any null value in the meta colum, set the meta as NULL
+if(any(is.na(meta_table$meta1))){
+  meta_table <- NULL
+}
 
 #meta_table <- read.delim("metadata.txt", header = TRUE, check.names = FALSE, stringsAsFactors = FALSE)
 
