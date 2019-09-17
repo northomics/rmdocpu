@@ -62,8 +62,8 @@ url_server<- paste0(url_api_split[1],"//", url_api_split[3],"/")
 # upload file and do the rendering
 # in this case, the proteinGroups.txt is in the working dir. it can be anywhere with the path
 # variable r is the returning information from the curl function
-#r <- httr::POST(url_api, body = list(file = httr::upload_file("proteinGroups1.txt")))
-r <- httr::POST(url_api, body = list(file = httr::upload_file("proteinGroups1.txt"), meta = httr::upload_file("proteinGroups1_meta.txt")), httr::timeout(200000))
+r <- httr::POST(url_api, body = list(file = httr::upload_file("proteinGroups1.txt")))
+#r <- httr::POST(url_api, body = list(file = httr::upload_file("proteinGroups1.txt"), meta = httr::upload_file("proteinGroups1_meta.txt")), httr::timeout(200000))
 
 r
 # get all the paths of all files from the opencpu end, and locate the one, which is the report

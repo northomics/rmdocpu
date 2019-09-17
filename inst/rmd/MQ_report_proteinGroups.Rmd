@@ -264,6 +264,8 @@ p<-ggplot(data_matrix_log10_melt)+
 
 plotly::ggplotly(p)
 
+rm(data_matrix_log10_melt)
+
 
 ```
 
