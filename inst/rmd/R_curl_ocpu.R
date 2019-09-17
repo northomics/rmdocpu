@@ -62,7 +62,7 @@ url_server<- paste0(url_api_split[1],"//", url_api_split[3],"/")
 # upload file and do the rendering
 # in this case, the proteinGroups.txt is in the working dir. it can be anywhere with the path
 # variable r is the returning information from the curl function
-r <- httr::POST(url_api, body = list(file = httr::upload_file("proteinGroups1.txt")))
+r <- httr::POST(url_api, body = list(file = httr::upload_file("proteinGroups.txt")))
 #r <- httr::POST(url_api, body = list(file = httr::upload_file("proteinGroups1.txt"), meta = httr::upload_file("proteinGroups1_meta.txt")), httr::timeout(200000))
 
 r
@@ -83,6 +83,29 @@ curl::curl_download(paste0(url_server, path_target), "report_proteinGroups_summa
 data_table  <- read.delim("proteinGroups1.txt", header = TRUE,check.names = FALSE, stringsAsFactors = FALSE) # NOTE the read in options
 meta_table <- read.delim("proteinGroups1_meta.txt", header = TRUE, check.names = FALSE, stringsAsFactors = FALSE) # with meta file
 rmarkdown::render("MQ_report_proteinGroups.Rmd",output_format = "html_document", params = list(input_datatable =  data_table, meta_table = meta_table), output_file="output.html")
+
+
+# server command
+render_proteinGroups_file <- function(file, meta = NULL){
+
+  #data_table  <- readr::read_tsv(file, col_names = TRUE)
+  data_table  <- read.delim(file, header = TRUE,check.names = FALSE, stringsAsFactors = FALSE) # NOTE the read in options
+
+  myfile <- RCurl::getURL("https://raw.githubusercontent.com/ningzhibin/rmdocpu/master/inst/rmd/MQ_report_proteinGroups.Rmd")
+  writeLines(myfile, con="input.Rmd");
+
+  if(!is.null(meta)){
+    meta_table <- read.delim(meta, header = TRUE, check.names = FALSE, stringsAsFactors = FALSE) # with meta file
+
+    rmarkdown::render("input.Rmd",output_format = "html_document", params = list(input_datatable =  data_table, meta_table = meta_table), output_file="output.html")
+
+  }else{
+    rmarkdown::render("input.Rmd",output_format = "html_document", params = list(input_datatable =  data_table), output_file="output.html")
+  }
+
+  invisible()
+}
+
 
 
 

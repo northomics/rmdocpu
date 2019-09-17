@@ -63,8 +63,6 @@ library(plotly)
 
 ```{r function_needed, recho=FALSE}
 
-# proteinGroups <- proteinGroups.txt
-
 tidy_proteingroups <- function(proteinGroups){ 
 
   # extract the primary protein ID,
@@ -144,6 +142,7 @@ if(any(is.na(meta_table$meta1))){
 
 # tidy
 proteingroups_tidyed <- tidy_proteingroups(proteinGroups.txt)
+rm(proteinGroups.txt)
 
 # process
 df_intensity <- proteingroups_tidyed$intensity_matrix
@@ -214,6 +213,7 @@ plotly::ggplotly(p)
 
 df_score <- data.frame(Score  = proteingroups_tidyed$score)
 
+rm(proteingroups_tidyed)
 
 p<- ggplot2::ggplot(data=df_score, aes(Score)) +
   geom_histogram(aes(y=..density..),color= "black",fill="white")+
@@ -264,6 +264,7 @@ p<-ggplot(data_matrix_log10_melt)+
 
 plotly::ggplotly(p)
 
+rm(p)
 rm(data_matrix_log10_melt)
 
 
@@ -314,6 +315,7 @@ if(ncol(df_intensity) > 3){ # otherwise, no point to do PCA
     
     # for screen plot
     sd <- PCA_result$sde
+    rm(PCA_result)
     var <- sd^2
     var.percent <- var/sum(var) * 100
   
