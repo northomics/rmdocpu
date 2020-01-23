@@ -1,9 +1,0 @@
-"0","raw <-summary_file_summary$summary_rawfiles
-
-p <-ggplot2::ggplot(data=raw, aes(x=`Raw file`, y=`Peptide Sequences Identified`)) +
-  geom_bar(stat=""identity"") + coord_flip()+
-  theme_bw()
-
-plotly::ggplotly(p)
-"
-"0",""

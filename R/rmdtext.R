@@ -1,6 +1,6 @@
 #' wrapper function of rmarkdown::render for opencpu
 #'
-#' Three general wrapper function to work with opencpu, which can render source r markdown code into html files, to be displacyed on the client end
+#' Three general wrapper function to work with opencpu, which can render source r markdown code into html files, to be displayed on the client end
 #'
 #' @param text For rmdtext, a string, which is the rmardown coding itself
 #' @return no direct return, but write an output.html to the temp session on the opencpu server
@@ -25,7 +25,7 @@ rmdtext <- function(text){
 
 #' wrapper function of rmarkdown::render for opencpu
 #'
-#' Three general wrapper function to work with opencpu, which can render source r markdown code into html files, to be displacyed on the client end
+#' Three general wrapper function to work with opencpu, which can render source r markdown code into html files, to be displayed on the client end
 #'
 #' @param rmd_url For render_rmd_url, a string of public accessible url
 #'
@@ -53,7 +53,7 @@ render_rmd_url <- function(rmd_url){
 
 #' wrapper function of rmarkdown::render for opencpu
 #'
-#' Three general wrapper function to work with opencpu, which can render source r markdown code into html files, to be displacyed on the client end
+#' Three general wrapper function to work with opencpu, which can render source r markdown code into html files, to be displayed on the client end
 #'
 #' @param rmd_file For render_rmd_server, a string of the file name on the same opencpu server in the same package, only for tests
 #' @return no direct return, but write an output.html to the temp session on the opencpu server
@@ -90,7 +90,7 @@ render_rmd_server <- function(rmd_file){
 #' It also works on the stand alone mode, to generate a report file, output.html in the currrent folder, using a public accessible rmd file on github. Of course, this need internect connection to run
 #'
 #'
-#' @param data_table the table is a matrix/data.frame/tble on the server ond, json formted on the front ond opencpu will do the conversion automatically
+#' @param data_table the table is a matrix/data.frame/tble on the server ond, json formted on the front end opencpu will do the conversion automatically
 #'
 #' @return no direct return, but write an output.html to the temp session on the opencpu server
 #' @seealso \code{\link{render}}  \code{\link{knit}} \code{\link{render_MQsummary_file}}
@@ -101,6 +101,8 @@ render_rmd_server <- function(rmd_file){
 #'
 #'
 #'
+
+
 
 
 render_MQsummary <- function(data_table){

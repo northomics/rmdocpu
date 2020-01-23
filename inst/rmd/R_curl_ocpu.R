@@ -1,7 +1,7 @@
 
-#  the following scripts show how to use r to upload summary.txt to the opencpu server as the imput to render an html report
+#  the following scripts show how to use r to upload summary.txt to the opencpu server as the input to render an html report
 #  then download the report to local storage
-#  This function could be done by any script languange, sucha as java, perl or bash
+#  This function could be done by any script languange, such as java, perl or bash
 #  by doing this, metalab can have the report easily, without the need to setup the r enviroment, but easily get all the report, especially with
 #  various data visualization in the report
 #  these report are all html based and could be linked/iframed on the website.
@@ -79,6 +79,9 @@ paths
 curl::curl_download(paste0(url_server, path_target), "report_proteinGroups_summary.html")
 
 
+
+
+
 # test on locoal rmd
 data_table  <- read.delim("proteinGroups1.txt", header = TRUE,check.names = FALSE, stringsAsFactors = FALSE) # NOTE the read in options
 meta_table <- read.delim("proteinGroups1_meta.txt", header = TRUE, check.names = FALSE, stringsAsFactors = FALSE) # with meta file
@@ -86,6 +89,9 @@ rmarkdown::render("MQ_report_proteinGroups.Rmd",output_format = "html_document",
 
 
 # server command
+
+render_proteinGroups_file(file = "proteinGroups.txt")
+
 render_proteinGroups_file <- function(file, meta = NULL){
 
   #data_table  <- readr::read_tsv(file, col_names = TRUE)

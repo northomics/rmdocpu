@@ -1,7 +1,0 @@
-"0",""
-"0",""
-"0","# start from the data table for parametrized version"
-"0","proteingroups_tidyed <- tidy_proteingroups(params$input_datatable)"
-"2","Error in strsplit(as.vector(proteinGroups$""Protein IDs""), "";"") : 
-  non-character argument
-"

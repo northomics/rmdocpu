@@ -71,7 +71,7 @@ tidy_proteingroups <- function(proteinGroups){
   #rownames(proteinGroups) <- protein_primary_ids # rename the rownames of the matrix
   
   # do the row wise filtering
-  index_contaminant <- grep("\\+", proteinGroups$`Potential contaminant`) # note that + is a special character
+   index_contaminant <- grep("\\+",proteinGroups[,grep( "ontaminant", colnames(proteinGroups))]) # note that + is a special character
   index_reverse <- grep("\\+", proteinGroups$Reverse)
   index_to_remove <- c(index_contaminant,index_reverse)
   
@@ -315,7 +315,6 @@ if(ncol(df_intensity) > 3){ # otherwise, no point to do PCA
     
     # for screen plot
     sd <- PCA_result$sde
-    rm(PCA_result)
     var <- sd^2
     var.percent <- var/sum(var) * 100
   
@@ -326,7 +325,9 @@ if(ncol(df_intensity) > 3){ # otherwise, no point to do PCA
     p2 <- plot_ly(data = df_scree,x = ~PC, y = ~ratio, type = "bar") %>%
       layout(title = "Scree Plot of Principle components", xaxis = list(title = 'Principle Component'), yaxis = list(title = 'Variance(%)'))
   
-    htmltools::tagList(list(p1, p2)) 
+    htmltools::tagList(list(p1, p2))
+
+    
     
   }else{
 
