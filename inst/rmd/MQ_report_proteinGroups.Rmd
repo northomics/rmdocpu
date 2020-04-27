@@ -388,38 +388,8 @@ DT::datatable(df_intensity_p_filtered, extensions = 'Buttons',options = list(dom
 
 }
 
-
-
-
-
 ```
 
-
-
-# Download the neat table
-
-**The table is clean proteingroups expression table, with reversed and contaminant removed. Only the first protein id was used to represent the proteingroups.**
-**The values are the LFQ(label free quantification turned on) or raw protein intensity. **
-**The talbe can be further visualized by our shiny apps [shiny.imetalab.ca](shiny.imetalab.ca)**
-
-
-```{r echo=FALSE,fig.width= 8,fig.height=6}
-
-
-df_intensity <- as.data.frame(df_intensity)
-rownames(df_intensity) <- protein_primary_ids
-
-
-DT::datatable(df_intensity, extensions = 'Buttons',options = list(dom = "Blfrtip",scrollX=TRUE, buttons =       list('copy', 'print', list(
-        extend = 'collection',
-        buttons = c('csv', 'excel', 'pdf'),
-        text = 'Download'
-      ))))
-
-
-
-
-```
 
 
 
