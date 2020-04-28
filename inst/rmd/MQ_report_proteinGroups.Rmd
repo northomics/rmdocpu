@@ -271,23 +271,47 @@ rm(data_matrix_log10_melt)
 ```
 
 
+
+
 `r if(ncol(df_intensity) > 1){ "# Overall Expression Profile"} `
 
-`r if(ncol(df_intensity) > 1){ "## Heatmap"} `
+`r if(ncol(df_intensity) > 1){ "## Heatmap of Top200 intensity proteins"} `
 
 
-```{r echo=FALSE,fig.width= 8,fig.height=6}
+```{r heatmap, eval =  TRUE, echo=FALSE,fig.width= 8,fig.height=6}
 
 # only if there is experiment desgin and  number of columns in protein experssion value is more than 1, 
 if(ncol(df_intensity) > 1){ 
-  df_intensity_log10 <-log10(df_intensity+1)
-  rownames(df_intensity_log10) <- protein_primary_ids
   
-  d3heatmap::d3heatmap(df_intensity_log10,show_grid = FALSE, color = "OrRd")
+  sparsity <- rowSums(df_intensity > 0) 
+  index_Q100 <- which(sparsity == ncol(df_intensity)) # index_Q100 is the index of Q100 proteins
+  
+  
+  if(length(index_Q100) >200){
+    topN = 200
+    
+    df_intensity$total_intensity<- rowSums(df_intensity) # add total intensity column
+    df_intensity_heatmap <- dplyr::top_n(df_intensity, topN, total_intensity) # top 100 rows
+    df_intensity_heatmap <- df_intensity_heatmap[, 1: (ncol(df_intensity_heatmap)-1)]
+    
+  }else{
+    #topN = length(index_Q100)
+    
+    df_intensity_heatmap <- df_intensity[index_Q100, , drop = FALSE] # the Q100 peptide matrix  
+    
+    
+    #rownames(df_intensity_log10) <- protein_primary_ids
+  
+  }
+  
+  df_intensity_heatmap_log10 <-log10(df_intensity_heatmap+1)
+  
+  d3heatmap::d3heatmap(df_intensity_heatmap_log10,show_grid = FALSE, color = "OrRd")
 }
 
 
 ```
+
 
 
 `r if(ncol(df_intensity) > 3 && nrow(df_intensity) > 5 ){ "## PCA Analysis"}`
